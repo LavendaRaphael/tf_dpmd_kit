@@ -3,6 +3,9 @@
 
 import ase.io
 import os
+import shutil
+import numpy
+import group_module
 
 def def_inputinit_pwscf(
         class_paras,
@@ -15,30 +18,32 @@ def def_inputinit_pwscf(
             index = ':')
         atoms_traj.extend( atoms_tmp )
     int_nframes = len(atoms_traj)
-    print(int_nframes)
+    print('int_nframes = ', int_nframes)
     
-    array_select = numpy.linspace( 
-        0, 
-        int_nframes, 
-        num = class_paras.int_select, 
-        dtype = int, 
-        endpoint = False )
+    if (not os.path.isdir(  class_paras.str_workdir )):
+        os.mkdir( class_paras.str_workdir )
+    os.chdir( class_paras.str_workdir )
 
-    os.chdir( class_paras.str_dir )
-    for int_i in array_select:
-        str_i = "snap_%05d" % int_i
-        print(str_i)
-        os.mkdir(str_i)
+    for int_id in class_paras.array_id:
+        print(int_id)
+        str_subdir = class_paras.def_id2dir( int_id )
+        if os.path.isdir(str_subdir):
+            shutil.rmtree(str_subdir)
+        os.mkdir(str_subdir)
+        os.chdir(str_subdir)
 
         ase.io.write(
             filename = 'pwscf.in',
-            images = atoms_i, 
+            images = atoms_traj[ int_id ], 
             format = 'espresso-in', 
             input_data = class_paras.dict_pwscfin, 
             pseudopotentials = class_paras.dict_pwpseudop )
 
-class class_paras():
+        os.chdir('..')
+
+class class_paras( group_module.class_subparas ):
     def __init__(self):
+        super( class_paras, self ).__init__()
 
         self._dict_pwscfin = {}
         self._dict_pwscfin['CONTROL'] = {
@@ -63,13 +68,10 @@ class class_paras():
     @property
     def dict_pwscfin(self):
         return self._dict_pwscfin
-    
+
     @property
-    def str_dir(self):
-        return self._str_dir
-    @str_dir.setter
-    def str_dir(self, value):
-        self._str_dir = value
+    def dict_pwpseudop(self):
+        return self._dict_pwpseudop
 
     @property
     def list1d_filename(self):
@@ -84,12 +86,4 @@ class class_paras():
     @str_format.setter
     def str_format(self, value):
         self._str_format = value
-
-    @property
-    def int_select(self):
-        return self._int_select
-    @int_select.setter
-    def int_select(self, value):
-        self._int_select = value
-
 
