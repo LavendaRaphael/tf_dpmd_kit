@@ -19,7 +19,8 @@ def def_inputinit_pwscf(
         atoms_traj.extend( atoms_tmp )
     int_nframes = len(atoms_traj)
     print('int_nframes = ', int_nframes)
-    
+   
+    str_cwd = os.getcwd()
     if (not os.path.isdir(  class_paras.str_workdir )):
         os.mkdir( class_paras.str_workdir )
     os.chdir( class_paras.str_workdir )
@@ -40,6 +41,7 @@ def def_inputinit_pwscf(
             pseudopotentials = class_paras.dict_pwpseudop )
 
         os.chdir('..')
+    os.chdir( str_cwd )
 
 class class_paras( group_module.class_subparas ):
     def __init__(self):
