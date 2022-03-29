@@ -6,16 +6,27 @@ import os
 import shutil
 import numpy
 import group_module
+import dpdata
 
 def def_inputinit_pwscf(
         class_paras,
         ):
     atoms_traj = []
-    for str_filename in class_paras.list1d_filename:
-        atoms_tmp = ase.io.read(
-            filename = str_filename, 
-            format = class_paras.str_format, 
-            index = ':')
+    
+    for list_file in class_paras.list2d_files:
+        str_filename = list_file[0]
+        str_format = list_file[1]
+        str_ppcode = list_file[2]
+        if (str_ppcode == 'ase'):
+            atoms_tmp = ase.io.read(
+                filename = str_filename, 
+                format = str_format, 
+                index = ':')
+        elif (str_ppcode == 'dpdata'):
+            atoms_tmp = def_dpdata2ase(
+                str_filename = str_filename,
+                str_format = str_format,
+                )
         atoms_traj.extend( atoms_tmp )
     int_nframes = len(atoms_traj)
     print('int_nframes = ', int_nframes)
@@ -42,6 +53,14 @@ def def_inputinit_pwscf(
 
         os.chdir('..')
     os.chdir( str_cwd )
+
+def def_dpdata2ase( str_filename, str_format ):
+    
+    dp_traj = dpdata.System(
+        file_name = str_filename,
+        fmt = str_format,
+        )
+    return dp_traj.to('ase/structure')
 
 class class_paras( group_module.class_subparas ):
     def __init__(self):
@@ -76,16 +95,9 @@ class class_paras( group_module.class_subparas ):
         return self._dict_pwpseudop
 
     @property
-    def list1d_filename(self):
-        return self._list1d_filename
-    @list1d_filename.setter
-    def list1d_filename(self, value):
-        self._list1d_filename = value
+    def list2d_files(self):
+        return self._list2d_files
+    @list2d_files.setter
+    def list2d_files(self, value):
+        self._list2d_files = value
     
-    @property
-    def str_format(self):
-        return self._str_format
-    @str_format.setter
-    def str_format(self, value):
-        self._str_format = value
-
