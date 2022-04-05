@@ -7,6 +7,19 @@ import shutil
 import numpy
 import group_module
 import dpdata
+import glob
+import os
+
+def def_rename(
+        dir_name,
+        str_origin,
+        str_new,
+        ):
+
+    list_file = sorted(glob.glob('./{}/**/{}'.format(dir_name, str_origin), recursive=True))
+    for str_file in list_file:
+        print(str_file)
+        os.rename(str_file, str_file.replace(str_origin, str_new))
 
 def def_inputinit_pwscf(
         class_paras,
@@ -39,9 +52,9 @@ def def_inputinit_pwscf(
     for int_id in class_paras.array_id:
         print(int_id)
         str_subdir = class_paras.def_id2dir( int_id )
-        if os.path.isdir(str_subdir):
-            shutil.rmtree(str_subdir)
-        os.mkdir(str_subdir)
+        if (not os.path.isdir(str_subdir)):
+            #shutil.rmtree(str_subdir)
+            os.mkdir(str_subdir)
         os.chdir(str_subdir)
 
         ase.io.write(
