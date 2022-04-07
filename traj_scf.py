@@ -29,7 +29,7 @@ def def_pwscf2dpraw_merge(
     print(dp_syscopy)
 
     dp_syscopy.to(
-        'deepmd/raw',
+        'deepmd/npy',
         str_outdir,
         )
 
@@ -54,7 +54,7 @@ def def_pwscf2dpraw_seperate(
         for int_i in range(int_copy-1):
             dp_syscopy.append(dp_sys)
         dp_syscopy.to(
-            'deepmd/raw',
+            'deepmd/npy',
             class_paras.str_dprawdir
             )
 
