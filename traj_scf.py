@@ -10,7 +10,30 @@ import dpdata
 import glob
 import os
 
-def def_scf2dpraw(
+def def_pwscf2dpraw_merge(
+        class_paras,
+        int_copy,
+        str_outdir,
+        ):
+    
+    dp_sys = dpdata.MultiSystems.from_dir(
+        dir_name = class_paras.str_workdir,
+        file_name = 'pwscf.out',
+        fmt = 'qe/pw/scf'
+        )[0]
+    print(dp_sys)
+
+    dp_syscopy = dp_sys.copy()
+    for int_i in range(int_copy-1):
+        dp_syscopy.append(dp_sys)
+    print(dp_syscopy)
+
+    dp_syscopy.to(
+        'deepmd/raw',
+        str_outdir,
+        )
+
+def def_pwscf2dpraw_seperate(
         class_paras,
         int_copy,
         ):
@@ -163,6 +186,9 @@ class class_paras( group_module.class_subparas ):
     @property
     def str_dprawdir(self):
         return self._str_dprawdir
+    @str_dprawdir.setter
+    def str_dprawdir(self, value):
+        self._str_dprawdir = value
 
     @property
     def dict_pwscfin(self):
