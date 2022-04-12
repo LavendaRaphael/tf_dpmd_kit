@@ -115,7 +115,6 @@ class Torque(PBS):
         else :
             return JobStatus.unknown
 
-    #add @FeifeiTian
     def gen_script_header(self, job):
         resources = job.resources
         pbs_script_header_dict= {}
@@ -127,5 +126,3 @@ class Torque(PBS):
         pbs_script_header_dict['queue_name_line']="#PBS -q {queue_name}".format(queue_name=resources.queue_name)
         pbs_script_header = pbs_script_header_template.format(**pbs_script_header_dict)
         return pbs_script_header
-    #end add
-
