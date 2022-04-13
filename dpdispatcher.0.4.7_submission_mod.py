@@ -151,8 +151,9 @@ class Submission(object):
         machine : Machine
             the machine to bind with
         """
-        self.submission_hash = self.get_hash()
         self.machine = machine
+        self.submission_hash = self.get_hash()
+
         for job in self.belonging_jobs:
             job.machine = machine
         if machine is not None:
@@ -377,7 +378,6 @@ class Submission(object):
 
                 for job in self.belonging_jobs:
                     job.resources = copy.deepcopy(self.resources)
-
                 self.bind_machine(machine=self.machine)
                 dlog.info(f"Find old submission; recover submission from json file;"
                     f"submission.submission_hash:{submission.submission_hash}; "
@@ -592,7 +592,7 @@ class Job(object):
             self.fail_count += 1
             dlog.info(f"job: {self.job_hash} {self.job_id} terminated;"
                 f"fail_cout is {self.fail_count}; resubmitting job")
-            if ( self.fail_count ) > 0 and ( self.fail_count % 3 == 0 ) :
+            if ( self.fail_count ) > 0 and ( self.fail_count % 10 == 0 ) :
                 raise RuntimeError(f"job:{self.job_hash} {self.job_id} failed {self.fail_count} times.job_detail:{self}")
             self.submit_job()
             if self.job_state != JobStatus.unsubmitted:
