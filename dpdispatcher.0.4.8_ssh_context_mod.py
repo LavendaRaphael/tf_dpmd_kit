@@ -155,7 +155,8 @@ class SSHSession (object):
     def arginfo():
         doc_hostname = 'hostname or ip of ssh connection.'
         doc_username = 'username of target linux system'
-        doc_password = 'password of linux system'
+        doc_password = ('(deprecated) password of linux system. Please use '
+                        '`SSH keys <https://www.ssh.com/academy/ssh/key>`_ instead to improve security.')
         doc_port = 'ssh connection port.'
         doc_key_filename = 'key filename used by ssh connection. If left None, find key in ~/.ssh or ' \
                            'use password for login'
@@ -226,7 +227,6 @@ class SSHContext(BaseContext):
         self.ssh_session = SSHSession(**remote_profile)
         # self.temp_remote_root = os.path.join(self.ssh_session.get_session_root())
         self.ssh_session.ensure_alive()
-        
         try:
             self.sftp.mkdir(self.temp_remote_root)
         except OSError: 
@@ -286,7 +286,6 @@ class SSHContext(BaseContext):
         self.remote_root = pathlib.PurePath(os.path.join(self.temp_remote_root, self.submission.submission_hash)).as_posix()
 
         sftp = self.ssh_session.ssh.open_sftp()
-
         if submission.belonging_jobs:
             try:
                 sftp.mkdir(self.remote_root)
@@ -302,7 +301,7 @@ class SSHContext(BaseContext):
         # sftp = self.ssh_session.ssh.open_sftp() 
         # sftp.mkdir(self.remote_root)
         # sftp.close()
-        # except:
+        # except Exception:
         #     pass
 
     def _walk_directory(self, files, work_path, file_list, directory_list):
@@ -337,8 +336,9 @@ class SSHContext(BaseContext):
         try:
             self.ssh_session.sftp.mkdir(os.path.basename(self.remote_root))
         except OSError:
-            # mkdir failed meaning it exists, thus the job is recovered
-            recover = True
+            # mkdir failed meaning it exists
+            if len(self.ssh_session.sftp.listdir(os.path.basename(self.remote_root))):
+                recover = True
         self.ssh_session.sftp.chdir(None)
 
         cwd = os.getcwd()
