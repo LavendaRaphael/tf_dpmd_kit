@@ -10,7 +10,7 @@ import dpdata
 import glob
 import os
 
-def def_pwscf2dpraw_merge(
+def def_pwscf2dpnpy_merge(
         class_paras,
         int_copy,
         str_outdir,
@@ -33,32 +33,6 @@ def def_pwscf2dpraw_merge(
         str_outdir,
         )
 
-def def_pwscf2dpraw_seperate(
-        class_paras,
-        int_copy,
-        ):
-    
-    str_cwd = os.getcwd()
-    os.chdir( class_paras.str_workdir )
-
-    for int_id in class_paras.array_id:
-        print(int_id)
-        str_subdir = class_paras.def_id2dir( int_id )
-        os.chdir(str_subdir)
-
-        dp_sys = dpdata.LabeledSystem(
-            file_name = class_paras.str_compsubdir+'/pwscf.out',
-            fmt = 'qe/pw/scf'
-            )
-        dp_syscopy = dp_sys.copy()
-        for int_i in range(int_copy-1):
-            dp_syscopy.append(dp_sys)
-        dp_syscopy.to(
-            'deepmd/npy',
-            class_paras.str_dprawdir
-            )
-
-        os.chdir('..')
     os.chdir( str_cwd )
 
 def def_allrename(
@@ -161,8 +135,6 @@ class class_paras( group_module.class_subparas ):
     def __init__(self):
         super( class_paras, self ).__init__()
     
-        self._str_dprawdir = 'dpraw'
-        #
         self._dict_pwscfin = {}
         self._dict_pwscfin['CONTROL'] = {
             'tstress': True,
@@ -182,13 +154,6 @@ class class_paras( group_module.class_subparas ):
             'O': 'O_HSCV_PBE-1.0.UPF',
             'H': 'H_HSCV_PBE-1.0.UPF'
             }
-
-    @property
-    def str_dprawdir(self):
-        return self._str_dprawdir
-    @str_dprawdir.setter
-    def str_dprawdir(self, value):
-        self._str_dprawdir = value
 
     @property
     def dict_pwscfin(self):
