@@ -22,6 +22,7 @@ def def_model_devi_atom(
         dp_sys,
         float_lowthred,
         str_save,
+        float_ylim = None
         ):
     
     ase_atoms = dp_sys.to('ase/structure')[0]
@@ -65,19 +66,21 @@ def def_model_devi_atom(
     ax.plot(x, array1d_devi_f_final)
     ax.set_xlabel("Atom index")
     ax.set_ylabel("Devi_f")
+    ax.set_ylim(top=float_ylim)
     plt.savefig(str_save, bbox_inches='tight')
     plt.show()
 
 def def_lmp2pdb(
         array_id,
-        type_map, # ["O", "H"]
+        type_map,       # ["O", "H"]
+        str_save = "traj.pdb"
         ):
     dp_sys = dpdata.System()
     for int_i in array_id:
-        str_origin = "{}.lammpstrj".format(int_i)
+        str_origin = "traj/{}.lammpstrj".format(int_i)
         dp_tmp = dpdata.System(str_origin, fmt='lammps/dump', type_map=type_map)
 
         dp_sys.append(dp_tmp)
     print(dp_sys)
     ase_atoms = dp_sys.to('ase/structure')
-    ase.io.write(format="proteindatabank", filename="traj.pdb", images=ase_atoms)
+    ase.io.write(format="proteindatabank", filename=str_save, images=ase_atoms)
