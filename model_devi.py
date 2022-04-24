@@ -70,7 +70,7 @@ def def_model_devi_atom(
     plt.savefig(str_save, bbox_inches='tight')
     plt.show()
 
-def def_lmp2pdb(
+def def_dump2pdb(
         array_id,
         type_map,       # ["O", "H"]
         str_save = "traj.pdb"
