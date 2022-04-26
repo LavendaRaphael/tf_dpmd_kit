@@ -70,17 +70,15 @@ def def_model_devi_atom(
     plt.savefig(str_save, bbox_inches='tight')
     plt.show()
 
-def def_dump2pdb(
+def def_dump2ase(
         array_id,
         type_map,       # ["O", "H"]
-        str_save = "traj.pdb"
         ):
     dp_sys = dpdata.System()
     for int_i in array_id:
-        str_origin = "traj/{}.lammpstrj".format(int_i)
+        str_origin = f"traj/{int_i}.lammpstrj"
         dp_tmp = dpdata.System(str_origin, fmt='lammps/dump', type_map=type_map)
 
         dp_sys.append(dp_tmp)
     print(dp_sys)
-    ase_atoms = dp_sys.to('ase/structure')
-    ase.io.write(format="proteindatabank", filename=str_save, images=ase_atoms)
+    return dp_sys.to('ase/structure')
