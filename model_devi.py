@@ -6,6 +6,8 @@ import numpy as np
 import ase.io
 import dpdata
 
+
+
 def def_plt_devi_f():
     data = np.genfromtxt("model_devi.out", names=True)
     for name in ["max_devi_f"]:
