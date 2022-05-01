@@ -28,10 +28,8 @@ def def_model_devi_atom(
         ):
     
     ase_atoms = dp_sys.to('ase/structure')[0]
-    print(ase_atoms)
     
     int_natom = len(ase_atoms.get_atomic_numbers())
-    print(int_natom)
     
     int_nmodel = len(list_model)
 
