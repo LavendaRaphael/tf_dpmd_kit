@@ -286,11 +286,10 @@ class SSHContext(BaseContext):
         self.remote_root = pathlib.PurePath(os.path.join(self.temp_remote_root, self.submission.submission_hash)).as_posix()
 
         sftp = self.ssh_session.ssh.open_sftp()
-        if submission.belonging_jobs:
-            try:
-                sftp.mkdir(self.remote_root)
-            except OSError:
-                pass
+        try:
+            sftp.mkdir(self.remote_root)
+        except OSError:
+            pass
 
         # self.job_uuid = submission.submission_hash
         # dlog.debug("debug:SSHContext.bind_submission"

@@ -119,10 +119,7 @@ class Submission(object):
             submission_dict['machine'] = {}
         else:
             submission_dict['machine'] = machine.serialize()
-
-        if not if_static:
-            submission_dict['resources'] = self.resources.serialize()
-
+        submission_dict['resources'] = self.resources.serialize()
         submission_dict['forward_common_files'] = self.forward_common_files
         submission_dict['backward_common_files'] = self.backward_common_files
         submission_dict['belonging_jobs'] = [ job.serialize(if_static=if_static) for job in self.belonging_jobs]
@@ -151,9 +148,8 @@ class Submission(object):
         machine : Machine
             the machine to bind with
         """
-        self.machine = machine
         self.submission_hash = self.get_hash()
-
+        self.machine = machine
         for job in self.belonging_jobs:
             job.machine = machine
         if machine is not None:
@@ -375,9 +371,6 @@ class Submission(object):
             submission.bind_machine(machine=self.machine)
             if self == submission:
                 self.belonging_jobs = submission.belonging_jobs
-
-                for job in self.belonging_jobs:
-                    job.resources = copy.deepcopy(self.resources)
                 self.bind_machine(machine=self.machine)
                 dlog.info(f"Find old submission; recover submission from json file;"
                     f"submission.submission_hash:{submission.submission_hash}; "
@@ -446,6 +439,15 @@ class Task(object):
     def load_from_json(cls, json_file):
         with open(json_file, 'r') as f:
             task_dict = json.load(f)
+        return cls.load_from_dict(task_dict)
+
+    @classmethod
+    def load_from_dict(cls, task_dict: dict) -> "Task":
+        # check dict
+        base = cls.arginfo()
+        task_dict = base.normalize_value(task_dict, trim_pattern="_*")
+        base.check_value(task_dict, strict=True)
+
         task = cls.deserialize(task_dict=task_dict)
         return task
 
@@ -592,7 +594,7 @@ class Job(object):
             self.fail_count += 1
             dlog.info(f"job: {self.job_hash} {self.job_id} terminated;"
                 f"fail_cout is {self.fail_count}; resubmitting job")
-            if ( self.fail_count ) > 0 and ( self.fail_count % 10 == 0 ) :
+            if ( self.fail_count ) > 0 and ( self.fail_count % 3 == 0 ) :
                 raise RuntimeError(f"job:{self.job_hash} {self.job_id} failed {self.fail_count} times.job_detail:{self}")
             self.submit_job()
             if self.job_state != JobStatus.unsubmitted:
@@ -632,10 +634,7 @@ class Job(object):
         job_content_dict = {}
         # for task in self.job_task_list:
         job_content_dict['job_task_list'] = [ task.serialize() for task in self.job_task_list ]
-
-        if not if_static:
-            job_content_dict['resources'] = self.resources.serialize()
-
+        job_content_dict['resources'] = self.resources.serialize()
         # job_content_dict['job_work_base'] = self.job_work_base
         job_hash = sha1(json.dumps(job_content_dict).encode('utf-8')).hexdigest()
         if not if_static:
@@ -803,10 +802,15 @@ class Resources(object):
 
     @classmethod
     def load_from_dict(cls, resources_dict):
+        # check dict
+        base = cls.arginfo(detail_kwargs='batch_type' in resources_dict)
+        resources_dict = base.normalize_value(resources_dict, trim_pattern="_*")
+        base.check_value(resources_dict, strict=True)
+
         return cls.deserialize(resources_dict=resources_dict)
 
     @staticmethod
-    def arginfo():
+    def arginfo(detail_kwargs=True):
         doc_number_node = 'The number of node need for each `job`'
         doc_cpu_per_node = 'cpu numbers of each node assigned to each job.'
         doc_gpu_per_node = 'gpu numbers of each node assigned to each job.'
@@ -847,14 +851,23 @@ class Resources(object):
             Argument("wait_time", [int, float], optional=True, doc=doc_wait_time, default=0)
         ]
 
-        batch_variant = Variant(
-            "batch_type",
-            [machine.resources_arginfo() for machine in set(Machine.subclasses_dict.values())],
-            optional=False,
-            doc='The batch job system type loaded from machine/batch_type.',
-        )
+        if detail_kwargs:
+            batch_variant = Variant(
+                "batch_type",
+                [machine.resources_arginfo() for machine in set(Machine.subclasses_dict.values())],
+                optional=False,
+                doc='The batch job system type loaded from machine/batch_type.',
+            )
 
-        resources_format = Argument("resources", dict, resources_args, [batch_variant])
+            resources_format = Argument("resources", dict, resources_args, [batch_variant])
+        else:
+            resources_args.append(
+                Argument("kwargs", dict, optional=True, doc="Vary by different machines.")
+            )
+            resources_args.append(
+                Argument("batch_type", str, optional=True, doc="Allow this key when strict checking.")
+            )
+            resources_format = Argument("resources", dict, resources_args)
         return resources_format
 
 
