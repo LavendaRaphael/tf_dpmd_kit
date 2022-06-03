@@ -9,10 +9,6 @@ dict_pwscfin['CONTROL'] = {
 dict_pwscfin['SYSTEM'] = {
     'input_dft': 'scan',
     'ecutwfc': 150,
-    'nosym': True,
-    }
-dict_pwscfin['ELECTRONS'] = {
-    'electron_maxstep': 500
     }
 
 dict_pwpseudop = {
