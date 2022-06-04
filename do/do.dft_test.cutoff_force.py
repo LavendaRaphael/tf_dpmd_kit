@@ -6,7 +6,7 @@ import matplotlib
 from numpy import linalg as LA
 import dpdata
 
-#'''
+'''
 np_cutoff = numpy.arange(
     start = 700,
     stop = 2100,
@@ -15,16 +15,18 @@ np_cutoff = numpy.arange(
 str_filename = 'OUTCAR'
 str_format = 'vasp-out'
 str_xlabel = 'Cutoff (eV)'
-list_std = ['2000/OUTCAR', 'vasp-out','converge.pdf', 'VASP - VASP(2000eV)']
+#list_std = ['2000/OUTCAR', 'vasp-out','converge.pdf', 'VASP - VASP(2000eV)']
+list_std = ['1600/OUTCAR', 'vasp-out','converge.pdf', 'VASP - VASP(1600eV)']
 #list_std = ['../qe_cutoff_ppsg15/300/log', 'espresso-out','converge_qe_ppsg15_300.pdf', 'VASP - QE(300Ry)']
 #'''
-'''
+#'''
 np_cutoff = numpy.array([100,110,120,130,140,150,160,170,180,190,200,220,240,260,280,300])
 str_filename = 'log'
 str_format = 'espresso-out'
 str_xlabel = 'Cutoff (Ry)'
 #list_std = ['300/log', 'espresso-out','converge.pdf', 'QE - QE (300Ry)']
-list_std = ['../vasp_cutoff/2000/OUTCAR', 'vasp-out','converge_vasp_2000.pdf', 'QE - VASP(2000eV)']
+list_std = ['280/log', 'espresso-out','converge_qe_280.pdf', 'QE - QE (280Ry)']
+#list_std = ['../vasp_cutoff/2000/OUTCAR', 'vasp-out','converge_vasp_2000.pdf', 'QE - VASP(2000eV)']
 #'''
 '''
 np_cutoff = numpy.array([100,110,120,130,140,150,160,170,180,190,200])
@@ -60,14 +62,14 @@ for int_i in range( np_cutoff.shape[0] ):
     np_force_error = np_force - np_force_std
 
     np_force_error_norm = LA.norm(np_force_error, axis=1)
-    print(np_force_error_norm)
 
     print(np_force_error_norm[np_filter])
     np_force_error_norm_ave[ int_i ] = numpy.average( np_force_error_norm[np_filter] )
 
     os.chdir('..')
 
-print(np_force_error_norm_ave)
+for int_i in range(np_cutoff.shape[0]):
+    print(np_cutoff[int_i], np_force_error_norm_ave[int_i])
 
 matplotlib.rcParams['font.size']=15
 matplotlib.rcParams['font.family']='sans-serif'
