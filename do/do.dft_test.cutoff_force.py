@@ -6,7 +6,7 @@ import matplotlib
 from numpy import linalg as LA
 import dpdata
 
-'''
+#'''
 np_cutoff = numpy.arange(
     start = 700,
     stop = 2100,
@@ -15,11 +15,11 @@ np_cutoff = numpy.arange(
 str_filename = 'OUTCAR'
 str_format = 'vasp-out'
 str_xlabel = 'Cutoff (eV)'
-#list_std = ['2000/OUTCAR', 'vasp-out','converge.pdf', 'VASP - VASP(2000eV)']
-list_std = ['1600/OUTCAR', 'vasp-out','converge.pdf', 'VASP - VASP(1600eV)']
+list_std = ['2000/OUTCAR', 'vasp-out','converge.pdf', 'VASP - VASP(2000eV)']
+#list_std = ['1600/OUTCAR', 'vasp-out','converge.pdf', 'VASP - VASP(1600eV)']
 #list_std = ['../qe_cutoff_ppsg15/300/log', 'espresso-out','converge_qe_ppsg15_300.pdf', 'VASP - QE(300Ry)']
 #'''
-#'''
+'''
 np_cutoff = numpy.array([100,110,120,130,140,150,160,170,180,190,200,220,240,260,280,300])
 str_filename = 'log'
 str_format = 'espresso-out'
