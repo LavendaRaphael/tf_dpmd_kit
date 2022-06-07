@@ -17,7 +17,8 @@ def def_poscar2vccpbo():
         'ecutwfc': 150,
         'ecfixed': 130,
         'qcutz': 200,
-        'q2sigma': 15
+        'q2sigma': 15,
+        'ibrav': 1
         }
     dict_pwscfin['ELECTRONS'] = {
         'electron_dynamics': 'cp-bo',
@@ -74,11 +75,13 @@ def def_poscar2cpgs():
         'dt': 2.0,
         'nstep': 20000,
         'max_seconds': 82800,
-        'tprnfor': True,
+        'tstress': True,
+        'tprnfor': True
         }
     dict_pwscfin['SYSTEM'] = {
         'input_dft': 'scan',
         'ecutwfc': 150,
+        'ibrav': 1
         }
     dict_pwscfin['ELECTRONS'] = {
         'electron_dynamics': 'damp',
