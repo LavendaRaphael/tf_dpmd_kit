@@ -24,8 +24,8 @@ np_cutoff = numpy.array([100,110,120,130,140,150,160,170,180,190,200,220,240,260
 str_filename = 'log'
 str_format = 'espresso-out'
 str_xlabel = 'Cutoff (Ry)'
-#list_std = ['300/log', 'espresso-out','converge.pdf', 'QE - QE (300Ry)']
-list_std = ['280/log', 'espresso-out','converge_qe_280.pdf', 'QE - QE (280Ry)']
+list_std = ['300/log', 'espresso-out','converge.pdf', 'QE - QE (300Ry)']
+#list_std = ['280/log', 'espresso-out','converge_qe_280.pdf', 'QE - QE (280Ry)']
 #list_std = ['../vasp_cutoff/2000/OUTCAR', 'vasp-out','converge_vasp_2000.pdf', 'QE - VASP(2000eV)']
 #'''
 '''
@@ -69,7 +69,7 @@ for int_i in range( np_cutoff.shape[0] ):
     os.chdir('..')
 
 for int_i in range(np_cutoff.shape[0]):
-    print(np_cutoff[int_i], np_force_error_norm_ave[int_i])
+    print(np_cutoff[int_i], f'{np_force_error_norm_ave[int_i]:.3f}')
 
 matplotlib.rcParams['font.size']=15
 matplotlib.rcParams['font.family']='sans-serif'
@@ -83,7 +83,7 @@ ax.legend()
 ax.set_xlabel( str_xlabel )
 ax.set_ylabel( 'Average force devi (eV/Å)' )
 #ax.set_xlim((0,600))
-#ax.set_ylim((0,700))
+ax.set_ylim((0,0.3))
 fig.set_size_inches(7, 6)
 fig.savefig(list_std[2], bbox_inches='tight')
 pyplot.show()

@@ -1,6 +1,169 @@
 import ase.io
 
-def def_poscar2vccpbo():
+def def_poscar2cp_cp():
+    dict_pwscfin = {}
+    dict_pwscfin['CONTROL'] = {
+        'calculation': 'cp',
+        'dt': 2.0,
+        'nstep': 20000,
+        'max_seconds': 82800,
+        'isave': 500,
+        'iprint': 10,
+        'tstress': True,
+        'tprnfor': True,
+        }
+    dict_pwscfin['SYSTEM'] = {
+        'input_dft': 'scan',
+        'ecutwfc': 85.0,
+        'ibrav': 1
+        }
+    dict_pwscfin['ELECTRONS'] = {
+        'electron_dynamics': 'verlet',
+        'emass': 100.0,
+        'emass_cutoff': 25.0,
+        'ortho_max': 800,
+        'electron_maxstep': 500
+        }
+    dict_pwscfin['IONS'] = {
+        'ion_dynamics': 'verlet',
+        'ion_temperature': 'nose',
+        'tempw': 330,
+        'fnosep': 60,
+        'nhptyp': 0,
+        'ndega': -3,
+        }
+
+    dict_pwpseudop = {
+        'O': 'O_HSCV_PBE-1.0.UPF',
+        'H': 'H_HSCV_PBE-1.0.UPF',
+        'C': 'C_HSCV_PBE-1.0.UPF'
+        }
+
+    atoms_poscar = ase.io.read(
+        filename = 'POSCAR',
+        format = 'vasp',
+        )
+
+    atoms_poscar.set_masses( [ 2.0141 if x==1.008 else x for x in atoms_poscar.get_masses() ] )
+
+    ase.io.write(
+        filename = 'cp.in',
+        images = atoms_poscar,
+        format = 'espresso-in',
+        input_data = dict_pwscfin,
+        pseudopotentials = dict_pwpseudop )
+
+def def_poscar2cp_cpbo():
+    dict_pwscfin = {}
+    dict_pwscfin['CONTROL'] = {
+        'calculation': 'cp',
+        'dt': 20.0,
+        'nstep': 20000,
+        'max_seconds': 82800,
+        'isave': 50,
+        'iprint': 5,
+        'tstress': True,
+        'tprnfor': True,
+        }
+    dict_pwscfin['SYSTEM'] = {
+        'input_dft': 'scan',
+        'ecutwfc': 85.0,
+        'ibrav': 1
+        }
+    dict_pwscfin['ELECTRONS'] = {
+        'electron_dynamics': 'cp-bo',
+        'emass_emin': 200,
+        'emass_cutoff_emin': 6.0,
+        'electron_damping_emin': 0.7,
+        'dt_emin': 5.0,
+        'emass': 1000.0,
+        'emass_cutoff': 6.0,
+        'ortho_max': 300,
+        'electron_maxstep': 500
+        }
+    dict_pwscfin['IONS'] = {
+        'ion_dynamics': 'verlet',
+        'ion_temperature': 'nose',
+        'fnosep': 60,
+        'tempw': 330,
+        'nhpcl': 4,
+        'nhptyp': 2,
+        'ndega': -3,
+        }
+
+    dict_pwpseudop = {
+        'O': 'O_HSCV_PBE-1.0.UPF',
+        'H': 'H_HSCV_PBE-1.0.UPF',
+        'C': 'C_HSCV_PBE-1.0.UPF'
+        }
+
+    atoms_poscar = ase.io.read(
+        filename = 'POSCAR',
+        format = 'vasp',
+        )
+
+    atoms_poscar.set_masses( [ 2.0141 if x==1.008 else x for x in atoms_poscar.get_masses() ] )
+
+    ase.io.write(
+        filename = 'cp.in',
+        images = atoms_poscar,
+        format = 'espresso-in',
+        input_data = dict_pwscfin,
+        pseudopotentials = dict_pwpseudop )
+
+def def_poscar2cp_gs():
+
+    dict_pwscfin = {}
+    dict_pwscfin['CONTROL'] = {
+        'calculation': 'cp',
+        'restart_mode': 'from_scratch',
+        'dt': 2.0,
+        'nstep': 20000,
+        'max_seconds': 82800,
+        'tstress': True,
+        'tprnfor': True
+        }
+    dict_pwscfin['SYSTEM'] = {
+        'input_dft': 'scan',
+        'ecutwfc': 85.0,
+        'ibrav': 1,
+        }
+    dict_pwscfin['ELECTRONS'] = {
+        'electron_dynamics': 'damp',
+        'electron_damping': 0.20,
+        'emass': 100.0,
+        'emass_cutoff': 25.0,
+        'ortho_max': 800,
+        'electron_maxstep': 500
+        }
+    dict_pwscfin['IONS'] = {
+        'ion_dynamics': 'none',
+        'ion_radius(1)': 1.4,
+        'ion_radius(2)': 1.4,
+        'ion_radius(3)': 1.4,
+        }
+    
+    dict_pwpseudop = {
+        'O': 'O_HSCV_PBE-1.0.UPF',
+        'H': 'H_HSCV_PBE-1.0.UPF',
+        'C': 'C_HSCV_PBE-1.0.UPF'
+        }
+    
+    atoms_poscar = ase.io.read(
+        filename = 'POSCAR',
+        format = 'vasp',
+        )
+    
+    atoms_poscar.set_masses( [ 2.0141 if x==1.008 else x for x in atoms_poscar.get_masses() ] )
+    
+    ase.io.write(
+        filename = 'gs.in',
+        images = atoms_poscar,
+        format = 'espresso-in',
+        input_data = dict_pwscfin,
+        pseudopotentials = dict_pwpseudop )
+
+def def_poscar2vccp_cpbo():
     dict_pwscfin = {}
     dict_pwscfin['CONTROL'] = {
         'calculation': 'vc-cp',
@@ -36,8 +199,7 @@ def def_poscar2vccpbo():
         'ion_temperature': 'nose',
         'fnosep': 60,
         'tempw': 330,
-        'nhpcl': 4,
-        'nhptyp': 2,
+        'nhptyp': 0,
         'ndega': -3,
         }
     dict_pwscfin['CELL'] = {
@@ -66,11 +228,16 @@ def def_poscar2vccpbo():
         input_data = dict_pwscfin,
         pseudopotentials = dict_pwpseudop )
 
+    float_cell = atoms_poscar.get_cell()[0,0]
+    float_cell_ref = float_cell * 1.04
+    with open('cp.in', 'a') as open_in:
+        open_in.write(f'REF_CELL_PARAMETERS {{angstrom}}\n  {float_cell_ref} 0.0 0.0\n  0.0 {float_cell_ref} 0.0\n  0.0 0.0 {float_cell_ref}')
 
-def def_poscar2cpgs():
+def def_poscar2vccp_gs():
 
     dict_pwscfin = {}
     dict_pwscfin['CONTROL'] = {
+        'calculation': 'vc-cp',
         'restart_mode': 'from_scratch',
         'dt': 2.0,
         'nstep': 20000,
@@ -81,21 +248,20 @@ def def_poscar2cpgs():
     dict_pwscfin['SYSTEM'] = {
         'input_dft': 'scan',
         'ecutwfc': 150,
-        'ibrav': 1
+        'ibrav': 1,
+        'ecfixed': 130,
+        'qcutz': 200,
+        'q2sigma': 15,
         }
     dict_pwscfin['ELECTRONS'] = {
         'electron_dynamics': 'damp',
-        'electron_damping': 0.2,
         'emass': 100.0,
         'emass_cutoff': 25.0,
-        'ortho_max': 10000,
+        'ortho_max': 1000,
         'electron_maxstep': 500
         }
     dict_pwscfin['IONS'] = {
         'ion_dynamics': 'none',
-        'ion_radius(1)': 1.4,
-        'ion_radius(2)': 1.4,
-        'ion_radius(3)': 1.4
         }
     
     dict_pwpseudop = {
@@ -117,4 +283,8 @@ def def_poscar2cpgs():
         format = 'espresso-in',
         input_data = dict_pwscfin,
         pseudopotentials = dict_pwpseudop )
-
+    
+    float_cell = atoms_poscar.get_cell()[0,0]
+    float_cell_ref = float_cell * 1.04
+    with open('gs.in', 'a') as open_in:
+        open_in.write(f'REF_CELL_PARAMETERS {{angstrom}}\n  {float_cell_ref} 0.0 0.0\n  0.0 {float_cell_ref} 0.0\n  0.0 0.0 {float_cell_ref}')
