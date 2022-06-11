@@ -21,8 +21,7 @@ def def_poscar2cp_cp():
         'electron_dynamics': 'verlet',
         'emass': 100.0,
         'emass_cutoff': 25.0,
-        'ortho_max': 800,
-        'electron_maxstep': 500
+        'ortho_max': 800
         }
     dict_pwscfin['IONS'] = {
         'ion_dynamics': 'verlet',
@@ -133,8 +132,7 @@ def def_poscar2cp_gs():
         'electron_damping': 0.20,
         'emass': 100.0,
         'emass_cutoff': 25.0,
-        'ortho_max': 800,
-        'electron_maxstep': 500
+        'ortho_max': 800
         }
     dict_pwscfin['IONS'] = {
         'ion_dynamics': 'none',
@@ -229,9 +227,74 @@ def def_poscar2vccp_cpbo():
         pseudopotentials = dict_pwpseudop )
 
     float_cell = atoms_poscar.get_cell()[0,0]
-    float_cell_ref = float_cell * 1.04
+    float_cell_ref = float_cell * 1.03
     with open('cp.in', 'a') as open_in:
-        open_in.write(f'REF_CELL_PARAMETERS {{angstrom}}\n  {float_cell_ref} 0.0 0.0\n  0.0 {float_cell_ref} 0.0\n  0.0 0.0 {float_cell_ref}')
+        open_in.write(f'REF_CELL_PARAMETERS angstrom\n  {float_cell_ref} 0.0 0.0\n  0.0 {float_cell_ref} 0.0\n  0.0 0.0 {float_cell_ref}')
+
+def def_poscar2vccp_cp():
+    dict_pwscfin = {}
+    dict_pwscfin['CONTROL'] = {
+        'calculation': 'vc-cp',
+        'dt': 2.0,
+        'nstep': 20000,
+        'max_seconds': 82800,
+        'isave': 500,
+        'iprint': 10,
+        'tstress': True,
+        'tprnfor': True,
+        }
+    dict_pwscfin['SYSTEM'] = {
+        'input_dft': 'scan',
+        'ecutwfc': 150,
+        'ecfixed': 130,
+        'qcutz': 200,
+        'q2sigma': 15,
+        'ibrav': 1
+        }
+    dict_pwscfin['ELECTRONS'] = {
+        'electron_dynamics': 'verlet',
+        'emass': 100.0,
+        'emass_cutoff': 25.0,
+        'ortho_max': 800
+        }
+    dict_pwscfin['IONS'] = {
+        'ion_dynamics': 'verlet',
+        'ion_temperature': 'nose',
+        'fnosep': 60,
+        'tempw': 330,
+        'nhptyp': 0,
+        'ndega': -3,
+        }
+    dict_pwscfin['CELL'] = {
+        'cell_dynamics': 'pr',
+        'press': 0.001,
+        'cell_dofree': 'volume',
+        }
+
+    dict_pwpseudop = {
+        'O': 'O_HSCV_PBE-1.0.UPF',
+        'H': 'H_HSCV_PBE-1.0.UPF',
+        'C': 'C_HSCV_PBE-1.0.UPF'
+        }
+
+    atoms_poscar = ase.io.read(
+        filename = 'POSCAR',
+        format = 'vasp',
+        )
+
+    atoms_poscar.set_masses( [ 2.0141 if x==1.008 else x for x in atoms_poscar.get_masses() ] )
+
+    ase.io.write(
+        filename = 'cp.in',
+        images = atoms_poscar,
+        format = 'espresso-in',
+        input_data = dict_pwscfin,
+        pseudopotentials = dict_pwpseudop )
+
+    float_cell = atoms_poscar.get_cell()[0,0]
+    float_cell_ref = float_cell * 1.03
+    with open('cp.in', 'a') as open_in:
+        open_in.write(f'REF_CELL_PARAMETERS angstrom\n  {float_cell_ref} 0.0 0.0\n  0.0 {float_cell_ref} 0.0\n  0.0 0.0 {float_cell_ref}')
 
 def def_poscar2vccp_gs():
 
@@ -239,7 +302,7 @@ def def_poscar2vccp_gs():
     dict_pwscfin['CONTROL'] = {
         'calculation': 'vc-cp',
         'restart_mode': 'from_scratch',
-        'dt': 2.0,
+        'dt': 1.0,
         'nstep': 20000,
         'max_seconds': 82800,
         'tstress': True,
@@ -247,18 +310,17 @@ def def_poscar2vccp_gs():
         }
     dict_pwscfin['SYSTEM'] = {
         'input_dft': 'scan',
-        'ecutwfc': 150,
+        'ecutwfc': 150.0,
         'ibrav': 1,
-        'ecfixed': 130,
-        'qcutz': 200,
-        'q2sigma': 15,
+        'ecfixed': 130.0,
+        'qcutz': 200.0,
+        'q2sigma': 15.0,
         }
     dict_pwscfin['ELECTRONS'] = {
         'electron_dynamics': 'damp',
         'emass': 100.0,
         'emass_cutoff': 25.0,
-        'ortho_max': 1000,
-        'electron_maxstep': 500
+        'ortho_max': 10000,
         }
     dict_pwscfin['IONS'] = {
         'ion_dynamics': 'none',
@@ -285,6 +347,6 @@ def def_poscar2vccp_gs():
         pseudopotentials = dict_pwpseudop )
     
     float_cell = atoms_poscar.get_cell()[0,0]
-    float_cell_ref = float_cell * 1.04
+    float_cell_ref = float_cell * 1.03
     with open('gs.in', 'a') as open_in:
-        open_in.write(f'REF_CELL_PARAMETERS {{angstrom}}\n  {float_cell_ref} 0.0 0.0\n  0.0 {float_cell_ref} 0.0\n  0.0 0.0 {float_cell_ref}')
+        open_in.write(f'REF_CELL_PARAMETERS angstrom\n  {float_cell_ref} 0.0 0.0\n  0.0 {float_cell_ref} 0.0\n  0.0 0.0 {float_cell_ref}')
