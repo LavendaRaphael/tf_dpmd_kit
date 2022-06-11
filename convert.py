@@ -301,7 +301,7 @@ def def_poscar2vccp_gs():
     dict_pwscfin = {}
     dict_pwscfin['CONTROL'] = {
         'calculation': 'vc-cp',
-        'restart_mode': 'from_scratch',
+        #'restart_mode': 'from_scratch',
         'dt': 1.0,
         'nstep': 20000,
         'max_seconds': 82800,
@@ -320,7 +320,7 @@ def def_poscar2vccp_gs():
         'electron_dynamics': 'damp',
         'emass': 100.0,
         'emass_cutoff': 25.0,
-        'ortho_max': 10000,
+        'ortho_max': 1000,
         }
     dict_pwscfin['IONS'] = {
         'ion_dynamics': 'none',
