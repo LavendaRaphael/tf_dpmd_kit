@@ -1,5 +1,18 @@
 import ase.io
 
+def def_dump2ase(
+        array_id,
+        type_map,       # ["O", "H"]
+        ):
+    dp_sys = dpdata.System()
+    for int_i in array_id:
+        str_origin = f"traj/{int_i}.lammpstrj"
+        dp_tmp = dpdata.System(str_origin, fmt='lammps/dump', type_map=type_map)
+
+        dp_sys.append(dp_tmp)
+    print(dp_sys)
+    return dp_sys.to('ase/structure')
+
 def def_poscar2cp_cp():
     dict_pwscfin = {}
     dict_pwscfin['CONTROL'] = {
@@ -301,8 +314,8 @@ def def_poscar2vccp_gs():
     dict_pwscfin = {}
     dict_pwscfin['CONTROL'] = {
         'calculation': 'vc-cp',
-        #'restart_mode': 'from_scratch',
-        'dt': 1.0,
+        'restart_mode': 'from_scratch',
+        'dt': 2.0,
         'nstep': 20000,
         'max_seconds': 82800,
         'tstress': True,
@@ -325,7 +338,10 @@ def def_poscar2vccp_gs():
     dict_pwscfin['IONS'] = {
         'ion_dynamics': 'none',
         }
-    
+    dict_pwscfin['CELL'] = {
+        'cell_dynamics': 'none'
+        }
+
     dict_pwpseudop = {
         'O': 'O_HSCV_PBE-1.0.UPF',
         'H': 'H_HSCV_PBE-1.0.UPF',
