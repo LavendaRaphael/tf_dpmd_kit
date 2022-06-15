@@ -41,7 +41,7 @@ os.chdir('snap')
 str_in = 'pwscf.in'
 str_log = 'pwscf.log'
 dict_task = {
-    "command": "mpirun qe.7.0_libxc_pw.x < "+str_in,
+    "command": "cat $PBS_NODEFILE|sort -u|xargs echo 'NODE:' && mpirun qe.7.0_libxc_pw.x < "+str_in,
     "forward_files": [
         str_in
         ],
