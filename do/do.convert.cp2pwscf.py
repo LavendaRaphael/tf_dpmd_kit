@@ -5,9 +5,9 @@ import os
 import json
 
 np_snap = numpy.arange(
-    start = 0,
-    stop = 2000,
-    step = 80,
+    start = 50,
+    stop = 2050,
+    step = 50,
     )
 
 dp_sys = dpdata.System(
@@ -40,8 +40,12 @@ os.chdir('snap')
 
 str_in = 'pwscf.in'
 str_log = 'pwscf.log'
+str_command = "if [ -f ../please.stop ]; then true; else"
+str_command += " cat $PBS_NODEFILE|sort -u|xargs echo 'NODE:'"
+str_command += " && mpirun qe.7.0_libxc_pw.x < "+str_in
+str_command += " && if [ -f ../please.continue ]; then false; fi; fi"
 dict_task = {
-    "command": "cat $PBS_NODEFILE|sort -u|xargs echo 'NODE:' && mpirun qe.7.0_libxc_pw.x < "+str_in,
+    "command": str_command,
     "forward_files": [
         str_in
         ],
