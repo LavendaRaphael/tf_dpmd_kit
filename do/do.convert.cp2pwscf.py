@@ -6,7 +6,7 @@ import json
 
 np_snap = numpy.arange(
     start = 50,
-    stop = 2050,
+    stop = 3050,
     step = 50,
     )
 
