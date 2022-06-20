@@ -203,7 +203,7 @@ def def_poscar2cp_gs():
     dict_pwscfin = {}
     dict_pwscfin['CONTROL'] = {
         'calculation': 'cp',
-        #'restart_mode': 'from_scratch',
+        'restart_mode': 'from_scratch',
         'dt': 2.0,
         'nstep': 20000,
         'max_seconds': 82800,
