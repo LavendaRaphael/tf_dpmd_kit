@@ -33,7 +33,7 @@ def def_cp2pwscf(
         }
     
     str_in = 'pwscf.in'
-    str_log = 'pwscf.log'
+    str_log = 'pwscf.out'
     str_command = "if [ -f ../please.stop ]; then true; else"
     str_command += " cat $PBS_NODEFILE|sort -u|xargs echo 'NODE:'"
     str_command += " && mpirun qe.7.0_libxc_pw.x < "+str_in
