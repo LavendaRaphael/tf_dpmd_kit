@@ -34,10 +34,10 @@ def def_cp2pwscf(
     
     str_in = 'pwscf.in'
     str_log = 'pwscf.out'
-    str_command = "if [ -f ../please.stop ]; then true; else"
+    str_command = "if [ -f please.stop ]; then true; else"
     str_command += " cat $PBS_NODEFILE|sort -u|xargs echo 'NODE:'"
-    str_command += " && mpirun qe.7.0_libxc_pw.x < "+str_in
-    str_command += " && if [ -f ../please.continue ]; then false; fi; fi"
+    str_command += " && mpirun qe.7.1_libxc_pw.x < "+str_in
+    str_command += " && if [ -f please.continue ]; then false; fi; fi"
     dict_task = {
         "command": str_command,
         "forward_files": [
@@ -134,7 +134,7 @@ def def_poscar2cp_cp():
     atoms_poscar.set_masses( [ 2.0141 if x==1.008 else x for x in atoms_poscar.get_masses() ] )
 
     ase.io.write(
-        filename = 'cp.in',
+        filename = 'md.in',
         images = atoms_poscar,
         format = 'espresso-in',
         input_data = dict_pwscfin,
@@ -192,7 +192,7 @@ def def_poscar2cp_cpbo():
     atoms_poscar.set_masses( [ 2.0141 if x==1.008 else x for x in atoms_poscar.get_masses() ] )
 
     ase.io.write(
-        filename = 'cp.in',
+        filename = 'md.in',
         images = atoms_poscar,
         format = 'espresso-in',
         input_data = dict_pwscfin,
@@ -308,7 +308,7 @@ def def_poscar2vccp_cpbo():
     atoms_poscar.set_masses( [ 2.0141 if x==1.008 else x for x in atoms_poscar.get_masses() ] )
 
     ase.io.write(
-        filename = 'cp.in',
+        filename = 'md.in',
         images = atoms_poscar,
         format = 'espresso-in',
         input_data = dict_pwscfin,
@@ -373,7 +373,7 @@ def def_poscar2vccp_cp():
     atoms_poscar.set_masses( [ 2.0141 if x==1.008 else x for x in atoms_poscar.get_masses() ] )
 
     ase.io.write(
-        filename = 'cp.in',
+        filename = 'md.in',
         images = atoms_poscar,
         format = 'espresso-in',
         input_data = dict_pwscfin,

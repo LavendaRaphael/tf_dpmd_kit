@@ -6,6 +6,7 @@ np_snap = numpy.arange(
     stop = 3050,
     step = 50,
     )
+np_snap = numpy.array([-1])
 
 tf_dpmd_kit.convert.def_cp2pwscf( np_snap )
 

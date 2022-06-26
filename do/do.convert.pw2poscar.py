@@ -1,7 +1,7 @@
 import ase.io
 
 ase_atoms = ase.io.read(
-     filename = 'cp.in',
+     filename = 'pwscf.in',
      format = 'espresso-in',
      )
 ase.io.write(
@@ -9,9 +9,12 @@ ase.io.write(
     images = ase_atoms,
     format = 'vasp',
     )
+
+'''
 ase.io.write(
     filename = 'lammps.data',
     images = ase_atoms,
     specorder = ["O","H"],
     format = 'lammps-data', 
     )
+'''
