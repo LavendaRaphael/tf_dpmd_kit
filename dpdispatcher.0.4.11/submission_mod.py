@@ -119,7 +119,12 @@ class Submission(object):
             submission_dict['machine'] = {}
         else:
             submission_dict['machine'] = machine.serialize()
-        submission_dict['resources'] = self.resources.serialize()
+
+        # @LavendaRaphael
+        # continue with changed resources
+        if not if_static:
+            submission_dict['resources'] = self.resources.serialize()
+
         submission_dict['forward_common_files'] = self.forward_common_files
         submission_dict['backward_common_files'] = self.backward_common_files
         submission_dict['belonging_jobs'] = [ job.serialize(if_static=if_static) for job in self.belonging_jobs]
@@ -148,8 +153,12 @@ class Submission(object):
         machine : Machine
             the machine to bind with
         """
-        self.submission_hash = self.get_hash()
         self.machine = machine
+        
+        # @LavendaRaphael
+        # not to create extra empty dir
+        self.submission_hash = self.get_hash()
+
         for job in self.belonging_jobs:
             job.machine = machine
         if machine is not None:
@@ -374,6 +383,12 @@ class Submission(object):
             submission.bind_machine(machine=self.machine)
             if self == submission:
                 self.belonging_jobs = submission.belonging_jobs
+
+                # @LavendaRaphael
+                # update after change resources
+                for job in self.belonging_jobs:
+                    job.resources = copy.deepcopy(self.resources)
+
                 self.bind_machine(machine=self.machine)
                 dlog.info(f"Find old submission; recover submission from json file;"
                     f"submission.submission_hash:{submission.submission_hash}; "
@@ -463,6 +478,7 @@ class Task(object):
         task_dict : dict
             the dictionary which contains the task information
         Returns
+
         -------
         task : Task
             the Task class instance converted from the task_dict
@@ -597,7 +613,7 @@ class Job(object):
             self.fail_count += 1
             dlog.info(f"job: {self.job_hash} {self.job_id} terminated;"
                 f"fail_cout is {self.fail_count}; resubmitting job")
-            if ( self.fail_count ) > 0 and ( self.fail_count % 3 == 0 ) :
+            if ( self.fail_count ) > 0 and ( self.fail_count % 10 == 0 ) :
                 raise RuntimeError(f"job:{self.job_hash} {self.job_id} failed {self.fail_count} times.job_detail:{self}")
             self.submit_job()
             if self.job_state != JobStatus.unsubmitted:
@@ -637,7 +653,12 @@ class Job(object):
         job_content_dict = {}
         # for task in self.job_task_list:
         job_content_dict['job_task_list'] = [ task.serialize() for task in self.job_task_list ]
-        job_content_dict['resources'] = self.resources.serialize()
+
+        # @LavendaRaphael
+        # continue with chenged resources
+        if not if_static:
+            job_content_dict['resources'] = self.resources.serialize()
+
         # job_content_dict['job_work_base'] = self.job_work_base
         job_hash = sha1(json.dumps(job_content_dict).encode('utf-8')).hexdigest()
         if not if_static:
