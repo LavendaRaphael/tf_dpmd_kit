@@ -2,7 +2,7 @@ import dpdata
 import ase.io
 
 dp_sys = dpdata.System(
-    file_name = 'cp',
+    file_name = 'cp/cp',
     fmt = 'qe/cp/traj',
     )
 print(dp_sys)

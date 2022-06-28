@@ -1,3 +1,3 @@
-import train
+import tf_dpmd_kit.train
 
-train.def_plt_lcurve()
+tf_dpmd_kit.train.def_plt_lcurve()
