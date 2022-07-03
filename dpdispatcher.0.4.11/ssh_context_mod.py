@@ -525,13 +525,15 @@ class SSHContext(BaseContext):
             uploaded directories non-recursively. Use `files` for uploading
             recursively
         """
-        of = self.submission.submission_hash + '.tgz'
+        #@Lavendaraphael
+        # Change tgz to tar
+        of = self.submission.submission_hash + '.tar'
         # local tar
         cwd = os.getcwd()
         os.chdir(self.local_root)
         if os.path.isfile(of) :
             os.remove(of)
-        with tarfile.open(of, "w:gz", dereference = dereference, compresslevel=6) as tar:
+        with tarfile.open(of, "w", dereference = dereference) as tar:
             for ii in files :
                 tar.add(ii)
             if directories is not None:
@@ -559,18 +561,20 @@ class SSHContext(BaseContext):
 
     def _get_files(self, 
                    files) :
-        of = self.submission.submission_hash + '.tar.gz'
+        #@Lavendaraphael
+        # Change tar to tgz
+        of = self.submission.submission_hash + '.tar'
         # remote tar
         # If the number of files are large, we may get "Argument list too long" error.
         # Thus, "-T" accepts a file containing the list of files
         per_nfile = 100
         ntar = len(files) // per_nfile + 1
         if ntar <= 1:
-            self.block_checkcall('tar czfh %s %s' % (of, " ".join(files)))
+            self.block_checkcall('tar cfh %s %s' % (of, " ".join(files)))
         else:
             file_list_file = os.path.join(self.remote_root, ".tmp.tar." + str(uuid.uuid4()))
             self.write_file(file_list_file, "\n".join(files))
-            self.block_checkcall('tar czfh %s -T %s' % (of, file_list_file))
+            self.block_checkcall('tar cfh %s -T %s' % (of, file_list_file))
         # trans
         from_f = pathlib.PurePath(os.path.join(self.remote_root, of)).as_posix()
         to_f = pathlib.PurePath(os.path.join(self.local_root, of)).as_posix()
@@ -580,7 +584,7 @@ class SSHContext(BaseContext):
         # extract
         cwd = os.getcwd()
         os.chdir(self.local_root)
-        with tarfile.open(of, "r:gz") as tar:
+        with tarfile.open(of) as tar:
             tar.extractall()
         os.chdir(cwd)        
         # cleanup
