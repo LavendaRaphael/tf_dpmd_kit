@@ -1313,7 +1313,7 @@ def run_md_model_devi (iter_index,
     if model_devi_engine == "lammps":
         #@Lavendaraphael
         # Add tar 
-        command = "{ if [ ! -f dpgen.restart.10000 ]; then %s -i input.lammps -v restart 0; else %s -i input.lammps -v restart 1; fi && tar -c traj -f traj.tar}" % (model_devi_exec, model_devi_exec)
+        command = "{ if [ ! -f dpgen.restart.10000 ]; then %s -i input.lammps -v restart 0; else %s -i input.lammps -v restart 1; fi && tar -c traj -f traj.tar; }" % (model_devi_exec, model_devi_exec)
         command = "/bin/sh -c '%s'" % command
         commands = [command]
         forward_files = ['conf.lmp', 'input.lammps', 'traj']

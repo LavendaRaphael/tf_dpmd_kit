@@ -51,9 +51,9 @@ def def_cp2pwscf(
         }
     ase_atoms = dp_sys.to('ase/structure')
 
-    if (not os.path.exists('snap')):
-        os.mkdir('snap')
-    os.chdir('snap')
+    if (not os.path.exists('../snap')):
+        os.mkdir('../snap')
+    os.chdir('../snap')
     for int_snap in np_snap:
         str_dir = f'snap_{int_snap:0>5d}'
         if (not os.path.exists(str_dir)):
@@ -73,7 +73,6 @@ def def_cp2pwscf(
             json.dump( dict_task, fp=open_json, indent=4 )
     
         os.chdir('..')
-    os.chdir('..')
 
 def def_dump2ase(
         array_id,
