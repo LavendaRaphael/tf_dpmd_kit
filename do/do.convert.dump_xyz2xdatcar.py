@@ -1,15 +1,15 @@
 import ase.io
 import numpy
-import dpdata
 from ase import Atoms
 from ase.atom import Atom
+from tf_dpmd_kit import convert
 
-type_map = ["O", "H", "C"]
-str_origin = "traj.lammpstrj"
-dp_sys = dpdata.System(str_origin, fmt='lammps/dump', type_map=type_map)
+array_id = numpy.arange(0,5005,5)
 
-print(dp_sys)
-atoms = dp_sys.to('ase/structure')
+atoms = convert.def_dump2ase(
+    array_id = array_id,
+    type_map = ["O", "H", "C"]
+)
 
 atoms_xyz = ase.io.read( 
     filename = 'plm.xyz',
@@ -20,15 +20,15 @@ atoms_xyz = ase.io.read(
 for int_i in range(len(atoms)):
     atom_vp = Atom(
         symbol = 'He',
-        position = atoms_xyz[int_i].get_positions()[6]
+        position = atoms_xyz[int_i].get_positions()[0]
     )
     atom_vh1 = Atom(
         symbol = 'Li',
-        position = atoms_xyz[int_i].get_positions()[7]
+        position = atoms_xyz[int_i].get_positions()[1]
     )
     atom_vh2 = Atom(
         symbol = 'Li',
-        position = atoms_xyz[int_i].get_positions()[8]
+        position = atoms_xyz[int_i].get_positions()[2]
     )
     atoms[int_i].append(atom_vp)
     atoms[int_i].append(atom_vh1)

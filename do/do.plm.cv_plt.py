@@ -26,29 +26,54 @@ def def_plt(
     plt.show()
 
 def_plt(
-    dict_label = {
-        #"dist_pro_c",
+    dict_label = [
+        "dist_vp_c",
+    ]
+)
+
+def_plt(
+    dict_label = [
+        'del_cn_o_h',
+    ]
+)
+def_plt(
+    dict_label = [
+        'cost_o_1_h', 
+        'cost_o_2_h', 
+        'cost_o_0_h', 
+    ]
+)
+def_plt(
+    dict_label = [
+        'dist_o_0_h',
+    ]
+)
+'''
+def_plt(
+    dict_label = [
+        #"dist_vp_c",
         #"cn_o_1_h",
         #'cn_o_2_h',
         #'del_cn_o_h',
-        #'cn_c_pro',
-        #'cn_c_pro_x',
-        #'cost_o_1_pro', 
-        #'cost_o_2_pro',
+        #'cn_o_1_vp',
+        #'cn_o_2_vp',
+        #'cost_o_1_vp', 
+        #'cost_o_2_vp',
         #'cost_o_1_vh', 
         #'cost_o_2_vh', 
         #'cost_o_1_h', 
         #'cost_o_2_h', 
-        #'restraint.bias',
-        #'up_c_pro.bias',
-        #'up_c_pro.force2', 
+        #'restraintbias',
+        #'up_c_vpbias',
+        #'up_c_vp.force2', 
         #'dist_o_0_h',
-        #'up_o_0_h.bias', 
+        #'up_o_0_hbias', 
         #'up_o_0_h.force2', 
         #'cost_o_0_h', 
-        #'dist_pro_o_1', 
-        #'dist_pro_o_2', 
+        #'dist_vp_o_1', 
+        #'dist_vp_o_2', 
         #'dist_o_1_vh', 
         #'dist_o_2_vh'
-    }
+    ]
 )
+'''
