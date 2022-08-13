@@ -22,8 +22,8 @@ def def_plt(
     ax.set_xlabel('Time(ps)')
     ax.set_ylabel('CV')
     if str_save:
-        plt.savefig(str_save, bbox_inches='tight')
-    plt.show()
+        ax.savefig(str_save, bbox_inches='tight')
+    #plt.show()
 
 dict_label = {
     "dist_vp_c": 'R(CP)',
@@ -56,14 +56,14 @@ def_plt(
     list_label = [
         "dist_vp_c",
     ],
-    str_save = 'cv.dist_vp_c.pdf'
+    #str_save = 'cv.dist_vp_c.pdf'
 )
 
 def_plt(
     list_label = [
         'del_cn_o_h',
     ],
-    str_save = 'cv.del_cn_o_h.pdf'
+    #str_save = 'cv.del_cn_o_h.pdf'
 )
 def_plt(
     list_label = [
@@ -71,13 +71,12 @@ def_plt(
         'cost_o_2_h', 
         'cost_o_0_h', 
     ],
-    str_save = 'cv.cost.pdf'
+    #str_save = 'cv.cost.pdf'
 )
-'''
 def_plt(
     list_label = [
         'dist_o_0_h',
     ],
-    str_save = 'cv.dist_o_0_h.pdf'
+    #str_save = 'cv.dist_o_0_h.pdf'
 )
-'''
+plt.show()
