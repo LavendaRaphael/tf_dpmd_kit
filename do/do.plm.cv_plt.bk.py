@@ -2,28 +2,27 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def def_plt(
-    list_label: list,
-    str_save: str = None
+    list2d_label: list[list],
 ) -> None:
     """
 
     """
-    fig, ax = plt.subplots()
+    int_nplot = len(list2d_label)
+    fig, axs = plt.subplots(int_nplot, 1, sharex='all', sharey='all')
     
     with open('COLVAR', 'r') as colvar:
         list_header = colvar.readline().split()[2:]
     data = np.genfromtxt("COLVAR", dtype=None, names=list_header)
     #print(data.dtype)
     
-    for str_header in list_label:
-        ax.plot(data['time'], data[str_header], label=dict_label[str_header])
+    for int_i in range(int_nplot):
+        list_label = list2d_label[int_i]
+        for str_header in list_label:
+            axs[int_i].plot(data['time'], data[str_header], label=dict_label[str_header])
     
-    ax.legend()
-    ax.set_xlabel('Time(ps)')
-    ax.set_ylabel('CV')
-    if str_save:
-        fig.savefig(str_save, bbox_inches='tight')
-    #plt.show()
+    axs[0].legend()
+    axs[0].set_xlabel('Time(ps)')
+    axs[0].set_ylabel('CV')
 
 dict_label = {
     "dist_vp_c": 'R(CP)',
@@ -53,30 +52,11 @@ dict_label = {
 
 
 def_plt(
-    list_label = [
-        "dist_vp_c",
-    ],
-    #str_save = 'cv.dist_vp_c.pdf'
-)
-
-def_plt(
-    list_label = [
-        'del_cn_o_h',
-    ],
-    #str_save = 'cv.del_cn_o_h.pdf'
-)
-def_plt(
-    list_label = [
-        'cost_o_1_h', 
-        'cost_o_2_h', 
-        'cost_o_0_h', 
-    ],
-    #str_save = 'cv.cost.pdf'
-)
-def_plt(
-    list_label = [
-        'dist_o_0_h',
-    ],
-    #str_save = 'cv.dist_o_0_h.pdf'
+    list2d_label = [
+        ["dist_vp_c"],
+        ['del_cn_o_h'],
+        ['cost_o_1_h','cost_o_2_h','cost_o_0_h'],
+        ['dist_o_0_h'],
+    ]
 )
 plt.show()
