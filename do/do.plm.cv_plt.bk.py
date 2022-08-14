@@ -8,7 +8,7 @@ def def_plt(
 
     """
     int_nplot = len(list2d_label)
-    fig, axs = plt.subplots(int_nplot, 1, sharex='all', sharey='all')
+    fig, axs = plt.subplots(int_nplot, 1, sharex='all')
     
     with open('COLVAR', 'r') as colvar:
         list_header = colvar.readline().split()[2:]
@@ -21,7 +21,7 @@ def def_plt(
             axs[int_i].plot(data['time'], data[str_header], label=dict_label[str_header])
     
     axs[0].legend()
-    axs[0].set_xlabel('Time(ps)')
+    axs[-1].set_xlabel('Time(ps)')
     axs[0].set_ylabel('CV')
 
 dict_label = {
