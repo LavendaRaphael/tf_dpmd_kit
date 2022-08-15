@@ -19,8 +19,7 @@ def def_plt(
         list_label = list2d_label[int_i]
         for str_header in list_label:
             axs[int_i].plot(data['time'], data[str_header], label=dict_label[str_header])
-    
-    axs[0].legend()
+            axs[int_i].legend() 
     axs[-1].set_xlabel('Time(ps)')
     axs[0].set_ylabel('CV')
 
