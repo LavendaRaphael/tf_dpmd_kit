@@ -9,12 +9,10 @@ def def_plt(
     """
     int_nplot = len(list2d_label)
     fig, axs = plt.subplots(int_nplot, 1, sharex='all')
-    
     with open('COLVAR', 'r') as colvar:
         list_header = colvar.readline().split()[2:]
     data = np.genfromtxt("COLVAR", dtype=None, names=list_header)
     #print(data.dtype)
-    
     for int_i in range(int_nplot):
         list_label = list2d_label[int_i]
         for str_header in list_label:
@@ -24,37 +22,48 @@ def def_plt(
     axs[0].set_ylabel('CV')
 
 dict_label = {
-    "dist_vp_c": 'R(CP)',
-    "cn_o_1_h": None,
-    'cn_o_2_h': None,
-    'del_cn_o_h': 'cn(O\N{SUBSCRIPT ONE}H)-cn(O\N{SUBSCRIPT TWO}H)',
-    'cn_o_1_vp': None,
-    'cn_o_2_vp': None,
-    'cost_o_1_vp': None, 
-    'cost_o_2_vp': None,
-    'cost_o_1_vh': None, 
-    'cost_o_2_vh': None, 
-    'cost_o_1_h': 'cos dh(O\N{SUBSCRIPT ONE}H)', 
-    'cost_o_2_h': 'cos dh(O\N{SUBSCRIPT TWO}H)', 
-    'restraintbias': None,
-    'up_c_vpbias': None,
-    'up_c_vp.force2': None, 
-    'dist_o_0_h': 'R(O\N{SUBSCRIPT ZERO}H)',
-    'up_o_0_hbias': None, 
-    'up_o_0_h.force2': None, 
-    'cost_o_0_h': 'cos dh(O\N{SUBSCRIPT ZERO}H)', 
-    'dist_vp_o_1': None, 
-    'dist_vp_o_2': None, 
-    'dist_o_1_vh': None, 
-    'dist_o_2_vh': None
-}
+    'dist_vp_o_1': None,
+    'dist_vp_o_2': None,
+    'dist_vp_c': None,
 
+    'cn_o_1_h': None,
+    'cn_o_2_h': None,
+    'del_cn_o_h': None,
+
+    'cost_o_1_vh': None, 
+    'cost_o_2_vh': None,
+    'cost_o_h': 'cos dh(OH)',
+    'cost_o_1_h': None,
+    'cost_o_2_h': None,
+
+    'dist_o_0_h': 'R(O\N{SUBSCRIPT ZERO}H)',
+    'cost_o_0_h': 'cos dh(O\N{SUBSCRIPT ZERO}H)', 
+
+    'pathspath': None,
+    'pathzpath': None
+}
+for str_key in dict_label.keys():
+    if not dict_label[str_key]:
+        dict_label[str_key] = str_key
+#'''
 def_plt(
     list2d_label = [
-        ["dist_vp_c"],
-        ['del_cn_o_h'],
-        ['cost_o_1_h','cost_o_2_h','cost_o_0_h'],
-        ['dist_o_0_h'],
+        ['dist_vp_o_1','dist_vp_o_2'],
+        ['cost_o_h'],
+        ['cn_o_1_h','cn_o_2_h'],
+        ['cost_o_1_vh','cost_o_2_vh'],
+        ['dist_o_0_h','cost_o_0_h'],
     ]
 )
+'''
+def_plt(
+    list2d_label = [
+        ['dist_vp_c'],
+        ['cn_o_1_h','cn_o_2_h','del_cn_o_h'],
+        ['cost_o_1_h','cost_o_2_h'],
+        ['pathspath','pathzpath'],
+        ['dist_o_0_h','cost_o_0_h'],
+    ]
+)
+'''
 plt.show()
