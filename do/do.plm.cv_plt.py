@@ -9,6 +9,8 @@ def def_plt(
     """
     int_nplot = len(list2d_label)
     fig, axs = plt.subplots(int_nplot, 1, sharex='all')
+    if int_nplot==1:
+        axs = [axs]
     with open('COLVAR', 'r') as colvar:
         list_header = colvar.readline().split()[2:]
     data = np.genfromtxt("COLVAR", dtype=None, names=list_header)
@@ -49,10 +51,12 @@ for str_key in dict_label.keys():
 def_plt(
     list2d_label = [
         ['dist_vp_o_1','dist_vp_o_2'],
-        ['cost_o_h'],
-        ['cn_o_1_h','cn_o_2_h'],
-        ['cost_o_1_vh','cost_o_2_vh'],
-        ['dist_o_0_h','cost_o_0_h'],
+        #['cost_o_h'],
+        #['pathspath'],
+        #['pathzpath'],
+        #['cn_o_1_h','cn_o_2_h'],
+        #['cost_o_1_vh','cost_o_2_vh'],
+        #['dist_o_0_h','cost_o_0_h'],
     ]
 )
 '''
