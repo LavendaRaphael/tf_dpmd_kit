@@ -30,6 +30,8 @@ dict_label = {
 
     'distx_vp_o_1': None,
     'distx_vp_o_2': None,
+    'cnx_vp_o_1': None,
+    'cnx_vp_o_2': None,
 
     'cn_o_1_h': None,
     'cn_o_2_h': None,
@@ -55,21 +57,12 @@ def_plt(
     list2d_label = [
         ['distx_vp_o_1','distx_vp_o_2'],
         ['cost_o_h'],
-        ['pathspath'],
-        ['pathzpath'],
-        ['dist_o_0_h','cost_o_0_h'],
-        ['dist_vp_o_1','dist_vp_o_2'],
+        #['pathspath'],
+        #['pathzpath'],
+        ['dist_o_0_h'],
+        ['cost_o_0_h'],
+        #['cnx_vp_o_1','cnx_vp_o_2']
+        ['cn_o_1_h','cn_o_2_h'],
     ]
 )
-'''
-def_plt(
-    list2d_label = [
-        ['dist_vp_c'],
-        ['cn_o_1_h','cn_o_2_h','del_cn_o_h'],
-        ['cost_o_1_h','cost_o_2_h'],
-        ['pathspath','pathzpath'],
-        ['dist_o_0_h','cost_o_0_h'],
-    ]
-)
-'''
 plt.show()
