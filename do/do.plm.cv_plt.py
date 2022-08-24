@@ -73,10 +73,10 @@ def_plt(
         ['dist_o_0_h'],
         ['cost_o_0_h'],
         #['cnx_vp_o_1','cnx_vp_o_2'],
-        ['restraintbias'],
+        #['restraintbias'],
     ],
     dict_windows = {
-        'list_range': [86750,86950],
+        'list_range': [0, 10000000],
         'int_stride': 20
     }
 )
