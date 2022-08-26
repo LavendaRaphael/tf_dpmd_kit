@@ -56,8 +56,6 @@ dict_label = {
 
     'pathspath': None,
     'pathzpath': None,
-    
-    'restraintbias': None
 }
 for str_key in dict_label.keys():
     if not dict_label[str_key]:
@@ -73,7 +71,6 @@ def_plt(
         ['dist_o_0_h'],
         ['cost_o_0_h'],
         #['cnx_vp_o_1','cnx_vp_o_2'],
-        #['restraintbias'],
     ],
     dict_windows = {
         'list_range': [0, 10000000],

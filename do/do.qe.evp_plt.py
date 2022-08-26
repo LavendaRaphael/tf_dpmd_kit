@@ -12,8 +12,9 @@ matplotlib.rcParams['font.sans-serif']=["Arial"]
 
 fig, ax = pyplot.subplots()
 
-ax.plot( np_evp[23:,1], np_evp[23:,2], label = 'Ekin_e', linewidth=2)
-ax.plot( np_evp[23:,1], (np_evp[23:,7]-np_evp[23:,5])/10, label = 'Ekin_ion/10', linewidth=2)
+#ax.plot( np_evp[23:,1], np_evp[23:,2], label = 'Ekin_e', linewidth=2)
+ax.plot( np_evp[23:,1], np_evp[23:,4], label = 'Ekin_e', linewidth=2)
+#ax.plot( np_evp[23:,1], (np_evp[23:,7]-np_evp[23:,5])/10, label = 'Ekin_ion/10', linewidth=2)
 
 ax.legend()
 ax.set_xlabel('Time (ps)')

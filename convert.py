@@ -35,16 +35,10 @@ def def_poscar2perturb(
     for int_i in range(int_perturb):
         dp_sys_perturb.to( 'vasp/poscar', os.path.join(str_dir, f'{int_i:02d}.POSCAR'), frame_idx=int_i )
 
-def def_cp2pwscf(
+def def_xdatcar2pwscf(
         np_snap
-        ):
+):
     print(np_snap)
-    dp_sys = dpdata.System(
-        file_name = 'cp',
-        fmt = 'qe/cp/traj',
-        )
-    print(dp_sys)
-    print(dp_sys['cells'][0])
     
     dict_pwscfin = {}
     dict_pwscfin['CONTROL'] = {
@@ -63,24 +57,11 @@ def def_cp2pwscf(
         'C': 'C_HSCV_PBE-1.0.UPF'
         }
     
-    str_in = 'pwscf.in'
-    str_log = 'pwscf.out'
-    str_command = "if [ -f please.stop ]; then true; else"
-    str_command += " cat $PBS_NODEFILE|sort -u|xargs echo 'NODE:'"
-    str_command += " && mpirun qe.7.1_libxc_pw.x < "+str_in
-    str_command += " && if [ -f please.continue ]; then false; fi; fi"
-    dict_task = {
-        "command": str_command,
-        "forward_files": [
-            str_in
-            ],
-        "backward_files": [
-            str_log
-            ],
-        'outlog': str_log,
-        'errlog': str_log
-        }
-    ase_atoms = dp_sys.to('ase/structure')
+    ase_atoms = ase.io.read(
+        filename = 'XDATCAR',
+        format = 'vasp-xdatcar',
+        index=':'
+    )
 
     if (not os.path.exists('../snap')):
         os.mkdir('../snap')
@@ -99,13 +80,9 @@ def def_cp2pwscf(
             pseudopotentials = dict_pwpseudop 
             )
     
-        dict_task['task_work_path'] = str_dir
-        with open('task.json', 'w') as open_json:
-            json.dump( dict_task, fp=open_json, indent=4 )
-    
         os.chdir('..')
 
-def def_dump2ase(
+def def_dpgen2ase(
         array_id,
         type_map,       # ["O", "H"]
         ):
