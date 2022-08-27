@@ -2,7 +2,8 @@ import MDAnalysis as mda
 from MDAnalysis.analysis.rdf import InterRDF
 
 mda_universe = mda.Universe('traj.pdb', format="PDB", dt=0.0005)
-print(mda_universe.trajectory)
+print(mda_universe.trajectory[0])
+print(mda_universe.trajectory[1])
 mda_atomgroup_1 = mda_universe.select_atoms("element O")
 mda_atomgroup_2 = mda_universe.select_atoms("element O")
 mda_rdf = InterRDF(

@@ -5,11 +5,12 @@ import os
 # data
 list2d_dirdata = []
 #'''
-list2d_dirdata.append(['rdf.c.o_w.0010000_0360000.npy', 'C-O_w' ])
-list2d_dirdata.append(['rdf.o_1.h_w.0010000_0360000.npy', 'O_=-H_w' ])
-list2d_dirdata.append(['rdf.o_0_2.h_w.0010000_0360000.npy', 'O_h-O_w' ])
-list2d_dirdata.append(['rdf.h_0_1.o_w.0010000_0360000.npy', 'H_c-O_w' ])
+#list2d_dirdata.append(['rdf.c.o_w.0010000_0360000.npy', 'C-O_w' ])
+#list2d_dirdata.append(['rdf.o_1.h_w.0010000_0360000.npy', 'O_=-H_w' ])
+#list2d_dirdata.append(['rdf.o_0_2.h_w.0010000_0360000.npy', 'O_h-O_w' ])
+#list2d_dirdata.append(['rdf.h_0_1.o_w.0010000_0360000.npy', 'H_c-O_w' ])
 list2d_dirdata.append(['rdf.o_w.o_w.0010000_0360000.npy', 'O_w-O_w' ])
+list2d_dirdata.append(['rdf.test.o_w.o_w.0010000_0360000.npy', 'test' ])
 #'''
 
 # common
@@ -18,7 +19,7 @@ fig, ax = plt.subplots()
 
 for list_dirdata in list2d_dirdata:
     array_rdf = np.load( os.path.join(list_dirdata[0]) )
-    ax.plot(
+    ax.scatter(
         array_rdf[0], 
         array_rdf[1], 
         label = list_dirdata[1],
