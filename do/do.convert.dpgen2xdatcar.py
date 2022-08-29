@@ -4,7 +4,7 @@ import numpy
 
 array_id = numpy.arange(400000,800000,100)
 
-ase_atoms = convert.def_dump2ase(
+ase_atoms = convert.def_dpgen2ase(
     array_id = array_id,
     type_map = ["O", "H", "C"])
 

@@ -1,107 +1,99 @@
 from matplotlib import pyplot as plt
+import matplotlib
 import numpy as np
 import os
+from matplotlib import rc
 
-# env
-str_homedir = os.environ['homedir']
+# def
 
-# setup
+def def_rdf_plt_compare(
+    list2d_data,
+    tup_xrange,
+    tup_yrange,
+    str_save,
+    str_title
+) -> None:
 
-array_id = np.array([1600000,2000000])
+    rc('font',**{'size':15, 'family':'sans-serif','sans-serif':['Arial']})
+
+    fig, ax = plt.subplots()
+    
+    for list_data in list2d_data:
+        array_rdf = np.loadtxt( 
+            fname = list_data[0],
+            delimiter = ','
+        )
+        ax.plot(
+            array_rdf[:,0], 
+            array_rdf[:,1], 
+            label = list_data[1],
+        )
+    ax.legend()
+    ax.set_title(str_title)
+    ax.set_xlabel('r (Å)')
+    ax.set_ylabel('RDF')
+    ax.set_xlim(tup_xrange)
+    ax.set_ylim(tup_yrange)
+    fig.set_size_inches(8, 6)
+    if str_save:
+        fig.savefig(str_save, bbox_inches='tight')
 
 # data
-list2d_dirdata = []
-#'''
-list2d_dirdata.append( [ '../../validation_test/struc49000_4md/iter.000000/01.model_devi/task.000.000000', 'Steps 1e6' ] )
-list2d_dirdata.append( [ '', 'Steps 8e6' ] )
-str_filesaveinsert = 'steps'
-#'''
-'''
-list2d_dirdata.append( [ 'validation_49000_4pb/iter.000000/01.model_devi/task.000.000000', '49000' ] )
-list2d_dirdata.append( [ 'validation_0/iter.000000/01.model_devi/task.000.000000', '0' ] )
-str_filesaveinsert = 'init'
-#'''
-'''
-list2d_dirdata.append( [ 'validation_49000_4pb/iter.000000/01.model_devi/task.000.000000', 'taut 0.05' ] )
-list2d_dirdata.append( [ 'validation_49000_taut0.1/iter.000000/01.model_devi/task.000.000000', 'taut 0.1' ] )
-str_filesaveinsert = 'taut'
-#'''
-'''
-list2d_dirdata.append( [ 'task.000.000000', '0' ] )
-list2d_dirdata.append( [ 'task.001.000000', '1' ] )
-list2d_dirdata.append( [ 'task.002.000000', '3' ] )
-list2d_dirdata.append( [ 'task.003.000000', '4' ] )
-str_filesaveinsert = 'model'
-#'''
 
-# ref
+list_ref_2009_JPCB = ['/home/faye/research/202203_MDCarbonicAcid/record/ref/2009_JPCB_KumarPPadma', 'BLYP 310K 46Mol (2009 Kumar P. Padma)']
+list_ref_2014_ChemComm = ['/home/faye/research/202203_MDCarbonicAcid/record/ref/2014_ChemComm_SandeepKReddy', 'BLYP+vdW 64Mol (2014 Sandeep K. Reddy)']
+str_label_mine = 'SCAN 330K 127Mol (Mine)'
 
-'''
-tuple_elements = ('O','O')
-str_fileref = os.path.join(str_homedir,'research/202112_MDMisc/record/ref/2022_naturecom_xifanwu/sf3_a.csv')
-str_ylabel = r'$g_{\mathrm{OO}}$ (r)'
-tuple_xlim = (2,6)
-tuple_ylim = (0,3)
-
-'''
-tuple_elements = ('O','H')
-str_fileref = os.path.join(str_homedir,'research/202112_MDMisc/record/ref/2022_naturecom_xifanwu/sf3_b.csv')
-str_ylabel = r'$g_{\mathrm{OH}}$ (r)'
-tuple_xlim = (0.5,4.5)
-tuple_ylim = (0,2)
-#'''
-
-# common
-
-def gen_filename(
-        tuple_elements,
-        array_id,
-        ):
-    return f'rdf.{tuple_elements[0]}_{tuple_elements[1]}.{array_id[0]:07d}_{array_id[-1]:07d}.npy'
-def gen_filesave(
-        tuple_elements,
-        array_id,
-        ):
-    return f'rdf.compare_{str_filesaveinsert}.{tuple_elements[0]}_{tuple_elements[1]}.{array_id[0]:07d}_{array_id[-1]:07d}.pdf'
-
-fig, ax = plt.subplots()
-
-str_filerdf = gen_filename(
-    tuple_elements = tuple_elements,
-    array_id = array_id,
-    )
-str_filesave = gen_filesave(
-    tuple_elements = tuple_elements,
-    array_id = array_id,
-    )
-
-for list_dirdata in list2d_dirdata:
-    array_rdf = np.load( os.path.join(list_dirdata[0], str_filerdf) )
-    ax.plot(
-        array_rdf[0], 
-        array_rdf[1], 
-        label = list_dirdata[1],
-        )
-
-array_ref = np.genfromtxt(
-    fname = str_fileref,
-    delimiter = ',',
-    )
-ax.plot(
-    array_ref[:,0], 
-    array_ref[:,1], 
-    label = 'Ref',
-    marker='o', 
-    linestyle = '',
-    markersize=2
-    )
-
-ax.legend()
-ax.set_xlabel('r (Å)')
-ax.set_ylabel(str_ylabel)
-ax.set_xlim(tuple_xlim)
-ax.set_ylim(tuple_ylim)
-fig. set_size_inches(8, 4)
-plt.savefig(str_filesave, bbox_inches='tight')
-plt.show()
-
+def_rdf_plt_compare(
+    list2d_data = [
+        ['rdf.c.o_w.0001000_0036000.csv', str_label_mine],
+        [os.path.join(list_ref_2009_JPCB[0], 'Fig_2.a.TT.csv'), list_ref_2009_JPCB[1]]
+    ],
+    tup_xrange = (2,6),
+    tup_yrange = (0,2.5),
+    str_save = f'rdf_ref.c.o_w.pdf',
+    str_title = r'C-O$_W$'
+)
+def_rdf_plt_compare(
+    list2d_data = [
+        ['rdf.o_1.h_w.0001000_0036000.csv', str_label_mine],
+        [os.path.join(list_ref_2009_JPCB[0], 'Fig_2.b.TT.csv'), list_ref_2009_JPCB[1]],
+        [os.path.join(list_ref_2014_ChemComm[0], 'Fig_6.a.TT.csv'), list_ref_2014_ChemComm[1]]
+    ],
+    tup_xrange = (1,6),
+    tup_yrange = (0,2),
+    str_save = 'rdf_ref.o_1.h_w.pdf',
+    str_title = r'$^=$O-H$_W$'
+)
+def_rdf_plt_compare(
+    list2d_data = [
+        ['rdf.o_0_2.h_w.0001000_0036000.csv', str_label_mine],
+        [os.path.join(list_ref_2009_JPCB[0], 'Fig_2.c.TT.csv'), list_ref_2009_JPCB[1]]
+    ],
+    tup_xrange = (1,6),
+    tup_yrange = (0,2),
+    str_save = 'rdf_ref.o_0_2.h_w.pdf',
+    str_title = r'O$_H$-H$_W$'
+)
+def_rdf_plt_compare(
+    list2d_data = [
+        ['rdf.h_0_1.o_w.0001000_0036000.csv', str_label_mine],
+        [os.path.join(list_ref_2009_JPCB[0], 'Fig_2.d.TT.csv'), list_ref_2009_JPCB[1]],
+        [os.path.join(list_ref_2014_ChemComm[0], 'Fig_6.b.TT.csv'), list_ref_2014_ChemComm[1]]
+    ],
+    tup_xrange = (1,6),
+    tup_yrange = (0,3),
+    str_save = 'rdf_ref.h_0_1.o_w.pdf',
+    str_title = r'H$_O$-O$_W$'
+)
+def_rdf_plt_compare(
+    list2d_data = [
+        ['rdf.o_w.o_w.0001000_0036000.csv', str_label_mine],
+        [os.path.join(list_ref_2009_JPCB[0], 'Fig_3.TT.csv'), list_ref_2009_JPCB[1]]
+    ],
+    tup_xrange = (2,6),
+    tup_yrange = (0,4),
+    str_save = 'rdf_ref.o_w.o_w.pdf',
+    str_title = r'O$_W$-O$_W$'
+)
+plt.show() 

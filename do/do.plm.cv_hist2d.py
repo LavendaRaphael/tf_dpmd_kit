@@ -64,7 +64,7 @@ for str_key in dict_label.keys():
     if not dict_label[str_key]:
         dict_label[str_key] = str_key
 
-#'''
+'''
 def_plt(
     str_x = 'dist_vp_o_1',
     str_y = 'cn_o_1_h',
@@ -72,7 +72,7 @@ def_plt(
     #str_save = 'cv.prob.2d.dist_vp_c.del_dist.pdf'
 )
 #'''
-#'''
+'''
 def_plt(
     str_x = 'dist_vp_o_2',
     str_y = 'cn_o_2_h',
@@ -80,12 +80,12 @@ def_plt(
     #str_save = 'cv.prob.2d.dist_vp_c.del_dist.pdf'
 )
 #'''
-'''
+#'''
 def_plt(
     str_x = 'dist_vp_c',
     str_y = 'del_dist_vp_o',
     #list2d_range = None,
-    str_save = 'cv.prob.2d.dist_vp_c.del_dist.pdf'
+    str_save = 'cv.prob2d.dist_vp_c.del_dist.pdf'
 )
 #'''
 '''
