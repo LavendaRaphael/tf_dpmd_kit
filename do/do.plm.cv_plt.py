@@ -32,9 +32,10 @@ def def_plt(
     axs[0].set_ylabel('CV')
 
 dict_label = {
-    'dist_vp_o_1': None,
-    'dist_vp_o_2': None,
-    'dist_vp_c': None,
+    'dist_vp_o_1': 'R(O\N{SUBSCRIPT ONE}V\N{Latin Subscript Small Letter P})',
+    'dist_vp_o_2': 'R(O\N{SUBSCRIPT TWO}V\N{Latin Subscript Small Letter P})',
+    'del_dist_vp_o': '\N{Greek Capital Letter Delta}R(OV\N{Latin Subscript Small Letter P})',
+    'dist_vp_c': 'R(CV\N{Latin Subscript Small Letter P})',
 
     'distx_vp_o_1': None,
     'distx_vp_o_2': None,
@@ -56,6 +57,8 @@ dict_label = {
 
     'pathspath': None,
     'pathzpath': None,
+
+    'metadbias': None,
 }
 for str_key in dict_label.keys():
     if not dict_label[str_key]:
@@ -63,18 +66,17 @@ for str_key in dict_label.keys():
 #'''
 def_plt(
     list2d_label = [
-        ['cn_o_1_h','cn_o_2_h'],
         ['dist_vp_c'],
+        ['del_dist_vp_o'],
         ['cost_o_h'],
-        #['pathspath'],
-        #['pathzpath'],
-        ['dist_o_0_h'],
-        ['cost_o_0_h'],
-        #['cnx_vp_o_1','cnx_vp_o_2'],
+        ['metadbias'],
+        ['cn_o_1_h','cn_o_2_h'],
+        #['dist_o_0_h'],
+        #['cost_o_0_h'],
     ],
     dict_windows = {
-        'list_range': [0, 10000000],
-        'int_stride': 20
+        'list_range': [936400, 936600],
+        'int_stride': 10
     }
 )
 plt.show()

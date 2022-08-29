@@ -87,7 +87,11 @@ def def_dpgen2ase(
         type_map,       # ["O", "H"]
         ):
     dp_sys = dpdata.System()
+    int_count = 0
     for int_i in array_id:
+        int_count += 1
+        if int_count % 100 == 0:
+            print(int_i)
         str_origin = f"traj/{int_i}.lammpstrj"
         dp_tmp = dpdata.System(str_origin, fmt='lammps/dump', type_map=type_map)
 

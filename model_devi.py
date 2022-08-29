@@ -6,8 +6,6 @@ import numpy as np
 import ase.io
 import dpdata
 
-
-
 def def_plt_devi_f():
     data = np.genfromtxt("model_devi.out", names=True)
     for name in ["max_devi_f"]:
@@ -16,7 +14,7 @@ def def_plt_devi_f():
     plt.xlabel('Step')
     plt.ylabel('max_devi_f')
     plt.grid()
-    plt.savefig('max_devi_f.pdf', bbox_inches='tight')
+    #plt.savefig('max_devi_f.pdf', bbox_inches='tight')
     plt.show()
 
 def def_model_devi_atom(
