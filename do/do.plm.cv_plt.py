@@ -22,13 +22,14 @@ def def_plt(
     list_range[0] = dict_windows['list_range'][0] // dict_windows['int_stride']
     list_range[1] = dict_windows['list_range'][1] // dict_windows['int_stride']
     data_windows = data[ list_range[0]:list_range[1] ]
+    list_frame = range(list_range[0], list_range[1])
 
     for int_i in range(int_nplot):
         list_label = list2d_label[int_i]
         for str_header in list_label:
-            axs[int_i].plot(data_windows['time'], data_windows[str_header], label=dict_label[str_header])
+            axs[int_i].plot(list_frame, data_windows[str_header], label=dict_label[str_header])
             axs[int_i].legend() 
-    axs[-1].set_xlabel('Time(ps)')
+    #axs[-1].set_xlabel('Time(ps)')
     axs[0].set_ylabel('CV')
 
 dict_label = {
@@ -46,6 +47,11 @@ dict_label = {
     'cn_o_2_h': None,
     'del_cn_o_h': None,
 
+    'cnx_o_1_h': None,
+    'cnx_o_2_h': None,
+    'up_cnx_o_1_hbias': None,
+    'up_cnx_o_2_hbias': None,
+
     'cost_o_1_vh': None, 
     'cost_o_2_vh': None,
     'cost_o_h': 'cos dh(OH)',
@@ -53,6 +59,7 @@ dict_label = {
     'cost_o_2_h': None,
 
     'dist_o_0_h': 'R(O\N{SUBSCRIPT ZERO}H)',
+    'up_o_0_hbias': None,
     'cost_o_0_h': 'cos dh(O\N{SUBSCRIPT ZERO}H)', 
 
     'pathspath': None,
@@ -71,11 +78,13 @@ def_plt(
         ['cost_o_h'],
         ['metadbias'],
         ['cn_o_1_h','cn_o_2_h'],
-        #['dist_o_0_h'],
-        #['cost_o_0_h'],
+        ['dist_o_0_h'],
+        ['cost_o_0_h'],
+        ['cnx_o_1_h', 'cnx_o_2_h'],
+        ['up_cnx_o_1_hbias', 'up_cnx_o_2_hbias']
     ],
     dict_windows = {
-        'list_range': [936400, 936600],
+        'list_range': [187850, 187950],
         'int_stride': 10
     }
 )

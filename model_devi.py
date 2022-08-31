@@ -1,5 +1,4 @@
 from ase import Atoms
-from deepmd.calculator import DP
 from numpy import linalg as LA
 from matplotlib import pyplot as plt 
 import numpy as np
@@ -24,7 +23,9 @@ def def_model_devi_atom(
         str_save,
         float_ylim = None
         ):
-    
+
+    from deepmd.calculator import DP
+
     ase_atoms = dp_sys.to('ase/structure')[0]
     
     int_natom = len(ase_atoms.get_atomic_numbers())
