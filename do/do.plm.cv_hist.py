@@ -40,8 +40,6 @@ dict_label = {
     'del_dist_vp_o': '\N{Greek Capital Letter Delta}R(OV\N{Latin Subscript Small Letter P})',
     'dist_vp_c': 'R(CV\N{Latin Subscript Small Letter P})',
 
-    'distx_vp_o_1': None,
-    'distx_vp_o_2': None,
     'cnx_vp_o_1': None,
     'cnx_vp_o_2': None,
 
@@ -58,37 +56,27 @@ dict_label = {
     'dist_o_0_h': 'R(O\N{SUBSCRIPT ZERO}H\N{SUBSCRIPT ZERO})',
     'cost_o_0_h': 'cos dh(O\N{SUBSCRIPT ZERO}H)', 
 
-    'pathspath': None,
-    'pathzpath': None,
+    'cnn_o_w_hmin': r'cn(O$_W$H)$_{min}$'
 }
 for str_key in dict_label.keys():
     if not dict_label[str_key]:
         dict_label[str_key] = str_key
 
-'''
-def_plt(
-    list2d_label = [
-        ['dist_vp_o_1', (2.0,2.5)],
-        ['dist_vp_o_2', (0,0.1)],
-    ],
-    str_save = 'cv.prob.dist_vp_o.pdf'
-)
 #'''
-'''
 def_plt(
     list2d_label = [
         ['dist_o_0_h', (0.9, 1.3)],
         ['cost_o_0_h', (-1, -0.9)],
+        ['cnn_o_w_hmin', (1.8,1.9)]
     ],
-    str_save = 'cv.prob.o0_dist_cost.pdf'
+    str_save = 'cv.prob.wall.pdf'
 )
 #'''
-#'''
+'''
 def_plt(
     list2d_label = [
         ['dist_vp_c', (1.2,1.5)],
         ['del_dist_vp_o', (2.1,2.4)],
-        #['del_cn_o_h', (-1.0,-0.8)],
         ['cost_o_h', (0.8,1)],
     ],
     str_save = 'cv.prob.dist_del_cost.pdf'
