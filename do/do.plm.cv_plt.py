@@ -37,6 +37,7 @@ dict_label = {
     'dist_vp_o_2': 'R(O\N{SUBSCRIPT TWO}V\N{Latin Subscript Small Letter P})',
     'del_dist_vp_o': '\N{Greek Capital Letter Delta}R(OV\N{Latin Subscript Small Letter P})',
     'dist_vp_c': 'R(CV\N{Latin Subscript Small Letter P})',
+    'up_vp_cbias': None,
 
     'distx_vp_o_1': None,
     'distx_vp_o_2': None,
@@ -77,6 +78,7 @@ def_plt(
         ['del_dist_vp_o'],
         ['cost_o_h'],
         ['metadbias'],
+        ['up_vp_cbias'],
         ['cn_o_1_h','cn_o_2_h'],
         ['dist_o_0_h'],
         ['cost_o_0_h'],
@@ -84,7 +86,7 @@ def_plt(
         ['up_cnx_o_1_hbias', 'up_cnx_o_2_hbias']
     ],
     dict_windows = {
-        'list_range': [187850, 187950],
+        'list_range': [915850, 915950],
         'int_stride': 10
     }
 )
