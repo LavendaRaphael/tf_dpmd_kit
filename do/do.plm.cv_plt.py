@@ -48,15 +48,15 @@ def_plt(
         ['del_dist_vp_o'],
         ['cost_o_h'],
         ['metadbias'],
-        ['wall_vp_cbias'],
-        ['cn_o_1_h','cn_o_2_h'],
-        ['dist_o_0_h'],
-        ['cost_o_0_h'],
+        #['wall_vp_cbias'],
+        #['cn_o_1_h','cn_o_2_h'],
+        #['dist_o_0_h'],
+        #['cost_o_0_h'],
         ['cnn_o_w_hmin'],
         ['wall_cnn_o_w_hbias']
     ],
     dict_windows = {
-        'list_range': [1823720, 1823740],
+        'list_range': [1200000, 1600000],
         'timestep': 0.0005
     }
 )
