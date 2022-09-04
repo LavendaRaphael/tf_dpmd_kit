@@ -21,9 +21,13 @@ def def_plt(
     for int_i in range(int_nplot):
         str_header = list2d_header[int_i][0]
         tup_range = list2d_header[int_i][1]
+        if str_header not in dict_label:
+            str_label = str_header
+        else:
+            str_label = dict_label[str_header]
         axs[int_i].hist(
             data[str_header], 
-            label = dict_label[str_header],
+            label = str_label,
             bins = 100,
             range = tup_range,
             density = True
@@ -50,24 +54,26 @@ dict_label = {
     'cnn_o_w_hmin': r'cn(O$_W$H)$_{min}$'
 }
 
-#'''
+'''
 def_plt(
     list2d_header = [
         ['dist_o_0_h', (0.9, 1.3)],
-        ['cost_o_0_h', (-1, -0.9)],
-        ['cnn_o_w_hmin', (1.8,1.9)]
+        #['cost_o_0_h', (-1, -0.9)],
+        ['cnn_o_w_hmin', (1.8,1.9)],
+        ['cn_o_0_h', (0,0.01)]
     ],
     str_save = 'cv.prob.wall.pdf'
 )
 #'''
-'''
+#'''
 def_plt(
     list2d_header = [
         ['dist_vp_c', (1.2,1.5)],
         ['del_dist_vp_o', (2.1,2.4)],
-        ['cost_o_h', (0.8,1)],
+        #['cost_o_h', (0.8,1)],
+        ['dh_o_0_h', (2,3.1416)]
     ],
-    str_save = 'cv.prob.dist_del_cost.pdf'
+    str_save = 'cv.prob.metad.pdf'
 )
 #'''
 plt.show()
