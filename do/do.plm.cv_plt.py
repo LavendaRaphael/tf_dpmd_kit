@@ -15,7 +15,7 @@ def def_plt(
 
     with open('COLVAR', 'r') as colvar:
         list_header = colvar.readline().split()[2:]
-    data = np.genfromtxt("COLVAR", dtype=None, names=list_header)
+    data = np.genfromtxt("COLVAR", dtype=None, names=list_header, invalid_raise=False)
     #print(data.dtype)
 
     data_windows = data[ dict_windows['list_range'][0]:dict_windows['list_range'][1] ]
@@ -46,17 +46,18 @@ def_plt(
     list2d_header = [
         ['dist_vp_c'],
         ['del_dist_vp_o'],
-        ['cost_o_h'],
-        ['metadbias'],
+        #['dh_o_0_h'],
+        #['cost_o_h'],
+        #['metadbias'],
         #['wall_vp_cbias'],
-        #['cn_o_1_h','cn_o_2_h'],
-        #['dist_o_0_h'],
-        #['cost_o_0_h'],
+        ['cn_o_1_h','cn_o_2_h'],
+        ['dist_o_0_h'],
+        ['cost_o_0_h'],
         ['cnn_o_w_hmin'],
-        ['wall_cnn_o_w_hbias']
+        #['wall_cnn_o_w_hbias']
     ],
     dict_windows = {
-        'list_range': [1200000, 1600000],
+        'list_range': [0, 2000000],
         'timestep': 0.0005
     }
 )
