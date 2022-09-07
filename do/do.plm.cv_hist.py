@@ -54,18 +54,17 @@ dict_label = {
     'cnn_o_w_hmin': r'cn(O$_W$H)$_{min}$'
 }
 
-'''
+#'''
 def_plt(
     list2d_header = [
         ['dist_o_0_h', (0.9, 1.3)],
-        #['cost_o_0_h', (-1, -0.9)],
         ['cnn_o_w_hmin', (1.8,1.9)],
         ['cn_o_0_h', (0,0.01)]
     ],
     str_save = 'cv.prob.wall.pdf'
 )
 #'''
-#'''
+'''
 def_plt(
     list2d_header = [
         ['dist_vp_c', (1.2,1.5)],
