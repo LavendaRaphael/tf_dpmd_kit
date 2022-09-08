@@ -15,7 +15,7 @@ def def_plt(
 
     with open('COLVAR', 'r') as colvar:
         list_header = colvar.readline().split()[2:]
-    data = np.genfromtxt("COLVAR", dtype=None, names=list_header)
+    data = np.genfromtxt("COLVAR", dtype=None, names=list_header, invalid_raise=False)
     #print(data.dtype)
 
     h, xedges, yedges, image = ax.hist2d(
@@ -73,7 +73,7 @@ def_plt(
 #'''
 def_plt(
     str_x = 'dist_vp_c',
-    str_y = 'del_dist_vp_o',
+    str_y = 'cost_o_0_h',
     #list2d_range = None,
     #str_save = 'cv.prob2d.dist_vp_c.del_dist.pdf'
 )
