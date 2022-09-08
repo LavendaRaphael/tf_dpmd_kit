@@ -46,7 +46,7 @@ def_plt(
     list2d_header = [
         ['dist_vp_c'],
         ['cost_o_0_h'],
-        #['metadbias'],
+        ['metadbias'],
         ['dist_o_0_h'],
         ['cn_o_0_h'],
         ['wall_cn_o_0_hbias'],
