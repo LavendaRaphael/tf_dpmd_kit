@@ -59,7 +59,7 @@ def_plt(
     str_x = 'dist_vp_c',
     str_y = 'cost_o_0_h',
     #list2d_range = None,
-    #str_save = 'cv.prob2d.dist_vp_c.del_dist.pdf'
+    str_save = 'cv.prob2d.dist_vp_c.cost_o_0_h.pdf'
 )
 #'''
 plt.show()
