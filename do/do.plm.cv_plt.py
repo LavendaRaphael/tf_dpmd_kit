@@ -47,10 +47,13 @@ def_plt(
         ['dist_vp_c'],
         ['cost_o_0_h'],
         ['metadbias'],
+        ['wall_vp_cbias'],
         ['dist_o_0_h'],
+        ['wall_dist_o_0_hbias'],
         ['cn_o_0_h'],
         ['wall_cn_o_0_hbias'],
         ['cnn_o_w_hmin'],
+        ['wall_cnn_o_w_hbias']
     ],
     dict_windows = {
         'list_range': [0, 2000000],

@@ -7,8 +7,7 @@ import dpdata
 
 def def_plt_devi_f():
     data = np.genfromtxt("model_devi.out", names=True)
-    for name in ["max_devi_f"]:
-        plt.plot(data['step'], data[name])
+    plt.plot(data['step'], data["max_devi_f"])
     plt.legend()
     plt.xlabel('Step')
     plt.ylabel('max_devi_f')
