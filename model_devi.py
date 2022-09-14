@@ -19,9 +19,9 @@ def def_model_devi_atom(
         list_model,
         dp_sys,
         float_lowthred,
-        str_save,
-        float_ylim = None
-        ):
+        str_save: str = None,
+        float_ylim: float = None
+):
 
     from deepmd.calculator import DP
 
@@ -65,5 +65,6 @@ def def_model_devi_atom(
     ax.set_xlabel("Atom index")
     ax.set_ylabel("Devi_f")
     ax.set_ylim(top=float_ylim)
-    plt.savefig(str_save, bbox_inches='tight')
+    if str_save:
+        fig.savefig(str_save, bbox_inches='tight')
     plt.show()

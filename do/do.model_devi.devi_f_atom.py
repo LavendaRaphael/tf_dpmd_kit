@@ -2,7 +2,7 @@ import dpdata
 from tf_dpmd_kit import model_devi
 import os
 
-dp_sys = dpdata.System(file_name="916100.lammpstrj", fmt='lammps/dump', type_map=["O","H","C"])
+dp_sys = dpdata.System(file_name="POSCAR", fmt="vasp/poscar")
 
 str_dir_iter = "../../"
 
