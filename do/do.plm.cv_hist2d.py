@@ -56,6 +56,13 @@ for str_key in dict_label.keys():
 
 #'''
 def_plt(
+    str_x = 'dhx_o_0_h',
+    str_y = 'dhx_o_1_2_vh',
+    #str_save = 'cv.prob2d.dist_vp_c.cost_o_0_h.pdf'
+)
+#'''
+'''
+def_plt(
     str_x = 'dist_vp_c',
     str_y = 'cost_o_0_h',
     #list2d_range = None,
