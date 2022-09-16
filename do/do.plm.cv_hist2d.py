@@ -25,7 +25,8 @@ def def_plt(
         range = list2d_range,
         density = True,
         cmin = 0.001,
-        norm = LogNorm()
+        norm = LogNorm(),
+        cmap = 'coolwarm'
     )
     fig.colorbar( mappable=image )
     if str_x not in dict_label:
@@ -49,6 +50,9 @@ dict_label = {
 
     'dist_o_0_h': 'R(O\N{SUBSCRIPT ZERO}H\N{SUBSCRIPT ZERO})',
     'cost_o_0_h': 'cos dh(O\N{SUBSCRIPT ZERO}H)', 
+
+    'dhx_o_0_h': r'dh (O$_0$H$_0$)',
+    'dhx_o_1_2_vh': r'dh (O$_1$V$_H$)'
 }
 for str_key in dict_label.keys():
     if not dict_label[str_key]:
@@ -58,7 +62,7 @@ for str_key in dict_label.keys():
 def_plt(
     str_x = 'dhx_o_0_h',
     str_y = 'dhx_o_1_2_vh',
-    #str_save = 'cv.prob2d.dist_vp_c.cost_o_0_h.pdf'
+    str_save = 'cv.prob2d.dh_o_h.pdf'
 )
 #'''
 '''

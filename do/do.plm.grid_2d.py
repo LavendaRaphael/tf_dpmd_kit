@@ -2,6 +2,9 @@ import numpy
 from matplotlib import pyplot as plt
 import numpy as np
 import matplotlib
+import pandas as pd
+import seaborn as sns
+import matplotlib.ticker as plticker
 
 matplotlib.rcParams['font.size']=15
 matplotlib.rcParams['font.family']='sans-serif'
@@ -17,24 +20,27 @@ def grid2d_plt(
         list_header = open_file.readline().split()[2:]
     np_data = np.genfromtxt(str_file, names=list_header)
     
-    x_list=np_data['dhx_o_0_h']
-    y_list=np_data['dhx_o_1_2_vh']
-    z_list=np_data['fes_dh_o_h']
+    x = np_data['dhx_o_0_h']
+    y = np_data['dhx_o_1_2_vh']
+    z = np_data['fes_dh_o_h']
 
-    N = int(len(z_list)**.5)
-    z = z_list.reshape(N, N)
-    image = ax.imshow(z, extent=(np.amin(x_list), np.amax(x_list), np.amin(y_list), np.amax(y_list)), aspect = 'auto')
+    N = int(len(z)**.5)
+    z = np.flip(z.reshape(N, N), axis=0)
+    image = ax.imshow(z, extent=(np.amin(x), np.amax(x), np.amin(y), np.amax(y)),
+            cmap='coolwarm')
+    fig.colorbar(image)
+    loc = plticker.MultipleLocator(base=1.0) # this locator puts ticks at regular intervals
+    ax.xaxis.set_major_locator(loc)
 
-    fig.colorbar(mappable=image)
-    ax.set_xlabel(r'DH(O_0H_0)')
-    ax.set_ylabel('DH(OH)')
+    ax.set_xlabel(r'dh (O$_0$H$_0$)')
+    ax.set_ylabel(r'dh (O$_1$V$_H$)')
     #fig.set_size_inches(8, 4)
     if str_save:
-        fig.savefig('fes.dist_vp_c.pdf', bbox_inches='tight')
+        fig.savefig(str_save, bbox_inches='tight')
 
 grid2d_plt(
-    str_file = 'fes.dh_o_h.grid'
-    #str_save = 
+    str_file = 'fes.dh_o_h.grid',
+    str_save = 'fes.dh_o_h.pdf'
 )
 
 plt.show()

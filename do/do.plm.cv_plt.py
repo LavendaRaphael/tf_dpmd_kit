@@ -45,6 +45,19 @@ dict_label = {
 def_plt(
     list2d_header = [
         ['dist_vp_c'],
+        ['dhx_o_0_h'],
+        ['dhx_o_1_2_vh']
+    ],
+    dict_windows = {
+        'list_range': [0, 2000000],
+        'timestep': 0.0005
+    }
+)
+#'''
+'''
+def_plt(
+    list2d_header = [
+        ['dist_vp_c'],
         ['cost_o_0_h'],
         ['metadbias'],
         ['uw_vp_cbias'],
@@ -60,4 +73,5 @@ def_plt(
         'timestep': 0.0005
     }
 )
+#'''
 plt.show()
