@@ -55,16 +55,18 @@ def def_plt(
     ax.set_xlabel(str_xlabel)
     ax.set_ylabel(str_ylabel)
     #fig.set_size_inches(4, 4)
-    plt.savefig('dptest.'+str_efv+'.pdf', bbox_inches='tight')
+    fig.savefig('dptest.'+str_efv+'.pdf', bbox_inches='tight')
     plt.show()
 
 def_plt(
     array_data = array_e,
     str_efv = 'e',
-    float_rmse = 0.6552798,
-    )
+    float_rmse = 0.44,
+)
+'''
 def_plt(
     array_data = array_f_norm,
     str_efv = 'f',
     float_rmse = 64.24218,
     )
+'''
