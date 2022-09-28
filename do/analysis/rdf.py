@@ -4,8 +4,7 @@ import numpy as np
 
 # read structrue
 
-float_dt = 0.00048378
-mda_universe = mda.Universe('traj.dump', format="LAMMPSDUMP", dt=float_dt)
+mda_universe = mda.Universe('traj.lammpstrj', format="LAMMPSDUMP")
 mda_universe.select_atoms("type 1").types = 'O'
 mda_universe.select_atoms("type 2").types = 'H'
 mda_universe.select_atoms("type 3").types = 'C'
@@ -23,10 +22,10 @@ dict_atomgroup = {
 # function
 
 def def_rdf(
-    str_atomgroup_0,
-    str_atomgroup_1,
+    str_atomgroup_0: str,
+    str_atomgroup_1: str,
     list2d_range: list[list],
-    dict_atomgroup,
+    dict_atomgroup: dict,
 ) -> None:
     int_nbins = 200
     
@@ -55,7 +54,10 @@ def def_rdf(
 # run
 
 list2d_range = [
-    [1000, 36000]
+    [     0,  50000],
+    [ 50000, 100000],
+    [100000, 150000],
+    [150000, 200000],
 ]
 
 def_rdf(

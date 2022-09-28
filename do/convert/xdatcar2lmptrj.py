@@ -8,7 +8,7 @@ ovito_pipeline = import_file(
 
 export_file( 
     data = ovito_pipeline, 
-    file = 'traj.dump', 
+    file = 'traj.lammpstrj', 
     format = 'lammps/dump',
     columns = ["Particle Identifier", "Particle Type", "Position.X", "Position.Y", "Position.Z"],
     multiple_frames = True

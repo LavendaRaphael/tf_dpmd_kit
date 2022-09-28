@@ -59,7 +59,6 @@ def def_plt(
     ax.set_xlim(tup_xlim)
     if str_save:
         fig.savefig(str_save, bbox_inches='tight')
-    plt.show()
 
 #'''
 def_plt(
@@ -78,3 +77,5 @@ def_plt(
     str_save = 'dptest.f.pdf'
 )
 #'''
+
+plt.show()
