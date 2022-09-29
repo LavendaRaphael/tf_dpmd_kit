@@ -1,76 +1,124 @@
 from matplotlib import pyplot as plt
 import numpy as np
-import os
+from matplotlib import rc
+
+def gen_filesave(
+    tup_elements: tuple,
+) -> list:
+
+    return f'rdf.{tup_elements[0]}.{tup_elements[1]}.test.pdf'
+
+def gen_filename(
+     tup_elements: tuple,
+     tup_id: tuple,
+) -> list:
+
+    return f'rdf.{tup_elements[0]}.{tup_elements[1]}.{tup_id[0]:07d}_{tup_id[-1]:07d}.csv'
+
+def gen_label(
+    float_timestep: float,
+    tup_id: tuple,
+):
+    int_start = int(tup_id[0]*float_timestep)
+    int_end = int(tup_id[-1]*float_timestep)
+    return f'{int_start}-{int_end}ps'
+
+def gen_listfile(
+    tup_elements: tuple,
+    list_id: list,
+    float_timestep: float
+) -> list:
+
+    list2d_file = []
+    for tup_id in list_id:
+        list2d_file.append([gen_filename(tup_elements, tup_id), gen_label(float_timestep, tup_id)])
+    return list2d_file
+
+def def_plt(
+    list2d_data,
+    tup_xrange,
+    tup_yrange,
+    str_save,
+    str_title
+) -> None:
+
+    rc('font',**{'size':15, 'family':'sans-serif','sans-serif':['Arial']})
+
+    fig, ax = plt.subplots()
+    
+    for list_data in list2d_data:
+        array_rdf = np.loadtxt( 
+            fname = list_data[0],
+            delimiter = ','
+        )
+        ax.plot(
+            array_rdf[:,0], 
+            array_rdf[:,1], 
+            label = list_data[1],
+        )
+    ax.legend()
+    ax.set_title(str_title)
+    ax.set_xlabel('r (Å)')
+    ax.set_ylabel('RDF')
+    ax.set_xlim(tup_xrange)
+    ax.set_ylim(tup_yrange)
+    fig.set_size_inches(8, 6)
+    if str_save:
+        fig.savefig(str_save, bbox_inches='tight')
 
 # setup
 
+list_id = []
 #'''
-tuple_elements = ('O','O')
-str_ylabel = r'$g_{\mathrm{OO}}$ (r)'
-tuple_xlim = (2,6)
-tuple_ylim = (0,3)
+list_id.append((      0, 50000))
+list_id.append((  50000,100000))
+list_id.append(( 100000,150000))
+list_id.append(( 150000,200000))
+#'''
 '''
-tuple_elements = ('O','H')
-str_ylabel = r'$g_{\mathrm{OH}}$ (r)'
-tuple_xlim = (0.5,4.5)
-tuple_ylim = (0,2)
+list_id.append((   4000, 8000))
+list_id.append((  14000,18000))
+list_id.append((  24000,28000))
+list_id.append((  34000,38000))
 #'''
 
-list_array_id = []
-list_array_id.append(np.array([       0, 400000]))
-list_array_id.append(np.array([  400000, 800000]))
-list_array_id.append(np.array([  800000,1200000]))
-list_array_id.append(np.array([ 1200000,1600000]))
-list_array_id.append(np.array([ 1600000,2000000]))
+float_timestep = 0.005
 
-# common
-str_homedir = os.environ['homedir']
-float_timestep = 0.0005
-
-def gen_filesave(
-        tuple_elements,
-        ):
-    return f'rdf.{tuple_elements[0]}_{tuple_elements[1]}.converge.pdf'
-def gen_filename(
-        tuple_elements,
-        array_id,
-        ):
-    return f'rdf.{tuple_elements[0]}_{tuple_elements[1]}.{array_id[0]:07d}_{array_id[-1]:07d}.npy'
-def gen_label(
-        float_timestep,
-        array_id,
-        ):
-    int_start = int(array_id[0]*float_timestep)
-    int_end = int(array_id[-1]*float_timestep)
-    return f'{int_start}-{int_end}ps'
-
-fig, ax = plt.subplots()
-for array_id in list_array_id:
-    str_filerdf = gen_filename(
-        tuple_elements = tuple_elements,
-        array_id = array_id,
-        )
-    array_rdf = np.load( str_filerdf )
-    str_label = gen_label(
-        float_timestep = float_timestep,
-        array_id = array_id,
-        )
-    ax.plot(
-        array_rdf[0], 
-        array_rdf[1], 
-        label = str_label,
-        )
-
-str_filesave = gen_filesave(
-    tuple_elements = tuple_elements,
-    )
-
-ax.legend()
-ax.set_xlabel('r (Å)')
-ax.set_ylabel(str_ylabel)
-ax.set_xlim(tuple_xlim)
-ax.set_ylim(tuple_ylim)
-fig. set_size_inches(8, 4)
-plt.savefig(str_filesave, bbox_inches='tight')
+def_plt(
+    list2d_data = gen_listfile(('c','o_w'), list_id, float_timestep),
+    tup_xrange = (2,6),
+    tup_yrange = (0,2.5),
+    str_save = gen_filesave(('c','o_w')),
+    str_title = r'C-O$_W$'
+)
+def_plt(
+    list2d_data = gen_listfile(('o_1','h_w'), list_id, float_timestep),
+    tup_xrange = (1,6),
+    tup_yrange = (0,2),
+    str_save = gen_filesave(('o_1','h_w')),
+    str_title = r'$^=$O-H$_W$'
+)
+def_plt(
+    list2d_data = gen_listfile(('o_0_2','h_w'), list_id, float_timestep),
+    tup_xrange = (1,6),
+    tup_yrange = (0,2),
+    str_save = gen_filesave(('o_0_2','h_w')),
+    str_title = r'O$_H$-H$_W$'
+)
+def_plt(
+    list2d_data = gen_listfile(('h_0_1','o_w'), list_id, float_timestep),
+    tup_xrange = (1,6),
+    tup_yrange = (0,3),
+    str_save = gen_filesave(('h_0_1','o_w')),
+    str_title = r'H$_O$-O$_W$'
+)
+def_plt(
+    list2d_data = gen_listfile(('o_w','o_w'), list_id, float_timestep),
+    tup_xrange = (2,6),
+    tup_yrange = (0,4),
+    str_save = gen_filesave(('o_w','o_w')),
+    str_title = r'O$_W$-O$_W$'
+)
+#'''
 plt.show()
 
