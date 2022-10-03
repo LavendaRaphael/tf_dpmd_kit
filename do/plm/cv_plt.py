@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 def def_plt(
     list2d_header: list[list],
-    dict_windows: dict
+    float_timescale: float
 ) -> None:
     """
 
@@ -18,8 +18,6 @@ def def_plt(
     data = np.genfromtxt("COLVAR", dtype=None, names=list_header, invalid_raise=False)
     #print(data.dtype)
 
-    data_windows = data[ dict_windows['list_range'][0]:dict_windows['list_range'][1] ]
-
     for int_i in range(int_nplot):
         list_header = list2d_header[int_i]
         for str_header in list_header:
@@ -27,15 +25,14 @@ def def_plt(
                 str_label = str_header
             else:
                 str_label = dict_label[str_header]
-            axs[int_i].plot(data_windows['time']/dict_windows['timestep'], data_windows[str_header], label=str_label)
-            axs[int_i].legend() 
+            axs[int_i].scatter(data['time']*float_timescale, data[str_header], label=str_label, s=0.5)
+            axs[int_i].legend(loc='upper left') 
     #axs[-1].set_xlabel('Time(ps)')
     axs[0].set_ylabel('CV')
 
 dict_label = {
     'dist_vp_o_1': 'R(O\N{SUBSCRIPT ONE}V\N{Latin Subscript Small Letter P})',
     'dist_vp_o_2': 'R(O\N{SUBSCRIPT TWO}V\N{Latin Subscript Small Letter P})',
-    'del_dist_vp_o': '\N{Greek Capital Letter Delta}R(OV\N{Latin Subscript Small Letter P})',
     'dist_vp_c': 'R(CV\N{Latin Subscript Small Letter P})',
     'cost_o_h': 'cos dh(OH)',
     'dist_o_0_h': 'R(O\N{SUBSCRIPT ZERO}H)',
@@ -45,33 +42,14 @@ dict_label = {
 def_plt(
     list2d_header = [
         ['dist_vp_c'],
-        ['dhx_o_0_h'],
-        ['dhx_o_1_2_vh']
-    ],
-    dict_windows = {
-        'list_range': [0, 2000000],
-        'timestep': 0.0005
-    }
-)
-#'''
-'''
-def_plt(
-    list2d_header = [
-        ['dist_vp_c'],
-        ['cost_o_0_h'],
-        ['metadbias'],
-        ['uw_vp_cbias'],
+        ['dh_o_0_h'],
         ['dist_o_0_h'],
-        ['uw_dist_o_0_hbias'],
+        #['uw_dist_o_0_hbias'],
         ['cn_o_0_h'],
-        ['uw_cn_o_0_hbias'],
-        ['cnn_o_w_hmin'],
-        ['lw_cnn_o_w_hbias']
+        #['uw_cn_o_0_hbias'],
+        ['cn_o_1_2_h']
     ],
-    dict_windows = {
-        'list_range': [0, 2000000],
-        'timestep': 0.0005
-    }
+    float_timescale = 1/0.0005/40
 )
 #'''
 plt.show()
