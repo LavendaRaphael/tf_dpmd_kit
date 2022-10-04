@@ -28,7 +28,7 @@ def def_plt(
         ax.hist(
             data[str_header],
             label = str_label,
-            bins = 500,
+            bins = 'auto',
             density = True
         )
         ax.set_xlim(list2d_header[int_i][1])
@@ -56,22 +56,21 @@ dict_label = {
     'cnn_o_w_hmin': r'cn(O$_W$H)$_{min}$'
 }
 
-'''
+#'''
 def_plt(
     list2d_header = [
         ['dist_o_0_h', (0.9, 1.3)],
-        ['cnn_o_w_hmin', (1.8,1.9)],
-        ['cn_o_0_h', (0,0.01)]
+        ['cn_o_0_h', (0,0.01)],
+        ['cn_o_1_2_h', (0.8,1.1)],
     ],
     str_save = 'cv.prob.wall.pdf'
 )
 #'''
-#'''
+'''
 def_plt(
     list2d_header = [
         ['dist_vp_c', (1.2,1.5)],
-        ['dh_o_0_h', (2,3.1416)],
-        ['dhx_o_0_h', None]
+        ['dh2x_o_0_h', None]
     ],
     str_save = 'cv.prob.metad.pdf'
 )

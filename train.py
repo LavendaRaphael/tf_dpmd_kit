@@ -14,11 +14,10 @@ def def_plt_lcurve(
 
     data = np.genfromtxt("lcurve.out", names=True)
     for name in ['rmse_e_trn','rmse_f_trn']:
-        ax.plot(data['step'], data[name], label=name)
+        ax.scatter(data['step'], data[name], label=name)
     ax.legend()
     ax.set_xlabel('Step')
     ax.set_ylabel('Loss')
-    #ax.set_xscale('symlog')
     ax.set_yscale('log')
     ax.set_xlim((None,None))
     ax.grid()
