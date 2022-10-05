@@ -36,7 +36,7 @@ def def_plt(
         np_data *= 1000
         del_data = np_data[:,1] - np_data[:,0]
         str_xlabel = r'E$_{DP}$-E$_{DFT}$ (meV/atom)'
-        str_label = f'Energy RMSE = {float_rmse:.2f} meV/atom'
+        str_label = f'Energy RMSE = {float_rmse:.3f} meV/atom'
     elif (str_mode=='f'):
         del_data_xyz = np_data[:,3:6] - np_data[:,0:3]
         del_data = np.linalg.norm( del_data_xyz, axis=1 )
@@ -64,15 +64,15 @@ def def_plt(
 def_plt(
     str_file = 'dptest.e.out',
     int_natoms = 384,
-    float_rmse = 0.44,
+    float_rmse = 0.440,
     tup_xlim = (-1.5,1.5),
     str_save = 'dptest.e.pdf'
 )
 #'''
-'''
+#'''
 def_plt(
     str_file = 'dptest.f.out',
-    float_rmse = 61.2,
+    float_rmse = 60.0,
     tup_xlim = (0,250),
     str_save = 'dptest.f.pdf'
 )

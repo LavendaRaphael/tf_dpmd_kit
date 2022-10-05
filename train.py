@@ -14,8 +14,8 @@ def def_plt_lcurve(
 
     data = np.genfromtxt("lcurve.out", names=True)
     for name in ['rmse_e_trn','rmse_f_trn']:
-        ax.scatter(data['step'], data[name], label=name)
-    ax.legend()
+        ax.scatter(data['step'], data[name], label=name, s=0.5)
+    ax.legend(loc='lower left')
     ax.set_xlabel('Step')
     ax.set_ylabel('Loss')
     ax.set_yscale('log')
