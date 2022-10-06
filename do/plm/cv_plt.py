@@ -42,12 +42,12 @@ dict_label = {
 def_plt(
     list2d_header = [
         ['dist_vp_c'],
-        ['dh_o_0_h'],
+        ['dh2x_o_0_h'],
+        ['metadbias'],
         ['dist_o_0_h'],
         #['uw_dist_o_0_hbias'],
         ['cn_o_0_h'],
         #['uw_cn_o_0_hbias'],
-        ['cn_o_1_2_h']
     ],
     float_timescale = 1/0.0005/40
 )
