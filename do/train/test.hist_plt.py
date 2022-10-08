@@ -60,7 +60,7 @@ def def_plt(
     if str_save:
         fig.savefig(str_save, bbox_inches='tight')
 
-#'''
+'''
 def_plt(
     str_file = 'dptest.e.out',
     int_natoms = 384,
@@ -73,7 +73,7 @@ def_plt(
 def_plt(
     str_file = 'dptest.f.out',
     float_rmse = 60.0,
-    tup_xlim = (0,250),
+    #tup_xlim = (0,250),
     str_save = 'dptest.f.pdf'
 )
 #'''

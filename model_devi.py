@@ -5,7 +5,7 @@ import numpy as np
 import ase.io
 import dpdata
 
-def def_plt_devi_f():
+def devi_plt():
     data = np.genfromtxt("model_devi.out", names=True)
     plt.plot(data['step'], data["max_devi_f"])
     plt.legend()
@@ -15,9 +15,9 @@ def def_plt_devi_f():
     #plt.savefig('max_devi_f.pdf', bbox_inches='tight')
     plt.show()
 
-def def_model_devi_atom(
+def devi_atom(
         list_model,
-        dp_sys,
+        ase_atoms,
         float_lowthred,
         str_save: str = None,
         float_ylim: float = None
@@ -25,8 +25,6 @@ def def_model_devi_atom(
 
     from deepmd.calculator import DP
 
-    ase_atoms = dp_sys.to('ase/structure')[0]
-    
     int_natom = len(ase_atoms.get_atomic_numbers())
     
     int_nmodel = len(list_model)

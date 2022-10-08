@@ -35,10 +35,9 @@ def def_poscar2perturb(
     for int_i in range(int_perturb):
         dp_sys_perturb.to( 'vasp/poscar', os.path.join(str_dir, f'{int_i:02d}.POSCAR'), frame_idx=int_i )
 
-def def_xdatcar2pwscf(
-        np_snap
-):
-    print(np_snap)
+def ase2pwscf(
+    ase_atoms
+) -> None:
     
     dict_pwscfin = {}
     dict_pwscfin['CONTROL'] = {
@@ -56,30 +55,32 @@ def def_xdatcar2pwscf(
         'H': 'H_HSCV_PBE-1.0.UPF',
         'C': 'C_HSCV_PBE-1.0.UPF'
         }
-    
-    ase_atoms = ase.io.read(
-        filename = 'XDATCAR',
-        format = 'vasp-xdatcar',
-        index=':'
+
+    ase.io.write(
+        filename = 'pwscf.in',
+        images = ase_atoms,
+        format = 'espresso-in',
+        input_data = dict_pwscfin,
+        pseudopotentials = dict_pwpseudop 
     )
 
-    if (not os.path.exists('../snap')):
-        os.mkdir('../snap')
-    os.chdir('../snap')
+def list_ase2pwscf(
+    list_ase,
+    np_snap
+):
+    print(np_snap)
+    
+    if (not os.path.exists('snap')):
+        os.mkdir('snap')
+    os.chdir('snap')
     for int_snap in np_snap:
         str_dir = f'snap_{int_snap:0>5d}'
         if (not os.path.exists(str_dir)):
             os.mkdir(str_dir)
         os.chdir(str_dir)
-    
-        ase.io.write(
-            filename = str_in,
-            images = ase_atoms[int_snap],
-            format = 'espresso-in',
-            input_data = dict_pwscfin,
-            pseudopotentials = dict_pwpseudop 
-            )
-    
+        
+        ase2pwscf(list_ase[int_snap])
+        
         os.chdir('..')
 
 def def_dpgen2ase(
