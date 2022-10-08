@@ -1,9 +1,9 @@
-
-int_restartstep = 1000000
+import os
 
 def read_timestep(
     str_lmpin: str
 ) -> float:
+    print('read:', str_lmpin)
     with open(str_lmpin, 'r') as file_open:
         for str_line in file_open:
             list_line = str_line.split()
@@ -15,6 +15,7 @@ def read_timestep(
 def read_stride(
     str_plmin: str
 ) -> int:
+    print('read:', str_plmin)
     with open(str_plmin, 'r') as file_open:
         for str_line in file_open:
             list_line = str_line.split()
@@ -30,11 +31,13 @@ def write_hills(
     str_new: str,
     float_time: float,
 ):
+    print('read:', str_old)
+    print('write:', str_new)
     with open(str_old, 'r') as file_old:
         with open(str_new, 'w') as file_new:
             for str_line in file_old:
                 list_line = str_line.split()
-                if list_line[0][0] != '#' and float(list_line[0]) >= float_time:
+                if list_line[0][0] != '#' and float(list_line[0]) > float_time:
                     break
                 file_new.write(str_line)
 
@@ -43,6 +46,8 @@ def write_colvar(
     str_new: str,
     float_time: float,
 ):
+    print('read:', str_old)
+    print('write:', str_new)
     with open(str_old, 'r') as file_old:
         with open(str_new, 'w') as file_new:
             for str_line in file_old:
@@ -56,6 +61,8 @@ def write_log(
     str_new: str,
     int_restartstep: int
 ):
+    print('read:', str_old)
+    print('write:', str_new)
     with open(str_old, 'r') as file_old:
         with open(str_new, 'w') as file_new:
             for str_line in file_old:
@@ -69,6 +76,7 @@ def write_traj(
     str_new: str,
     int_restartstep: int
 ):
+    print('read:', str_old)
     with open(str_old, 'r') as file_open:
         for str_line in file_open:
             if str_line == f'ITEM: TIMESTEP\n':
@@ -78,7 +86,7 @@ def write_traj(
             int_line += 1
             if str_line == f'ITEM: TIMESTEP\n':
                 break
-
+    print('write:', str_new)
     with open(str_old, 'r') as file_old:
         with open(str_new, 'w') as file_new:
             for str_line in file_old:
@@ -90,6 +98,28 @@ def write_traj(
                 for i in range(int_line-2):
                     file_new.write(file_old.readline())
 
-float_timestep = read_timestep()
+int_restartstep = 5000000
+str_dir = '../330K.bk'
+float_timestep = read_timestep('lmp.in')
 float_time = int_restartstep * float_timestep
-write_traj( int_restartstep )
+write_hills(
+    str_old = os.path.join(str_dir, 'HILLS'),
+    str_new = 'HILLS',
+    float_time = float_time,
+)
+write_colvar(
+    str_old = os.path.join(str_dir, 'COLVAR'),
+    str_new = 'COLVAR',
+    float_time = float_time,
+)
+write_log(
+    str_old = os.path.join(str_dir, 'log'),
+    str_new = 'log',
+    int_restartstep = int_restartstep
+)
+write_traj(
+    str_old = os.path.join(str_dir, 'traj.lammpstrj'),
+    str_new = 'traj.lammpstrj',
+    int_restartstep = int_restartstep
+)
+
