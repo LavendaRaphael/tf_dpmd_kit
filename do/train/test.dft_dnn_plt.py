@@ -1,72 +1,84 @@
-import numpy
+import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib
 
-matplotlib.rcParams['font.size']=15
-matplotlib.rcParams['font.family']='sans-serif'
-matplotlib.rcParams['font.sans-serif']=["Arial"]
-
-# setup
-int_natom = 192
-
-# common
-array_e = numpy.genfromtxt("dptest.e.out").transpose()
-array_e /= int_natom
-array_e -= numpy.average( array_e[0] )
-array_e *= 1000
-
-array_f = numpy.genfromtxt('dptest.f.out').transpose()
-array_f_norm = numpy.zeros( shape = (2, array_f.shape[1]) )
-array_f_norm[0] = numpy.linalg.norm( array_f[0:3], axis=0 )
-array_f_norm[1] = numpy.linalg.norm( array_f[3:6], axis=0 )
-array_f_norm -= numpy.average( array_f_norm[0] )
-
 def def_plt(
-        array_data,
-        str_efv,
-        float_rmse,
-        ):
+    float_rmse: float,
+    str_file: str,
+    int_natoms: int=None,
+    str_save: str=None,
+) -> None:
     
-    if (str_efv=='e'):
-        str_label = f"Energy RMSE = {float_rmse:.2f} meV/atom"
-        str_xlabel = 'DFT energy (meV/atom)'
-        str_ylabel = 'DNN energy (meV/atom)'
-    elif (str_efv=='f'):
-        str_label = f"Force RMSE = {float_rmse:.2f} meV/Å"
-        str_xlabel = 'DFT force (eV/Å)'
-        str_ylabel = 'DNN force (eV/Å)' 
-    else:
-        raise
+    matplotlib.rcParams['font.size']=15
+    matplotlib.rcParams['font.family']='sans-serif'
+    matplotlib.rcParams['font.sans-serif']=["Arial"]
 
-    fig, ax = plt.subplots()
+    with open(str_file, 'r') as file_open:
+        list_line = file_open.readline().split()
+        if list_line[-1] == 'pred_e':
+            str_mode = 'e'
+            if not int_natoms:
+                raise
+        elif list_line[-1] == 'pred_fz':
+            str_mode = 'f'
+        else:
+            print(list_line)
+            raise
 
-    ax.plot(
-        array_data[0],
-        array_data[1],
-        label = str_label,
-        marker='o',
-        linestyle = '',
-        markersize=2,
+    np_data = np.loadtxt(str_file)
+    if (str_mode=='e'):
+        # per atom
+        np_data /= int_natoms
+        # eV to meV
+        np_data *= 1000
+        np_data -= np.average( np_data[:,0] )
+
+        fig, ax = plt.subplots()
+        ax.set_xlabel('DFT energy (meV/atom)')
+        ax.set_ylabel('DNN energy (meV/atom)')
+        ax.plot(
+            np_data[:,0],
+            np_data[:,1],
+            label = f'Energy RMSE = {float_rmse:.3f} meV/atom',
+            marker='o',
+            linestyle = '',
+            markersize=2,
         )
+    elif (str_mode=='f'):
+        np_data *= 1000
+
+        fig, ax = plt.subplots()
+        for in []:
+            ax.plot(
+                np_data[:,0],
+                np_data[:,1],
+                label = f'Energy RMSE = {float_rmse:.3f} meV/atom',
+                marker='o',
+                linestyle = '',
+                markersize=2,
+            )
+        str_xlabel = 'DFT force (meV/Å)'
+        str_ylabel = 'DNN force (meV/Å)'
+        str_label = f'Force RMSE = {float_rmse:.1f} meV/Å'
 
     ax.axline([0, 0], [1, 1], color='black', linestyle='--')
-
     ax.legend()
-    ax.set_xlabel(str_xlabel)
-    ax.set_ylabel(str_ylabel)
-    #fig.set_size_inches(4, 4)
-    fig.savefig('dptest.'+str_efv+'.pdf', bbox_inches='tight')
-    plt.show()
+    if str_save:
+        fig.savefig(str_save, bbox_inches='tight')
 
+#'''
 def_plt(
-    array_data = array_e,
-    str_efv = 'e',
-    float_rmse = 0.44,
+    str_file = 'dptest.e.out',
+    int_natoms = 384,
+    float_rmse = 0.440,
 )
+#'''
 '''
 def_plt(
-    array_data = array_f_norm,
-    str_efv = 'f',
-    float_rmse = 64.24218,
-    )
-'''
+    str_file = 'dptest.f.out',
+    float_rmse = 60.0,
+    str_save = 'dptest.f.pdf'
+)
+#'''
+
+plt.show()
