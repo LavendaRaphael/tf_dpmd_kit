@@ -1,36 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def def_plt(
-    list_header: list,
-    float_timescale: float
-) -> None:
-
-    int_nplot = len(list2d_header)
-    fig, axs = plt.subplots(int_nplot, 1, sharex='all')
-    if int_nplot==1:
-        axs = [axs]
-
-    with open('COLVAR', 'r') as colvar:
-        list_header = colvar.readline().split()[2:]
-    data = np.genfromtxt("COLVAR", dtype=None, names=list_header, invalid_raise=False)
-    #print(data.dtype)
-
-    for int_i in range(int_nplot):
-        list_header = list2d_header[int_i]
-        for str_header in list_header:
-            if str_header not in dict_label:
-                str_label = str_header
-            else:
-                str_label = dict_label[str_header]
-            axs[int_i].scatter(data['time']*float_timescale, data[str_header], label=str_label, s=0.5)
-            axs[int_i].legend(loc='upper left') 
-    #axs[-1].set_xlabel('Time(ps)')
-    axs[0].set_ylabel('CV')
-
 def def_multi_plt(
     list_header: list,
-    float_timescale: float
+    float_timescale: float,
+    tup_xlim: tuple = None,
+    str_save: str = None,
 ) -> None:
 
     int_nplot = len(list_header)
@@ -53,7 +28,7 @@ def def_multi_plt(
                     break
             data = np.genfromtxt(list_tmp, dtype=None, names=list_field, invalid_raise=False)
             for int_i in range(int_nplot):
-                str_header = list_header[int_i]
+                str_header = list_header[int_i][0]
                 if str_header not in data.dtype.names:
                     continue
                 axs[int_i].scatter(data['time']*float_timescale, data[str_header], s=0.5)
@@ -62,12 +37,17 @@ def def_multi_plt(
             list_tmp = [str_line]
             list_field = str_line.split()[2:]
     for int_i in range(int_nplot):
-        str_header = list_header[int_i]
+        str_header = list_header[int_i][0]
         if str_header not in dict_label:
             str_label = str_header
         else:
             str_label = dict_label[str_header]
         axs[int_i].set_ylabel(str_label)
+        axs[int_i].set_xlim(tup_xlim)
+        if len(list_header[int_i]) > 1:
+            axs[int_i].set_ylim(list_header[int_i][1])
+    if str_save:
+        fig.savefig(str_save, bbox_inches='tight')
 
 dict_label = {
     'dist_vp_o_1': 'R(O\N{SUBSCRIPT ONE}V\N{Latin Subscript Small Letter P})',
@@ -80,16 +60,18 @@ dict_label = {
 
 def_multi_plt(
     list_header = [
-        'dist_vp_c',
-        'dh2x_o_0_h',
-        'metadbias',
-        'dist_o_0_h',
-        #'uw_dist_o_0_hbias',
-        'cn_o_0_h',
-        #'uw_cn_o_0_hbias',
-        'cnn_o_w_hmin'
+        ['dist_vp_c', (0.5, 1.5)],
+        #('dh2x_o_0_h'),
+        ['metadbias'],
+        #('dist_o_0_h'),
+        #('uw_dist_o_0_hbias'),
+        #('cn_o_0_h'),
+        #('uw_cn_o_0_hbias'),
+        #('cnn_o_w_hmin')
     ],
-    float_timescale = 1/0.0005/40
+    float_timescale = 1/0.0005/40,
+    tup_xlim = (360800, 363300),
+    str_save = 'cv.pdf'
 )
 
 plt.show()

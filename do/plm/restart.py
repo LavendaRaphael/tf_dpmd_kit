@@ -98,8 +98,8 @@ def write_traj(
                 for i in range(int_line-2):
                     file_new.write(file_old.readline())
 
-int_restartstep = 5000000
-str_dir = '../330K.bk'
+int_restartstep = 13000000
+str_dir = '../310K.bk'
 float_timestep = read_timestep('lmp.in')
 float_time = int_restartstep * float_timestep
 write_hills(
