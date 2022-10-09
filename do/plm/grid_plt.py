@@ -29,42 +29,53 @@ def grid_plt(
     ax.legend()
     ax.set_xlabel(str_xlabel)
     ax.set_ylabel('FES (kJ/mol)')
-    ax.set_xlim((1.1,7))
+    ax.set_xlim((0.85,8))
     ax.set_ylim(tup_ylim)
     if str_save:
         fig.savefig(str_save, bbox_inches='tight')
-#'''
+'''
 grid_plt(
     list2d_file = [
-        ['sum_hills/fes.dist_vp_c.4.dat', 'sum_hills'],
+        ['sum_hills/fes.dist_vp_c.10.dat', 'sum_hills'],
         ['reweight_bias/fes.dist_vp_c.grid', 'reweight_bias'],
         ['reweight_metad/fes.dist_vp_c.grid', 'reweight_metad'],
     ],
     str_xlabel = r'R(CV$_P$) (Å)',
     str_save = 'fes.dist_vp_c.compare.pdf',
-    tup_ylim = (None, 60)
+    tup_ylim = (None, 70)
 )
 #'''
 '''
 grid_plt(
     list2d_file = [
-        ['fes.dist_vp_c.0.dat', '0.2ns'],
-        ['fes.dist_vp_c.2.dat', '0.6ns'],
-        ['fes.dist_vp_c.4.dat', '1.0ns'],
+        ['fes.dist_vp_c.1.dat', '2ns'],
+        ['fes.dist_vp_c.3.dat', '4ns'],
+        ['fes.dist_vp_c.5.dat', '6ns'],
+        ['fes.dist_vp_c.7.dat', '8ns'],
+        ['fes.dist_vp_c.9.dat', '10ns']
     ],
     str_xlabel = r'R(CV$_P$) (Å)',
     str_save = 'fes.dist_vp_c.pdf',
+    tup_ylim = (None, 70)
 )
 #'''
-'''
+#'''
 grid_plt(
     list2d_file = [
-        ['analysis.0.fes.dist_vp_c.grid', '0.2ns'],
-        ['analysis.2.fes.dist_vp_c.grid', '0.6ns'],
-        ['fes.dist_vp_c.grid', '1.0ns'],
+        #['analysis.0.fes.dist_vp_c.grid', '2ns'],
+        ['analysis.1.fes.dist_vp_c.grid', '2ns'],
+        #['analysis.2.fes.dist_vp_c.grid', '2ns'],
+        ['analysis.3.fes.dist_vp_c.grid', '4ns'],
+        #['analysis.4.fes.dist_vp_c.grid', '4ns'],
+        ['analysis.5.fes.dist_vp_c.grid', '6ns'],
+        #['analysis.6.fes.dist_vp_c.grid', '6ns'],
+        ['analysis.7.fes.dist_vp_c.grid', '8ns'],
+        #['analysis.8.fes.dist_vp_c.grid', '8ns'],
+        ['fes.dist_vp_c.grid', '10ns'],
     ],
     str_xlabel = r'R(CV$_P$) (Å)',
     str_save = 'fes.dist_vp_c.pdf',
+    tup_ylim = (None, 70)
 )
 #'''
 plt.show()

@@ -27,7 +27,7 @@ def def_integral(
 
     np_data = np.loadtxt(str_file)    
     np_data[:,1] -= min(np_data[:,1])
-    
+ 
     float_KbT = def_T2KbT(float_T)
     
     np_data[:,1] = np.exp(-np_data[:,1]/float_KbT)
@@ -51,22 +51,26 @@ def def_pka(
     float_KbT = def_T2KbT(float_T)
     return float_deltag/(float_KbT*math.log(10))
 
+float_T = 350
+
 float_g1 = def_integral(
     str_file = 'fes.dist_vp_c.grid',
-    float_T = 370,
-    float_xlow = 0.7,
+    float_T = float_T,
+    float_xlow = 1,
     float_xup = 2,
 )
 print('float_g1', float_g1)
 float_g2 = def_integral(
     str_file = 'fes.dist_vp_c.grid',
-    float_T = 370,
+    float_T = float_T,
     float_xlow = 2.2,
     float_xup = '1M',
 )
 print('float_g2', float_g2)
+float_deltag = float_g2-float_g1
 float_pka = def_pka(
-    float_deltag = float_g2-float_g1,
-    float_T = 370,
+    float_deltag = float_deltag,
+    float_T = float_T,
 )
+print('float_deltag', float_deltag)
 print('float_pka', float_pka)
