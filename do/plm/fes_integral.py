@@ -51,7 +51,7 @@ def def_pka(
     float_KbT = def_T2KbT(float_T)
     return float_deltag/(float_KbT*math.log(10))
 
-float_T = 350
+float_T = 310
 
 float_g1 = def_integral(
     str_file = 'fes.dist_vp_c.grid',
