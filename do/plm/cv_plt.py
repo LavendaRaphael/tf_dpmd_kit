@@ -60,18 +60,18 @@ dict_label = {
 
 def_multi_plt(
     list_header = [
-        ['dist_vp_c', (0.5, 1.5)],
-        #('dh2x_o_0_h'),
+        ['dist_vp_c'],
+        ['dh2x_o_0_h'],
         ['metadbias'],
-        #('dist_o_0_h'),
+        ['dist_o_0_h'],
         #('uw_dist_o_0_hbias'),
-        #('cn_o_0_h'),
+        ['cn_o_0_h'],
         #('uw_cn_o_0_hbias'),
-        #('cnn_o_w_hmin')
+        ['cnn_o_w_hmin']
     ],
     float_timescale = 1/0.0005/40,
-    tup_xlim = (360800, 363300),
-    str_save = 'cv.pdf'
+    #tup_xlim = (360800, 363300),
+    #str_save = 'cv.pdf'
 )
 
 plt.show()
