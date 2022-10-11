@@ -154,7 +154,7 @@ def def_plt(
         ax.set_xlabel( r'E$_{DP}$-E$_{DFT}$ (meV/atom)')
         str_label = f'Energy RMSE = {float_rmse:.3f} meV/atom'
         for int_i in range(len(del_data)):
-            if abs(del_data[int_i]) > 2:
+            if abs(del_data[int_i]) > 1.5:
                 str_locate, int_locate = check_locate(int_i)
                 print(f'{str_locate} {int_locate} {del_data[int_i]:.1f}')
     elif (str_mode=='f'):
@@ -185,14 +185,14 @@ def def_plt(
     if str_save:
         fig.savefig(str_save, bbox_inches='tight')
 
-'''
+#'''
 def_plt(
     str_file = 'dptest.e.out',
     int_natoms = 384,
     float_rmse = 0.440,
     #tup_xlim = (-1.5,1.5),
     tup_ylim = (0,10),
-    str_save = 'dptest.e.pdf'
+    #str_save = 'dptest.e.pdf'
 )
 #'''
 #'''
@@ -202,7 +202,7 @@ def_plt(
     int_natoms = 384,
     #tup_xlim = (0,250),
     tup_ylim = (0,10),
-    str_save = 'dptest.f.pdf'
+    #str_save = 'dptest.f.pdf'
 )
 #'''
 
