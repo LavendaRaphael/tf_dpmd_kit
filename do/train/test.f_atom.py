@@ -34,14 +34,14 @@ def def_plt(
     if str_save:
         fig.savefig(str_save, bbox_inches='tight')
 
-'''
+#'''
 def_plt(
     list_file = [
         ('dptest.f.out', ''),
     ],
 )
 #'''
-#'''
+'''
 def_plt(
     list_file = [
         ('snap_361413/dptest/dptest.f.out', 'snap_361413'),
