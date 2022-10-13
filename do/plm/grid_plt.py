@@ -1,19 +1,18 @@
 import numpy
 from matplotlib import pyplot as plt
 import numpy as np
-import matplotlib
+from matplotlib import rc
 
 def grid_plt(
     list2d_file: list[list],
     str_xlabel: str,
     str_save: str=None,
     bool_minzero: bool=True,
-    tup_ylim: tuple=None,
+    tup_xlim: tuple = None,
+    tup_ylim: tuple = None,
 ) -> None:
 
-    matplotlib.rcParams['font.size']=15
-    matplotlib.rcParams['font.family']='sans-serif'
-    matplotlib.rcParams['font.sans-serif']=["Arial"]
+    rc('font',**{'size':15, 'family':'sans-serif','sans-serif':['Arial']})
 
     fig, ax = plt.subplots()
     for list_file in list2d_file:
@@ -29,11 +28,11 @@ def grid_plt(
     ax.legend()
     ax.set_xlabel(str_xlabel)
     ax.set_ylabel('FES (kJ/mol)')
-    ax.set_xlim((0.85,8))
+    ax.set_xlim(tup_xlim)
     ax.set_ylim(tup_ylim)
     if str_save:
         fig.savefig(str_save, bbox_inches='tight')
-#'''
+'''
 grid_plt(
     list2d_file = [
         ['290K/fes/sum_hills/fes.dist_vp_c.grid', '290K'],
@@ -75,6 +74,21 @@ grid_plt(
     tup_ylim = (None, 70)
 )
 #'''
+#'''
+grid_plt(
+    list2d_file = [
+        ['sum_hills/fes.dist_vp_c.1.dat', '2ns'],
+        ['sum_hills/fes.dist_vp_c.3.dat', '4ns'],
+        ['sum_hills/fes.dist_vp_c.5.dat', '6ns'],
+        ['sum_hills/fes.dist_vp_c.7.dat', '8ns'],
+        ['sum_hills/fes.dist_vp_c.9.dat', '10ns']
+    ],
+    str_xlabel = r'R(CV$_P$) (Å)',
+    str_save = 'sum_hills/fes.dist_vp_c.minzero.pdf',
+    bool_minzero = False,
+    tup_xlim = (0, 10)
+)
+#'''
 '''
 grid_plt(
     list2d_file = [
@@ -86,6 +100,7 @@ grid_plt(
     ],
     str_xlabel = r'R(CV$_P$) (Å)',
     str_save = 'sum_hills/fes.dist_vp_c.pdf',
+    tup_xlim = (0.85, 8)
     tup_ylim = (None, 70)
 )
 #'''

@@ -1,12 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import rc
 
 def def_multi_plt(
     list_header: list,
-    float_timescale: float,
+    float_timescale: float=1.0,
     tup_xlim: tuple = None,
     str_save: str = None,
 ) -> None:
+
+    rc('font',**{'size':15, 'family':'sans-serif','sans-serif':['Arial']})
 
     int_nplot = len(list_header)
     fig, axs = plt.subplots(int_nplot, 1, sharex='all')
@@ -46,32 +49,42 @@ def def_multi_plt(
         axs[int_i].set_xlim(tup_xlim)
         if len(list_header[int_i]) > 1:
             axs[int_i].set_ylim(list_header[int_i][1])
+    axs[-1].set_xlabel(('time (ns)'))
     if str_save:
-        fig.savefig(str_save, bbox_inches='tight')
+        fig.set_size_inches(11, 5)
+        fig.savefig(str_save, bbox_inches='tight', dpi=300)
 
 dict_label = {
     'dist_vp_o_1': 'R(O\N{SUBSCRIPT ONE}V\N{Latin Subscript Small Letter P})',
     'dist_vp_o_2': 'R(O\N{SUBSCRIPT TWO}V\N{Latin Subscript Small Letter P})',
-    'dist_vp_c': 'R(CV\N{Latin Subscript Small Letter P})',
+    'dist_vp_c': r'R(CV$_p$)',
     'cost_o_h': 'cos dh(OH)',
     'dist_o_0_h': 'R(O\N{SUBSCRIPT ZERO}H)',
     'cost_o_0_h': 'cos dh(O\N{SUBSCRIPT ZERO}H)', 
+    'metadbias': 'V(s,t)',
+    'metadrbias': 'M(s,t)', 
+    'metadrct': 'c(t)', 
 }
 
 def_multi_plt(
     list_header = [
-        ['dist_vp_c'],
-        ['dh2x_o_0_h'],
-        ['metadbias'],
-        ['dist_o_0_h'],
-        #('uw_dist_o_0_hbias'),
+        ['dist_vp_c', (0.5, 1.5)],
+        ['lw_vp_cbias'],
+        #['dh2x_o_0_h'],
+        #['metadbias'],
+        #['metadrbias'],
+        #['metadrct'],
+        ['dist_o_0_h', (1.1, 1.2)],
+        ['uw_dist_o_0_hbias'],
         ['cn_o_0_h'],
-        #('uw_cn_o_0_hbias'),
-        ['cnn_o_w_hmin']
+        ['uw_cn_o_0_hbias'],
+        ['cnn_o_w_hmin',(1.6, 1.8)],
+        ['lw_cnn_o_w_hbias']
     ],
-    float_timescale = 1/0.0005/40,
+    float_timescale = 1/1000,
+    #float_timescale = 1/0.0005/40,
     #tup_xlim = (360800, 363300),
-    #str_save = 'cv.pdf'
+    #str_save = 'cv.png'
 )
 
 plt.show()
