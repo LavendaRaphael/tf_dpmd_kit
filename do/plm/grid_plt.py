@@ -77,30 +77,30 @@ grid_plt(
 #'''
 grid_plt(
     list2d_file = [
+        ['sum_hills/fes.dist_vp_c.0.dat', '1ns'],
         ['sum_hills/fes.dist_vp_c.1.dat', '2ns'],
+        ['sum_hills/fes.dist_vp_c.2.dat', '3ns'],
         ['sum_hills/fes.dist_vp_c.3.dat', '4ns'],
-        ['sum_hills/fes.dist_vp_c.5.dat', '6ns'],
-        ['sum_hills/fes.dist_vp_c.7.dat', '8ns'],
-        ['sum_hills/fes.dist_vp_c.9.dat', '10ns']
+        ['sum_hills/fes.dist_vp_c.4.dat', '5ns'],
     ],
     str_xlabel = r'R(CV$_P$) (Å)',
     str_save = 'sum_hills/fes.dist_vp_c.minzero.pdf',
     bool_minzero = False,
-    tup_xlim = (0, 10)
+    tup_xlim = None
 )
 #'''
-'''
+#'''
 grid_plt(
     list2d_file = [
+        ['sum_hills/fes.dist_vp_c.0.dat', '1ns'],
         ['sum_hills/fes.dist_vp_c.1.dat', '2ns'],
+        ['sum_hills/fes.dist_vp_c.2.dat', '3ns'],
         ['sum_hills/fes.dist_vp_c.3.dat', '4ns'],
-        ['sum_hills/fes.dist_vp_c.5.dat', '6ns'],
-        ['sum_hills/fes.dist_vp_c.7.dat', '8ns'],
-        ['sum_hills/fes.dist_vp_c.9.dat', '10ns']
+        ['sum_hills/fes.dist_vp_c.4.dat', '5ns'],
     ],
     str_xlabel = r'R(CV$_P$) (Å)',
     str_save = 'sum_hills/fes.dist_vp_c.pdf',
-    tup_xlim = (0.85, 8)
+    tup_xlim = None,
     tup_ylim = (None, 70)
 )
 #'''

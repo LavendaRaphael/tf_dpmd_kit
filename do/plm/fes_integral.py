@@ -56,7 +56,7 @@ float_T = 310
 float_g1 = def_integral(
     str_file = 'fes.dist_vp_c.grid',
     float_T = float_T,
-    float_xlow = 1,
+    float_xlow = 1.2,
     float_xup = 2,
 )
 print('float_g1', float_g1)
