@@ -68,18 +68,29 @@ dict_label = {
 
 def_multi_plt(
     list_header = [
-        ['dist_vp_c', (0.5, 1.5)],
-        ['lw_vp_cbias'],
+        ['dist_vp_o_1'],
+        ['dist_vp_o_2'],
+        ['dist_vp_o_1_2'],
+
+        ['dist_vp_c'],
+        #['dist_vp_c', (0.5, 1.5)],
+        #['lw_vp_cbias'],
+
         #['dh2x_o_0_h'],
-        #['metadbias'],
+
+        ['metadbias'],
         #['metadrbias'],
         #['metadrct'],
-        ['dist_o_0_h', (1.1, 1.2)],
-        ['uw_dist_o_0_hbias'],
+
+        ['dist_o_0_h'],
+        #['dist_o_0_h', (1.1, 1.2)],
+        #['uw_dist_o_0_hbias'],
+
         ['cn_o_0_h'],
-        ['uw_cn_o_0_hbias'],
-        ['cnn_o_w_hmin',(1.6, 1.8)],
-        ['lw_cnn_o_w_hbias']
+        #['uw_cn_o_0_hbias'],
+
+        #['cnn_o_w_hmin',(1.6, 1.8)],
+        #['lw_cnn_o_w_hbias']
     ],
     float_timescale = 1/1000,
     #float_timescale = 1/0.0005/40,
