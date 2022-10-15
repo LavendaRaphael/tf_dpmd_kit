@@ -31,7 +31,8 @@ def def_plt(
             bins = 'auto',
             density = True
         )
-        ax.set_xlim(list2d_header[int_i][1])
+        if len(list2d_header[int_i]) > 1:
+            ax.set_xlim(list2d_header[int_i][1])
 
         float_std = np.std(data[str_header])
         float_mean = np.mean(data[str_header])
@@ -59,20 +60,11 @@ dict_label = {
 #'''
 def_plt(
     list2d_header = [
-        ['dist_o_0_h', (0.9, 1.3)],
+        ['dist_vp_o_1_2'],
+        ['dist_o_0_h', (0.9, 1.2)],
         ['cn_o_0_h', (0,0.01)],
-        ['cn_o_1_2_h', (0.8,1.1)],
     ],
-    str_save = 'cv.prob.wall.pdf'
-)
-#'''
-'''
-def_plt(
-    list2d_header = [
-        ['dist_vp_c', (1.2,1.5)],
-        ['dh2x_o_0_h', None]
-    ],
-    str_save = 'cv.prob.metad.pdf'
+    str_save = 'cv.prob.pdf'
 )
 #'''
 plt.show()
