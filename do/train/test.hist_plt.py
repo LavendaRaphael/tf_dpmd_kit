@@ -1,122 +1,22 @@
 import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib
+import json
 
 def check_locate(
     int_id: int,
+    str_data: str
 ):
-    list_dpnpy = [
-        ('      data.init/H2CO3_CC_H2O_126/dpnpy', 235), 
-        ('      data.init/H2CO3_CT_H2O_126/dpnpy', 354), 
-        ('      data.init/H2CO3_TT_H2O_126/dpnpy',  60), 
-        ('    data.init/H2O_128/dpnpy/iter.0.004',  13), 
-        ('    data.init/H2O_128/dpnpy/iter.1.005', 300), 
-        ('    data.init/H2O_128/dpnpy/iter.2.006', 236), 
-        ('    data.init/H2O_128/dpnpy/iter.3.007', 107), 
-        ('    data.init/H2O_128/dpnpy/iter.4.009', 149), 
-        ('    data.init/H2O_128/dpnpy/iter.5.011',  20), 
-        ('    data.init/H2O_128/dpnpy/iter.6.013',   1), 
-        ('    data.init/H3O_OH_far_H2O_126/dpnpy', 364), 
-        ('   data.init/H3O_OH_near_H2O_126/dpnpy', 147), 
-        ('  data.init/HCO3_H3O_far_H2O_125/dpnpy',  97), 
-        (' data.init/HCO3_H3O_near_H2O_125/dpnpy', 351), 
-        (' data.iters/iter.000000/02.fp/data.000', 300), 
-        (' data.iters/iter.000000/02.fp/data.004', 300), 
-        (' data.iters/iter.000000/02.fp/data.008', 300), 
-        (' data.iters/iter.000000/02.fp/data.012',  15), 
-        (' data.iters/iter.000000/02.fp/data.016', 300), 
-        (' data.iters/iter.000000/02.fp/data.020', 300), 
-        (' data.iters/iter.000001/02.fp/data.001', 300), 
-        (' data.iters/iter.000001/02.fp/data.005', 300), 
-        (' data.iters/iter.000001/02.fp/data.009', 300), 
-        (' data.iters/iter.000001/02.fp/data.013', 225), 
-        (' data.iters/iter.000001/02.fp/data.017', 300), 
-        (' data.iters/iter.000001/02.fp/data.021', 300), 
-        (' data.iters/iter.000002/02.fp/data.002', 300), 
-        (' data.iters/iter.000002/02.fp/data.006', 300), 
-        (' data.iters/iter.000002/02.fp/data.010', 300), 
-        (' data.iters/iter.000002/02.fp/data.014',  27), 
-        (' data.iters/iter.000002/02.fp/data.018', 300), 
-        (' data.iters/iter.000002/02.fp/data.022', 300), 
-        (' data.iters/iter.000003/02.fp/data.003', 300), 
-        (' data.iters/iter.000003/02.fp/data.007', 300), 
-        (' data.iters/iter.000003/02.fp/data.011', 300), 
-        (' data.iters/iter.000003/02.fp/data.015', 300), 
-        (' data.iters/iter.000003/02.fp/data.019', 300), 
-        (' data.iters/iter.000003/02.fp/data.023', 300), 
-        (' data.iters/iter.000004/02.fp/data.024', 300), 
-        (' data.iters/iter.000004/02.fp/data.028', 300), 
-        (' data.iters/iter.000004/02.fp/data.032', 300), 
-        (' data.iters/iter.000004/02.fp/data.036',  79), 
-        (' data.iters/iter.000004/02.fp/data.040', 300), 
-        (' data.iters/iter.000004/02.fp/data.044', 300), 
-        (' data.iters/iter.000005/02.fp/data.025', 300), 
-        (' data.iters/iter.000005/02.fp/data.029', 300), 
-        (' data.iters/iter.000005/02.fp/data.033', 300), 
-        (' data.iters/iter.000005/02.fp/data.037',  52), 
-        (' data.iters/iter.000005/02.fp/data.041', 300), 
-        (' data.iters/iter.000005/02.fp/data.045', 300), 
-        (' data.iters/iter.000006/02.fp/data.026', 222), 
-        (' data.iters/iter.000006/02.fp/data.030', 148), 
-        (' data.iters/iter.000006/02.fp/data.034', 141), 
-        (' data.iters/iter.000006/02.fp/data.038',  46), 
-        (' data.iters/iter.000006/02.fp/data.042', 230), 
-        (' data.iters/iter.000006/02.fp/data.046', 206), 
-        (' data.iters/iter.000007/02.fp/data.027', 300), 
-        (' data.iters/iter.000007/02.fp/data.031', 300), 
-        (' data.iters/iter.000007/02.fp/data.035', 300), 
-        (' data.iters/iter.000007/02.fp/data.039', 167), 
-        (' data.iters/iter.000007/02.fp/data.043', 300), 
-        (' data.iters/iter.000007/02.fp/data.047', 300), 
-        (' data.iters/iter.000008/02.fp/data.048', 279), 
-        (' data.iters/iter.000008/02.fp/data.052', 259), 
-        (' data.iters/iter.000008/02.fp/data.056', 178), 
-        (' data.iters/iter.000009/02.fp/data.048', 279), 
-        (' data.iters/iter.000009/02.fp/data.052', 158), 
-        (' data.iters/iter.000009/02.fp/data.056', 124), 
-        (' data.iters/iter.000009/02.fp/data.060', 109), 
-        (' data.iters/iter.000010/02.fp/data.049', 115), 
-        (' data.iters/iter.000010/02.fp/data.053',  86), 
-        (' data.iters/iter.000010/02.fp/data.057',  65), 
-        (' data.iters/iter.000010/02.fp/data.061', 103), 
-        (' data.iters/iter.000011/02.fp/data.050', 243), 
-        (' data.iters/iter.000011/02.fp/data.054', 215), 
-        (' data.iters/iter.000011/02.fp/data.058', 210), 
-        (' data.iters/iter.000011/02.fp/data.062', 171), 
-        (' data.iters/iter.000012/02.fp/data.051', 288), 
-        (' data.iters/iter.000012/02.fp/data.055', 253), 
-        (' data.iters/iter.000012/02.fp/data.059', 239), 
-        (' data.iters/iter.000012/02.fp/data.063', 205), 
-        (' data.iters/iter.000013/02.fp/data.064',  79), 
-        (' data.iters/iter.000013/02.fp/data.068',  83), 
-        (' data.iters/iter.000013/02.fp/data.072',  65), 
-        (' data.iters/iter.000013/02.fp/data.076',  87), 
-        (' data.iters/iter.000014/02.fp/data.065', 298), 
-        (' data.iters/iter.000014/02.fp/data.069', 294), 
-        (' data.iters/iter.000014/02.fp/data.073', 295), 
-        (' data.iters/iter.000014/02.fp/data.077', 300), 
-        (' data.iters/iter.000015/02.fp/data.066', 291), 
-        (' data.iters/iter.000015/02.fp/data.070', 291), 
-        (' data.iters/iter.000015/02.fp/data.074', 284), 
-        (' data.iters/iter.000015/02.fp/data.078', 210), 
-        (' data.iters/iter.000016/02.fp/data.067', 300), 
-        (' data.iters/iter.000016/02.fp/data.071', 300), 
-        (' data.iters/iter.000016/02.fp/data.075', 299), 
-        (' data.iters/iter.000016/02.fp/data.079', 300), 
-        (' data.iters/iter.000017/02.fp/data.067',  10), 
-        (' data.iters/iter.000017/02.fp/data.071',  12), 
-        (' data.iters/iter.000017/02.fp/data.075',  10), 
-        (' data.iters/iter.000017/02.fp/data.079',  20), 
-    ]
-    int_sum = 0
-    for tup_dpnpy in list_dpnpy:
-        int_sum += tup_dpnpy[1]
+    with open(str_data, 'r') as fp:
+        dict_json = json.load(fp)
+    dict_system = dict_json['dict_system']
 
-    for tup_dpnpy in list_dpnpy:
-        if int_id < tup_dpnpy[1]:
-            return tup_dpnpy[0], int_id
+    for str_system in dict_system:
+        int_num = dict_system[str_system]
+        if int_id < int_num:
+            return str_system, int_id
         else:
-            int_id -= tup_dpnpy[1]
+            int_id -= int_num
     raise
 
 def def_plt(
@@ -127,6 +27,7 @@ def def_plt(
     tup_xlim: tuple = None,
     tup_ylim: tuple = None,
     int_bins: int = 'auto',
+    str_data: str = None
 ) -> None:
     
     matplotlib.rcParams['font.size']=15
@@ -153,21 +54,24 @@ def def_plt(
         del_data = np_data[:,1] - np_data[:,0]
         ax.set_xlabel( r'E$_{DP}$-E$_{DFT}$ (meV/atom)')
         str_label = f'Energy RMSE = {float_rmse:.3f} meV/atom'
-        for int_i in range(len(del_data)):
-            if abs(del_data[int_i]) > 1.5:
-                str_locate, int_locate = check_locate(int_i)
-                print(f'{str_locate} {int_locate} {del_data[int_i]:.1f}')
+        if str_data:
+            for int_i in range(len(del_data)):
+                if abs(del_data[int_i]) > 1.5:
+                    str_locate, int_locate = check_locate(int_i, str_data)
+                    print(f'{str_locate} {int_locate} {del_data[int_i]:.1f}')
+
     elif (str_mode=='f'):
         del_data_xyz = np_data[:,3:6] - np_data[:,0:3]
         del_data = np.linalg.norm( del_data_xyz, axis=1 )
         del_data *= 1000
         ax.set_xlabel(r'|F$_{DP}$-F$_{DFT}$| (meV/Å)')
         str_label = f'Force RMSE = {float_rmse:.1f} meV/Å'
-        for int_i in range(len(del_data)):
-            if del_data[int_i] > 1000:
-                int_id = int_i // int_natoms
-                str_locate, int_locate = check_locate(int_id)
-                print(f'{str_locate} {int_locate} {del_data[int_i]:.1f}')
+        if str_data:
+            for int_i in range(len(del_data)):
+                if del_data[int_i] > 1000:
+                    int_id = int_i // int_natoms
+                    str_locate, int_locate = check_locate(int_id, str_data)
+                    print(f'{str_locate} {int_locate} {del_data[int_i]:.1f}')
 
     #float_std = np.std(del_data)
     #float_mean = np.mean(del_data) 
@@ -189,20 +93,22 @@ def def_plt(
 def_plt(
     str_file = 'dptest.e.out',
     int_natoms = 384,
-    float_rmse = 0.440,
+    float_rmse = 0.412,
     #tup_xlim = (-1.5,1.5),
-    tup_ylim = (0,10),
-    #str_save = 'dptest.e.pdf'
+    #tup_ylim = (0,10),
+    str_save = 'dptest.e.pdf',
+    str_data = 'data.json'
 )
 #'''
 #'''
 def_plt(
     str_file = 'dptest.f.out',
-    float_rmse = 60.0,
+    float_rmse = 59.9,
     int_natoms = 384,
-    #tup_xlim = (0,250),
-    tup_ylim = (0,10),
-    #str_save = 'dptest.f.pdf'
+    tup_xlim = (0,250),
+    #tup_ylim = (0,10),
+    str_save = 'dptest.f.pdf',
+    str_data = 'data.json'
 )
 #'''
 

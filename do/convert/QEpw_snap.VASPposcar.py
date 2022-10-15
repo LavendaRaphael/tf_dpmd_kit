@@ -2,11 +2,11 @@ import ase.io
 import glob
 import os
 
-#'''
+'''
 str_prefix = 'task.'
 str_pwin = 'input'
 #'''
-'''
+#'''
 str_prefix = 'snap_'
 str_pwin = 'pwscf.in'
 #'''
