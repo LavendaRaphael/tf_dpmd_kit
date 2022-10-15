@@ -2,6 +2,7 @@ import numpy
 from matplotlib import pyplot as plt
 import numpy as np
 from matplotlib import rc
+import os
 
 def grid_plt(
     list2d_file: list[list],
@@ -18,7 +19,8 @@ def grid_plt(
     for list_file in list2d_file:
         str_file = list_file[0]
         str_label = list_file[1]
-
+        if not os.path.isfile(str_file):
+            continue
         np_data = np.loadtxt(str_file)
         if bool_minzero:
             ax.plot( np_data[:,0], np_data[:,1]-min(np_data[:,1]), label=str_label)
