@@ -61,6 +61,7 @@ dict_label = {
 def_plt(
     list2d_header = [
         ['dist_vp_o_1_2', (1.05,1.25)],
+        ['dh2x_o_0_h'],
         ['dist_o_0_h', (0.9, 1.2)],
         ['cn_o_0_h', (0,0.01)],
     ],
