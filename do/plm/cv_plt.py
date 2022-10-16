@@ -55,12 +55,11 @@ def def_multi_plt(
         fig.savefig(str_save, bbox_inches='tight', dpi=300)
 
 dict_label = {
-    'dist_vp_o_1': 'R(O\N{SUBSCRIPT ONE}V\N{Latin Subscript Small Letter P})',
-    'dist_vp_o_2': 'R(O\N{SUBSCRIPT TWO}V\N{Latin Subscript Small Letter P})',
+    'dist_vp_o_1': r'R(V$_p$O$_1$)',
+    'dist_vp_o_2': r'R(V$_p$O$_2$)',
     'dist_vp_c': r'R(CV$_p$)',
     'cost_o_h': 'cos dh(OH)',
-    'dist_o_0_h': 'R(O\N{SUBSCRIPT ZERO}H)',
-    'cost_o_0_h': 'cos dh(O\N{SUBSCRIPT ZERO}H)', 
+    'dist_o_0_h': r'R(O$_0$H)',
     'metadbias': 'V(s,t)',
     'metadrbias': 'M(s,t)', 
     'metadrct': 'c(t)', 
@@ -92,8 +91,9 @@ def_multi_plt(
         #['cnn_o_w_hmin',(1.6, 1.8)],
         #['lw_cnn_o_w_hbias']
     ],
-    float_timescale = 1/1000,
+    #float_timescale = 1/1000,
     #float_timescale = 1/0.0005/40,
+    float_timescale = 1/0.000048378/10
     #tup_xlim = (360800, 363300),
     #str_save = 'cv.png'
 )
