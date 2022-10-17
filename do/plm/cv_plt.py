@@ -75,7 +75,7 @@ def_multi_plt(
         #['dist_vp_c', (0.5, 1.5)],
         #['lw_vp_cbias'],
 
-        #['dh2x_o_0_h'],
+        ['dh2x_o_0_h'],
 
         ['metadbias'],
         #['metadrbias'],
@@ -87,12 +87,9 @@ def_multi_plt(
 
         ['cn_o_0_h'],
         #['uw_cn_o_0_hbias'],
-
-        #['cnn_o_w_hmin',(1.6, 1.8)],
-        #['lw_cnn_o_w_hbias']
     ],
-    #float_timescale = 1/1000,
-    float_timescale = 1/0.0005/50,
+    float_timescale = 1/1000,
+    #float_timescale = 1/0.0005/50,
     #float_timescale = 1/0.000048378/10
     #tup_xlim = (360800, 363300),
     #str_save = 'cv.png'
