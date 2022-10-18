@@ -34,21 +34,23 @@ def def_rdf(
         dict_atomgroup[str_atomgroup_1],
         nbins = int_nbins,
         range=(1.0, 6.0),
-        )
+    )
     for list_range in list2d_range:
+        str_save = f'rdf.{str_atomgroup_0}.{str_atomgroup_1}.{list_range[0]:07d}_{list_range[-1]:07d}.csv'
+        print(str_save)
+
         mda_rdf.run(
             start = list_range[0],
             stop = list_range[1],
             verbose = True,
-            )
+        )
         array_final = np.empty( shape=(int_nbins,2) )
         array_final[:,0] = mda_rdf.results.bins
         array_final[:,1] = mda_rdf.results.rdf
-        
+    
         np.savetxt(
-            fname = f'rdf.{str_atomgroup_0}.{str_atomgroup_1}.{list_range[0]:07d}_{list_range[-1]:07d}.csv',
-            X = array_final,
-            delimiter = ','
+            fname = str_save,
+            X = array_final
         )
 
 # run
@@ -60,9 +62,16 @@ list2d_range = [
     [150000, 200000],
 ]
 #'''
+#'''
 list2d_range = [
-    [ 50000, 200000],
+    [ 50000, 150000],
 ]
+#'''
+'''
+list2d_range = [
+    [ 1000, 55000],
+]
+#'''
 
 def_rdf(
     'c',

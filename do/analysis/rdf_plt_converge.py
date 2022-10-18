@@ -6,7 +6,7 @@ def gen_filesave(
     tup_elements: tuple,
 ) -> list:
 
-    return f'rdf.{tup_elements[0]}.{tup_elements[1]}.test.pdf'
+    return f'rdf.{tup_elements[0]}.{tup_elements[1]}.converge.pdf'
 
 def gen_filename(
      tup_elements: tuple,
@@ -49,7 +49,6 @@ def def_plt(
     for list_data in list2d_data:
         array_rdf = np.loadtxt( 
             fname = list_data[0],
-            delimiter = ','
         )
         ax.plot(
             array_rdf[:,0], 
@@ -75,14 +74,13 @@ list_id.append((  50000,100000))
 list_id.append(( 100000,150000))
 list_id.append(( 150000,200000))
 #'''
-'''
-list_id.append((   4000, 8000))
-list_id.append((  14000,18000))
-list_id.append((  24000,28000))
-list_id.append((  34000,38000))
-#'''
-
 float_timestep = 0.005
+
+'''
+list_id.append((1000,46000))
+list_id.append((1000,55000))
+float_timestep = 4.837769e-04
+#'''
 
 def_plt(
     list2d_data = gen_listfile(('c','o_w'), list_id, float_timestep),

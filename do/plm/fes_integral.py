@@ -1,22 +1,14 @@
 import numpy as np
 import math
+from tf_dpmd_kit import plm
 
-def def_T2KbT(
-    float_T: float,
-) -> float:
-
-    float_Avogadro = 6.02214076e23
-    # J*K^-1
-    float_Kb = 1.380649e-23
-    # KJ*mol^-1
-    float_KbT = float_Kb*float_Avogadro*float_T/1000.0
-    return float_KbT
-
-def def_integral(
+def fes_integral(
     str_file: str,
-    float_T: float,
     float_xlow: float,
     float_xup: float,
+    float_T: float = None,
+    str_plmin: str = '../../plm.in',
+    str_plmlog: str = '../../plm.log'
 ) -> float:
 
     if float_xup == '1M':
@@ -27,8 +19,11 @@ def def_integral(
 
     np_data = np.loadtxt(str_file)    
     np_data[:,1] -= min(np_data[:,1])
- 
-    float_KbT = def_T2KbT(float_T)
+
+    if not float_T:
+        float_T, float_KbT = plm.get_temperature( str_plmin, str_plmlog )
+    else:
+        float_KbT = plm.T2KbT(float_T)
     
     np_data[:,1] = np.exp(-np_data[:,1]/float_KbT)
  
@@ -43,34 +38,23 @@ def def_integral(
     float_integral = -np.log(float_integral) * float_KbT
     return float_integral
 
-def def_pka(
-    float_deltag: float,
-    float_T: float,
-) -> None:
-
-    float_KbT = def_T2KbT(float_T)
-    return float_deltag/(float_KbT*math.log(10))
-
-float_T = 310
-
-float_g1 = def_integral(
+float_g1 = fes_integral(
     str_file = 'fes.dist_vp_c.grid',
-    float_T = float_T,
-    float_xlow = 1.2,
-    float_xup = 2,
+    float_xlow = 1.16,
+    float_xup = 1.66,
 )
 print('float_g1', float_g1)
-float_g2 = def_integral(
+
+float_g2 = fes_integral(
     str_file = 'fes.dist_vp_c.grid',
-    float_T = float_T,
-    float_xlow = 2.2,
+    float_xlow = 2.56,
     float_xup = '1M',
 )
 print('float_g2', float_g2)
+
 float_deltag = float_g2-float_g1
-float_pka = def_pka(
+float_pka = plm.deltag_to_pka(
     float_deltag = float_deltag,
-    float_T = float_T,
 )
 print('float_deltag', float_deltag)
 print('float_pka', float_pka)
