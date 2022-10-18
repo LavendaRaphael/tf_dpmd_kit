@@ -79,7 +79,7 @@ def def_plt(
         del_data,
         label = str_label,
         bins = int_bins,
-        #density = True
+        density = True
     )
 
     ax.legend()
@@ -95,12 +95,12 @@ def_plt(
     int_natoms = 384,
     float_rmse = 0.412,
     #tup_xlim = (-1.5,1.5),
-    #tup_ylim = (0,10),
+    tup_ylim = (0,1.25),
     str_save = 'dptest.e.pdf',
     str_data = 'data.json'
 )
 #'''
-#'''
+'''
 def_plt(
     str_file = 'dptest.f.out',
     float_rmse = 59.9,

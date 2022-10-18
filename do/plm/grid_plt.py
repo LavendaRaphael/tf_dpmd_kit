@@ -23,9 +23,9 @@ def grid_plt(
             continue
         np_data = np.loadtxt(str_file)
         if bool_minzero:
-            ax.plot( np_data[:,0], np_data[:,1]-min(np_data[:,1]), label=str_label)
+            ax.plot( np_data[:,0], np_data[:,1]-min(np_data[:,1]), label=str_label, linewidth=2)
         else:
-            ax.plot( np_data[:,0], np_data[:,1], label=str_label)
+            ax.plot( np_data[:,0], np_data[:,1], label=str_label, linewidth=2)
     
     ax.legend()
     ax.set_xlabel(str_xlabel)
@@ -33,7 +33,8 @@ def grid_plt(
     ax.set_xlim(tup_xlim)
     ax.set_ylim(tup_ylim)
     if str_save:
-        fig.savefig(str_save, bbox_inches='tight')
+        #fig.set_size_inches(6, 5)
+        fig.savefig(str_save, bbox_inches='tight', dpi=300)
 '''
 grid_plt(
     list2d_file = [
@@ -61,7 +62,8 @@ grid_plt(
     ],
     str_xlabel = r'R(CV$_P$) (Å)',
     str_save = 'fes.dist_vp_c.reweight_bias.pdf',
-    tup_ylim = (None, 70)
+    tup_xlim = (1.1, 8),
+    tup_ylim = (-10, 70)
 )
 #'''
 '''
@@ -76,7 +78,7 @@ grid_plt(
     tup_ylim = (None, 70)
 )
 #'''
-#'''
+'''
 grid_plt(
     list2d_file = [
         ['sum_hills/fes.dist_vp_c.0.dat', '1ns'],
@@ -91,7 +93,7 @@ grid_plt(
     tup_xlim = None
 )
 #'''
-#'''
+'''
 grid_plt(
     list2d_file = [
         ['sum_hills/fes.dist_vp_c.0.dat', '1ns'],
