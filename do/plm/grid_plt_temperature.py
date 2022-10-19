@@ -38,7 +38,7 @@ def grid_plt(
     ax.set_xlim(tup_xlim)
     ax.set_ylim(tup_ylim)
     if str_save:
-        #fig.set_size_inches(6, 5)
+        fig.set_size_inches(9, 7)
         fig.savefig(str_save, bbox_inches='tight', dpi=300)
 '''
 grid_plt(

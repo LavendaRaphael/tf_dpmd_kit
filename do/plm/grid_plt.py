@@ -33,7 +33,7 @@ def grid_plt(
     ax.set_xlim(tup_xlim)
     ax.set_ylim(tup_ylim)
     if str_save:
-        #fig.set_size_inches(6, 5)
+        fig.set_size_inches(6, 5)
         fig.savefig(str_save, bbox_inches='tight', dpi=300)
 '''
 grid_plt(
@@ -92,23 +92,23 @@ grid_plt(
     bool_minzero = False,
     tup_xlim = None
 )
-#'''
 '''
+#'''
 grid_plt(
     list2d_file = [
-        ['sum_hills/fes.dist_vp_c.0.dat', '1ns'],
         ['sum_hills/fes.dist_vp_c.1.dat', '2ns'],
-        ['sum_hills/fes.dist_vp_c.2.dat', '3ns'],
         ['sum_hills/fes.dist_vp_c.3.dat', '4ns'],
-        ['sum_hills/fes.dist_vp_c.4.dat', '5ns'],
+        ['sum_hills/fes.dist_vp_c.5.dat', '6ns'],
+        ['sum_hills/fes.dist_vp_c.7.dat', '8ns'],
+        ['sum_hills/fes.dist_vp_c.9.dat', '10ns'],
     ],
     str_xlabel = r'R(CV$_P$) (Å)',
     str_save = 'sum_hills/fes.dist_vp_c.pdf',
-    tup_xlim = None,
+    tup_xlim = (1.1, 8),
     tup_ylim = (None, 70)
 )
 #'''
-'''
+#'''
 grid_plt(
     list2d_file = [
         ['reweight_bias/analysis.1.fes.dist_vp_c.grid', '2ns'],
@@ -119,6 +119,7 @@ grid_plt(
     ],
     str_xlabel = r'R(CV$_P$) (Å)',
     str_save = 'reweight_bias/fes.dist_vp_c.pdf',
+    tup_xlim = (1.1, 8),
     tup_ylim = (None, 70)
 )
 #'''

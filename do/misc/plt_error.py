@@ -27,7 +27,7 @@ def run(
     ax.set_ylabel(str_ylabel)
     ax.legend()
     if str_save:
-        fig.set_size_inches(6, 5)
+        fig.set_size_inches(9, 7)
         fig.savefig(str_save, bbox_inches='tight', dpi=300)
 
 str_home = os.environ['homedir']
@@ -55,9 +55,9 @@ run(
 
 run(
     dict_file = {
-        str_exp+'/2019_PNAS_DanielAminov/Fig_1_deltag.csv': '2019 Daniel Aminov',
-        str_exp+'/2010_JPCA_WangXiaoguang/Sfig_3_deltag.csv': '2010 Xiaoguang Wang',
-        str_exp+'/2009_Science_KatrinAdamczyk/deltag.csv': '2009 Katrin Adamczyk',
+        str_exp+'/2019_PNAS_DanielAminov/Fig_1_deltag.csv': 'Daniel Aminov et al. (2019)',
+        str_exp+'/2010_JPCA_WangXiaoguang/Sfig_3_deltag.csv': 'Xiaoguang Wang et al. (2010)',
+        str_exp+'/2009_Science_KatrinAdamczyk/deltag.csv': 'Katrin Adamczyk et al. (2009, Deuterium)',
         'deltag.csv': 'DPMD'
     },
     str_save = 'deltag_exp.pdf',
