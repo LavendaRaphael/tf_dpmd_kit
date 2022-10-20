@@ -46,7 +46,7 @@ def def_plt(
         str_label = f'Force RMSE = {float_rmse:.1f} meV/Å'
 
     #float_std = np.std(del_data)
-    #float_mean = np.mean(del_data) 
+    #float_mean = np.mean(del_data)
     ax.hist(
         del_data,
         label = str_label,
@@ -60,6 +60,14 @@ def def_plt(
     ax.set_ylim(tup_ylim)
     if str_save:
         fig.savefig(str_save, bbox_inches='tight')
+
+def get_rmse(i):
+    with open('log', 'r') as fp:
+        for str_line in fp:
+            if 'weighted average of errors' in str_line:
+                break
+        fp.readline()
+        
 
 #'''
 def_plt(
