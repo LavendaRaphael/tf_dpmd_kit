@@ -11,12 +11,14 @@ def check_locate(
         dict_json = json.load(fp)
     dict_system = dict_json['dict_system']
 
+    int_tmp = int_id
     for str_system in dict_system:
         int_num = dict_system[str_system]
-        if int_id < int_num:
-            return str_system, int_id
+        if int_tmp < int_num:
+            return str_system, int_tmp
         else:
-            int_id -= int_num
+            int_tmp -= int_num
+    print(int_id)
     raise
 
 def def_plt(
