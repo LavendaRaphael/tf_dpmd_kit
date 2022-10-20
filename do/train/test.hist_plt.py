@@ -3,24 +3,6 @@ from matplotlib import pyplot as plt
 import matplotlib
 import json
 
-def check_locate(
-    int_id: int,
-    str_data: str
-):
-    with open(str_data, 'r') as fp:
-        dict_json = json.load(fp)
-    dict_system = dict_json['dict_system']
-
-    int_tmp = int_id
-    for str_system in dict_system:
-        int_num = dict_system[str_system]
-        if int_tmp < int_num:
-            return str_system, int_tmp
-        else:
-            int_tmp -= int_num
-    print(int_id)
-    raise
-
 def def_plt(
     float_rmse: float,
     str_file: str,
@@ -29,7 +11,6 @@ def def_plt(
     tup_xlim: tuple = None,
     tup_ylim: tuple = None,
     int_bins: int = 'auto',
-    str_data: str = None
 ) -> None:
     
     matplotlib.rcParams['font.size']=15
@@ -56,11 +37,6 @@ def def_plt(
         del_data = np_data[:,1] - np_data[:,0]
         ax.set_xlabel( r'E$_{DP}$-E$_{DFT}$ (meV/atom)')
         str_label = f'Energy RMSE = {float_rmse:.3f} meV/atom'
-        if str_data:
-            for int_i in range(len(del_data)):
-                if abs(del_data[int_i]) > 1.5:
-                    str_locate, int_locate = check_locate(int_i, str_data)
-                    print(f'{str_locate} {int_locate} {del_data[int_i]:.1f}')
 
     elif (str_mode=='f'):
         del_data_xyz = np_data[:,3:6] - np_data[:,0:3]
@@ -68,12 +44,6 @@ def def_plt(
         del_data *= 1000
         ax.set_xlabel(r'|F$_{DP}$-F$_{DFT}$| (meV/Å)')
         str_label = f'Force RMSE = {float_rmse:.1f} meV/Å'
-        if str_data:
-            for int_i in range(len(del_data)):
-                if del_data[int_i] > 1000:
-                    int_id = int_i // int_natoms
-                    str_locate, int_locate = check_locate(int_id, str_data)
-                    print(f'{str_locate} {int_locate} {del_data[int_i]:.1f}')
 
     #float_std = np.std(del_data)
     #float_mean = np.mean(del_data) 
@@ -97,20 +67,18 @@ def_plt(
     int_natoms = 384,
     float_rmse = 0.412,
     #tup_xlim = (-1.5,1.5),
-    tup_ylim = (0,1.25),
+    #tup_ylim = (0,1.25),
     str_save = 'dptest.e.pdf',
-    str_data = 'data.json'
 )
 #'''
-'''
+#'''
 def_plt(
     str_file = 'dptest.f.out',
     float_rmse = 59.9,
     int_natoms = 384,
-    tup_xlim = (0,250),
+    #tup_xlim = (0,250),
     #tup_ylim = (0,10),
     str_save = 'dptest.f.pdf',
-    str_data = 'data.json'
 )
 #'''
 
