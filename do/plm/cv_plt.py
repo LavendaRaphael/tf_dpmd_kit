@@ -67,8 +67,8 @@ dict_label = {
 
 def_multi_plt(
     list_header = [
-        ['dist_vp_o_1'],
-        ['dist_vp_o_2'],
+        #['dist_vp_o_1'],
+        #['dist_vp_o_2'],
         ['dist_vp_o_1_2'],
 
         ['dist_vp_c'],
