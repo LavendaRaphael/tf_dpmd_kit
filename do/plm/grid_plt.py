@@ -119,21 +119,24 @@ grid_plt(
 )
 #'''
 #'''
+str_tmp = 'dist_vp_c_fes'
+str_tmp = 'dist_vp_c_hgx'
+str_tmp = 'dist_vp_o_1_2_fes'
 grid_plt(
     list2d_file = [
-        ['reweight_bias/analysis.0.fes.dist_vp_c.grid', '1ns'],
-        ['reweight_bias/analysis.1.fes.dist_vp_c.grid', '2ns'],
-        ['reweight_bias/analysis.2.fes.dist_vp_c.grid', '3ns'],
-        ['reweight_bias/analysis.3.fes.dist_vp_c.grid', '4ns'],
-        ['reweight_bias/analysis.4.fes.dist_vp_c.grid', '5ns'],
-        ['reweight_bias/analysis.5.fes.dist_vp_c.grid', '6ns'],
-        ['reweight_bias/analysis.6.fes.dist_vp_c.grid', '7ns'],
-        ['reweight_bias/analysis.7.fes.dist_vp_c.grid', '8ns'],
-        ['reweight_bias/analysis.8.fes.dist_vp_c.grid', '9ns'],
-        ['reweight_bias/fes.dist_vp_c.grid', '10ns'],
+        [f'analysis.0.{str_tmp}.grid', '1ns'],
+        [f'analysis.1.{str_tmp}.grid', '2ns'],
+        [f'analysis.2.{str_tmp}.grid', '3ns'],
+        [f'analysis.3.{str_tmp}.grid', '4ns'],
+        [f'analysis.4.{str_tmp}.grid', '5ns'],
+        [f'analysis.5.{str_tmp}.grid', '6ns'],
+        [f'analysis.6.{str_tmp}.grid', '7ns'],
+        [f'analysis.7.{str_tmp}.grid', '8ns'],
+        [f'analysis.8.{str_tmp}.grid', '9ns'],
+        [f'{str_tmp}.grid', '10ns'],
     ],
     str_xlabel = r'R(CV$_P$) (Å)',
-    str_save = 'reweight_bias/fes.dist_vp_c.pdf',
+    str_save = f'{str_tmp}.pdf',
     #tup_xlim = (1.1, 8),
     #tup_ylim = (None, 70)
 )

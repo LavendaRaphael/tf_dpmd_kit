@@ -88,8 +88,8 @@ def_multi_plt(
         ['cn_o_0_h'],
         #['uw_cn_o_0_hbias'],
     ],
-    float_timescale = 1/1000,
-    #float_timescale = 1/0.0005/50,
+    #float_timescale = 1/1000,
+    float_timescale = 1/0.0005/50,
     #float_timescale = 1/0.000048378/10
     #tup_xlim = (360800, 363300),
     #str_save = 'cv.png'
