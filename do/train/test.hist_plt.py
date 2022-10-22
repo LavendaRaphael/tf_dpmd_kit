@@ -4,7 +4,6 @@ import matplotlib
 import json
 
 def def_plt(
-    float_rmse: float,
     str_file: str,
     int_natoms: int,
     str_save: str = None,
@@ -29,24 +28,27 @@ def def_plt(
             print(list_line)
             raise
     np_data = np.loadtxt(str_file)
+
+    float_rmse_e, float_rmse_f, float_rmse_v = get_rmse()
+
     if (str_mode=='e'):
         # per atom
         np_data /= int_natoms
         # eV to meV
         np_data *= 1000
+        float_rmse_e *= 1000
         del_data = np_data[:,1] - np_data[:,0]
         ax.set_xlabel( r'E$_{DP}$-E$_{DFT}$ (meV/atom)')
-        str_label = f'Energy RMSE = {float_rmse:.3f} meV/atom'
+        str_label = f'Energy RMSE = {float_rmse_e:.3f} meV/atom'
 
     elif (str_mode=='f'):
         del_data_xyz = np_data[:,3:6] - np_data[:,0:3]
         del_data = np.linalg.norm( del_data_xyz, axis=1 )
         del_data *= 1000
+        float_rmse_f *= 1000
         ax.set_xlabel(r'|F$_{DP}$-F$_{DFT}$| (meV/Å)')
-        str_label = f'Force RMSE = {float_rmse:.1f} meV/Å'
+        str_label = f'Force RMSE = {float_rmse_f:.1f} meV/Å'
 
-    #float_std = np.std(del_data)
-    #float_mean = np.mean(del_data)
     ax.hist(
         del_data,
         label = str_label,
@@ -61,19 +63,21 @@ def def_plt(
     if str_save:
         fig.savefig(str_save, bbox_inches='tight')
 
-def get_rmse(i):
+def get_rmse():
     with open('log', 'r') as fp:
         for str_line in fp:
             if 'weighted average of errors' in str_line:
                 break
         fp.readline()
-        
+        float_rmse_e = float(fp.readline().split()[-2])
+        float_rmse_f = float(fp.readline().split()[-2])
+        float_rmse_v = float(fp.readline().split()[-2])
+    return float_rmse_e, float_rmse_f, float_rmse_v
 
 #'''
 def_plt(
     str_file = 'dptest.e.out',
     int_natoms = 384,
-    float_rmse = 0.412,
     #tup_xlim = (-1.5,1.5),
     #tup_ylim = (0,1.25),
     str_save = 'dptest.e.pdf',
@@ -82,7 +86,6 @@ def_plt(
 #'''
 def_plt(
     str_file = 'dptest.f.out',
-    float_rmse = 59.9,
     int_natoms = 384,
     #tup_xlim = (0,250),
     #tup_ylim = (0,10),
