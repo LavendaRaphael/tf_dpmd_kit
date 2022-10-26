@@ -47,9 +47,9 @@ run(
         str_exp+'/2019_PNAS_DanielAminov/Fig_1_kelvin.csv': '2019 Daniel Aminov',
         str_exp+'/2010_JPCA_WangXiaoguang/Sfig_3_kelvin.csv': '2010 Xiaoguang Wang',
         str_exp+'/2009_Science_KatrinAdamczyk/pka_kelvin.csv': '2009 Katrin Adamczyk',
-        'pka.csv': 'DPMD'
+        'reweight_bias.pka.csv': 'DPMD'
     },
-    str_save = 'pka_exp.pdf',
+    str_save = 'reweight_bias.pka_exp.pdf',
     str_ylabel = 'pKa'
 )
 
@@ -58,9 +58,9 @@ run(
         str_exp+'/2019_PNAS_DanielAminov/Fig_1_deltag.csv': 'Daniel Aminov et al. (2019)',
         str_exp+'/2010_JPCA_WangXiaoguang/Sfig_3_deltag.csv': 'Xiaoguang Wang et al. (2010)',
         str_exp+'/2009_Science_KatrinAdamczyk/deltag.csv': 'Katrin Adamczyk et al. (2009, Deuterium)',
-        'deltag.csv': 'DPMD'
+        'reweight_bias.deltag.csv': 'DPMD'
     },
-    str_save = 'deltag_exp.pdf',
+    str_save = 'reweight_bias.deltag_exp.pdf',
     str_ylabel = r'$\Delta$G (KJ/mol)'
 )
 

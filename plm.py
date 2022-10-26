@@ -12,31 +12,39 @@ def T2KbT(
     return float_KbT
 
 def get_temperature(
-    str_in: str = '../../plm.in',
-    str_log: str = '../../plm.log'
+    str_in: str = '../plm.in',
+    str_log: str = '../plm.log'
 ) -> float:
-    
-    with open(str_in, 'r') as fp:
-        for str_line in fp:
-            if 'TEMP=' in str_line:
-                list_line = str_line.split()
-                break
-        for str_key in list_line:
-            if 'TEMP=' == str_key[:5]:
-                float_T = int(str_key[5:])
-                break
-    print(float_T)
-    float_T2KbT = T2KbT(float_T)
 
-    with open(str_log, 'r') as fp:
-        for str_line in fp:
-            if 'KbT' in str_line:
-                list_line = str_line.split()
-                break
-        float_KbT = float(list_line[2])
-    print(float_KbT)
+    if str_in:
+        with open(str_in, 'r') as fp:
+            for str_line in fp:
+                if 'TEMP=' in str_line:
+                    list_line = str_line.split()
+                    break
+            for str_key in list_line:
+                if 'TEMP=' == str_key[:5]:
+                    float_T = int(str_key[5:])
+                    break
+        if not float_T:
+            raise
+        float_T2KbT = T2KbT(float_T)
 
-    if float_T2KbT-float_KbT > 1e4:
+    if str_log:
+        with open(str_log, 'r') as fp:
+            for str_line in fp:
+                if 'KbT' in str_line:
+                    list_line = str_line.split()
+                    float_KbT = float(list_line[2])
+                    break
+        if not float_KbT:
+            raise
+
+    if str_in and str_log:
+        if float_T2KbT-float_KbT > 1e4:
+            raise
+
+    if not (str_in or str_log):
         raise
 
     return float_T, float_T2KbT
@@ -44,8 +52,8 @@ def get_temperature(
 def deltag_to_pka(
     float_deltag: float,
     float_T: float = None,
-    str_plmin: str = '../../plm.in',
-    str_plmlog: str = '../../plm.log'
+    str_in: str = '../plm.in',
+    str_log: str = '../plm.log'
 ) -> float:
 
     if float_T is None:
@@ -58,8 +66,8 @@ def deltag_to_pka(
 def pka_to_deltag(
     float_pka: float,
     float_T: float = None,
-    str_plmin: str = '../../plm.in',
-    str_plmlog: str = '../../plm.log'
+    str_in: str = '../plm.in',
+    str_log: str = '../plm.log'
 ) -> float:
 
     if float_T is None:
