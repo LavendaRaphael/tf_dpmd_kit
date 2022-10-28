@@ -98,16 +98,16 @@ def write_traj(
                 for i in range(int_line-2):
                     file_new.write(file_old.readline())
 
-int_restartstep = 3600000
+int_restartstep = 22000000
 str_dir = 'bk'
-'''
+#'''
 float_timestep = read_timestep('lmp.in')
 float_time = int_restartstep * float_timestep
-write_hills(
-    str_old = os.path.join(str_dir, 'HILLS'),
-    str_new = 'HILLS',
-    float_time = float_time,
-)
+#write_hills(
+#    str_old = os.path.join(str_dir, 'HILLS'),
+#    str_new = 'HILLS',
+#    float_time = float_time,
+#)
 write_colvar(
     str_old = os.path.join(str_dir, 'COLVAR'),
     str_new = 'COLVAR',
@@ -118,7 +118,7 @@ write_log(
     str_new = 'log',
     int_restartstep = int_restartstep
 )
-'''
+#'''
 write_traj(
     str_old = os.path.join(str_dir, 'traj.lammpstrj'),
     str_new = 'traj.lammpstrj',
