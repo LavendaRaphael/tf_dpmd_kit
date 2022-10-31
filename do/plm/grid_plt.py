@@ -56,19 +56,20 @@ def grid_plt(
     if str_save:
         fig.set_size_inches(9, 7)
         fig.savefig(str_save, bbox_inches='tight', dpi=300)
-'''
+#------------------------------------------------------------------[Temperature]
+#'''
 str_tmp = 'dist_vp_c_deltag'
 grid_plt(
     list2d_file = [
-        [f'290K.0/reweight_bias/{str_tmp}.csv', '290K'],
-        [f'310K.0/reweight_bias/{str_tmp}.csv', '310K'],
-        [f'330K.0/reweight_bias/{str_tmp}.csv', '330K'],
-        [f'350K.0/reweight_bias/{str_tmp}.csv', '350K'],
-        [f'370K.0/reweight_bias/{str_tmp}.csv', '370K'],
-        [f'390K.0/reweight_bias/{str_tmp}.csv', '390K'],
+        [f'290K/reweight_bias/{str_tmp}.csv', '290K'],
+        [f'310K/reweight_bias/{str_tmp}.csv', '310K'],
+        [f'330K/reweight_bias/{str_tmp}.csv', '330K'],
+        [f'350K/reweight_bias/{str_tmp}.csv', '350K'],
+        [f'370K/reweight_bias/{str_tmp}.csv', '370K'],
+        [f'390K/reweight_bias/{str_tmp}.csv', '390K'],
     ],
     str_xlabel = 'Time (ns)',
-    str_ylabel = 'pKa',
+    str_ylabel = r'$\Delta$G (kJ/mol)',
     str_save = f'reweight_bias.{str_tmp}.pdf',
     #tup_xlim = (1.1, 8),
     #tup_ylim = (-10, 70),
@@ -79,12 +80,12 @@ grid_plt(
 str_tmp = 'dist_vp_c_pka'
 grid_plt(
     list2d_file = [
-        [f'290K.0/reweight_bias/{str_tmp}.csv', '290K'],
-        [f'310K.0/reweight_bias/{str_tmp}.csv', '310K'],
-        [f'330K.0/reweight_bias/{str_tmp}.csv', '330K'],
-        [f'350K.0/reweight_bias/{str_tmp}.csv', '350K'],
-        [f'370K.0/reweight_bias/{str_tmp}.csv', '370K'],
-        [f'390K.0/reweight_bias/{str_tmp}.csv', '390K'],
+        [f'290K/reweight_bias/{str_tmp}.csv', '290K'],
+        [f'310K/reweight_bias/{str_tmp}.csv', '310K'],
+        [f'330K/reweight_bias/{str_tmp}.csv', '330K'],
+        [f'350K/reweight_bias/{str_tmp}.csv', '350K'],
+        [f'370K/reweight_bias/{str_tmp}.csv', '370K'],
+        [f'390K/reweight_bias/{str_tmp}.csv', '390K'],
     ],
     str_xlabel = 'Time (ns)',
     str_ylabel = 'pKa',
@@ -119,12 +120,12 @@ grid_plt(
 str_tmp = 'dist_vp_o_1_2_fes'
 grid_plt(
     list2d_file = [
-        [f'290K.0/reweight_bias/{str_tmp}.grid', '290K'],
-        [f'310K.0/reweight_bias/{str_tmp}.grid', '310K'],
-        [f'330K.0/reweight_bias/{str_tmp}.grid', '330K'],
-        [f'350K.0/reweight_bias/{str_tmp}.grid', '350K'],
-        [f'370K.0/reweight_bias/{str_tmp}.grid', '370K'],
-        [f'390K.0/reweight_bias/{str_tmp}.grid', '390K'],
+        [f'290K/reweight_bias/{str_tmp}.grid', '290K'],
+        [f'310K/reweight_bias/{str_tmp}.grid', '310K'],
+        [f'330K/reweight_bias/{str_tmp}.grid', '330K'],
+        [f'350K/reweight_bias/{str_tmp}.grid', '350K'],
+        [f'370K/reweight_bias/{str_tmp}.grid', '370K'],
+        [f'390K/reweight_bias/{str_tmp}.grid', '390K'],
     ],
     str_xlabel = r'R(V$_P$O$_C$) (Å)',
     str_ylabel = 'FES (kJ/mol)',
@@ -140,12 +141,12 @@ str_tmp = 'dist_vp_c_fes'
 #str_tmp = 'fes.dist_vp_c'
 grid_plt(
     list2d_file = [
-        [f'290K.0/reweight_bias/{str_tmp}.grid', '290K'],
-        [f'310K.0/reweight_bias/{str_tmp}.grid', '310K'],
-        [f'330K.0/reweight_bias/{str_tmp}.grid', '330K'],
-        [f'350K.0/reweight_bias/{str_tmp}.grid', '350K'],
-        [f'370K.0/reweight_bias/{str_tmp}.grid', '370K'],
-        [f'390K.0/reweight_bias/{str_tmp}.grid', '390K'],
+        [f'290K/reweight_bias/{str_tmp}.grid', '290K'],
+        [f'310K/reweight_bias/{str_tmp}.grid', '310K'],
+        [f'330K/reweight_bias/{str_tmp}.grid', '330K'],
+        [f'350K/reweight_bias/{str_tmp}.grid', '350K'],
+        [f'370K/reweight_bias/{str_tmp}.grid', '370K'],
+        [f'390K/reweight_bias/{str_tmp}.grid', '390K'],
     ],
     str_xlabel = r'R(V$_P$C) (Å)',
     str_ylabel = 'FES (kJ/mol)',
@@ -156,20 +157,79 @@ grid_plt(
     tup_colormap = (290, 390)
 )
 #'''
-#'''
+#----------------------------------------------------------[Compare]
+
+'''
+str_tmp = 'dist_vp_c_pka'
 grid_plt(
     list2d_file = [
-        ['../../../02.390K_hills/390K/sum_hills/fes.dist_vp_o_1_2.10.dat', 'Hills 0.5'],
-        ['dist_vp_o_1_2_fes.5.dat', 'Hills 1.0'],
+        [f'../../../03.390K_hills_reweight/390K/reweight_bias/{str_tmp}.csv', 'Biasfactor 5.0'],
+        [f'{str_tmp}.csv', 'Biasfactor 10.0'],
+    ],
+    str_xlabel = 'Time (ns)',
+    str_ylabel = 'pKa',
+    str_save = f'{str_tmp}.compare.pdf'
+)
+#'''
+'''
+str_tmp = 'dist_vp_c_deltag'
+grid_plt(
+    list2d_file = [
+        [f'../../../03.390K_hills_reweight/390K/reweight_bias/{str_tmp}.csv', 'Biasfactor 5.0'],
+        [f'{str_tmp}.csv', 'Biasfactor 10.0'],
+    ],
+    str_xlabel = 'Time (ns)',
+    str_ylabel = r'$\Delta$G (kJ/mol)',
+    str_save = f'{str_tmp}.compare.pdf'
+)
+#'''
+'''
+str_tmp = 'dist_vp_c_fes'
+grid_plt(
+    list2d_file = [
+        [f'../../../03.390K_hills_reweight/390K/reweight_bias/{str_tmp}.grid', 'Biasfactor 5.0'],
+        [f'{str_tmp}.grid', 'Biasfactor 10.0'],
+    ],
+    str_xlabel = r'R(V$_P$C) (Å)',
+    str_save = f'{str_tmp}.compare.pdf',
+    bool_minzero = True,
+    str_ylabel = 'FES (kJ/mol)',
+    tup_xlim = (0,10),
+    tup_ylim = (None, 80),
+)
+#'''
+'''
+str_tmp = 'dist_vp_o_1_2_fes'
+grid_plt(
+    list2d_file = [
+        [f'../../../03.390K_hills_reweight/390K/reweight_bias/{str_tmp}.grid', 'Biasfactor 5.0'],
+        [f'{str_tmp}.grid', 'Biasfactor 10.0'],
     ],
     str_xlabel = r'R(V$_P$O$_C$) (Å)',
-    str_save = f'dist_vp_o_1_2_fes.compare.pdf',
+    str_save = f'{str_tmp}.compare.pdf',
+    bool_minzero = True,
+    str_ylabel = 'FES (kJ/mol)',
+    tup_xlim = (0,14),
+    tup_ylim = (None, 80),
+)
+#'''
+'''
+str_tmp = 'dist_vp_o_1_2_fes'
+grid_plt(
+    list2d_file = [
+        ['../../../02.390K_hills/390K/sum_hills/fes.dist_vp_o_1_2.10.dat', 'Biasfactor 5.0'],
+        [f'{str_tmp}.5.dat', 'Biasfactor 10.0'],
+    ],
+    str_xlabel = r'R(V$_P$O$_C$) (Å)',
+    str_save = f'{str_tmp}.compare.pdf',
     bool_minus = True,
     bool_maxzero = True,
     str_ylabel = 'Hills (kJ/mol)',
     tup_xlim = (0,14)
 )
 #'''
+#----------------------------------------------------------[Sum hills]
+
 '''
 str_tmp = 'dist_vp_o_1_2_fes'
 #str_tmp = 'fes.dist_vp_o_1_2'

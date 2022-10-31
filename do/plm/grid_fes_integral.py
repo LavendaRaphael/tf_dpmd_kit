@@ -113,8 +113,12 @@ def get_pka_time(
     np_pka[int_nfile-1] = (int_nfile, float_pka)
     np_deltag[int_nfile-1] = (int_nfile, float_deltag)
     if str_save:
-        np.savetxt(f'{str_save}_pka.csv', np_pka, header=' '.join(np_pka.dtype.names))
-        np.savetxt(f'{str_save}_deltag.csv', np_deltag, header=' '.join(np_deltag.dtype.names))
+        str_save_pka = f'{str_save}_pka.csv'
+        print(str_save_pka)
+        np.savetxt(str_save_pka, np_pka, header=' '.join(np_pka.dtype.names))
+        str_save_deltag = f'{str_save}_deltag.csv'
+        print(str_save_deltag)
+        np.savetxt(str_save_deltag, np_deltag, header=' '.join(np_deltag.dtype.names))
 
 get_pka_time(
     str_file = 'dist_vp_c_fes.grid',
