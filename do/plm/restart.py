@@ -1,4 +1,5 @@
 import os
+import shutil
 
 def read_timestep(
     str_lmpin: str
@@ -98,9 +99,21 @@ def write_traj(
                 for i in range(int_line-2):
                     file_new.write(file_old.readline())
 
-int_restartstep = 22000000
+int_restartstep = 25000000
 str_dir = 'bk'
-#'''
+list_filecp = [
+    'HILLS',
+    'restart.1000000'
+]
+#---------------------------------------------
+list_filecp.extend([
+    f'restart.{int_restartstep}',
+    'lmp.in',
+    'plm.in'
+])
+
+for str_file in list_filecp:
+    shutil.copy(os.path.join(str_dir, str_file), '.')
 float_timestep = read_timestep('lmp.in')
 float_time = int_restartstep * float_timestep
 #write_hills(
@@ -118,7 +131,6 @@ write_log(
     str_new = 'log',
     int_restartstep = int_restartstep
 )
-#'''
 write_traj(
     str_old = os.path.join(str_dir, 'traj.lammpstrj'),
     str_new = 'traj.lammpstrj',
