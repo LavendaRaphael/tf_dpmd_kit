@@ -4,9 +4,9 @@ from tf_dpmd_kit import plm
 
 def run(
     str_cv: str,
-    str_in: str = '../plm.in',
-    str_log: str = '../plm.log',
-    str_hills: str = '../HILLS'
+    str_in: str = 'plm.in',
+    str_log: str = 'plm.log',
+    str_hills: str = 'HILLS'
 ):
 
     float_T, float_KbT = plm.get_temperature(str_in, str_log)
@@ -19,4 +19,7 @@ def run(
 
     print(subprocess_results.stdout)
 
-run('dist_vp_o_1_2')
+run(
+    str_cv = 'dist_vp_o_1_2',
+    str_log = None
+)
