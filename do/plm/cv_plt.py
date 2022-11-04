@@ -7,6 +7,7 @@ def def_multi_plt(
     float_timescale: float=1.0,
     tup_xlim: tuple = None,
     str_save: str = None,
+    str_color: str = None,
 ) -> None:
 
     rc('font',**{'size':15, 'family':'sans-serif','sans-serif':['Arial']})
@@ -34,7 +35,7 @@ def def_multi_plt(
                 str_header = list_header[int_i][0]
                 if str_header not in data.dtype.names:
                     continue
-                axs[int_i].scatter(data['time']*float_timescale, data[str_header], s=0.5)
+                axs[int_i].scatter(data['time']*float_timescale, data[str_header], s=0.5, color=str_color)
             if str_line[0] != '#':
                 break
             list_tmp = [str_line]
@@ -57,6 +58,7 @@ def def_multi_plt(
 dict_label = {
     'dist_vp_o_1': r'R(V$_p$O$_1$)',
     'dist_vp_o_2': r'R(V$_p$O$_2$)',
+    'dist_vp_o_1_2': r'R(V$_p$O$_C$)',
     'dist_vp_c': r'R(CV$_p$)',
     'cost_o_h': 'cos dh(OH)',
     'dist_o_0_h': r'R(O$_0$H)',
@@ -71,28 +73,28 @@ def_multi_plt(
         #['dist_vp_o_2'],
         ['dist_vp_o_1_2'],
 
-        ['dist_vp_c'],
+        #['dist_vp_c'],
         #['dist_vp_c', (0.5, 1.5)],
         #['lw_vp_cbias'],
 
-        ['dh2x_o_0_h'],
+        #['dh2x_o_0_h'],
 
-        ['metadbias'],
+        #['metadbias'],
         #['metadrbias'],
         #['metadrct'],
 
-        ['dist_o_0_h'],
+        #['dist_o_0_h'],
         #['dist_o_0_h', (1.1, 1.2)],
         #['uw_dist_o_0_hbias'],
 
-        ['cn_o_0_h'],
+        #['cn_o_0_h'],
         #['uw_cn_o_0_hbias'],
     ],
     #float_timescale = 1/1000,
     float_timescale = 1/0.0005/50,
     #float_timescale = 1/0.000048378/10
     #tup_xlim = (360800, 363300),
-    #str_save = 'cv.png'
+    str_save = 'cv.png'
 )
 
 plt.show()

@@ -57,7 +57,7 @@ def grid_plt(
         fig.set_size_inches(9, 7)
         fig.savefig(str_save, bbox_inches='tight', dpi=300)
 #------------------------------------------------------------------[Temperature]
-#'''
+'''
 str_tmp = 'dist_vp_c_deltag'
 grid_plt(
     list2d_file = [
@@ -230,7 +230,7 @@ grid_plt(
 #'''
 #----------------------------------------------------------[Sum hills]
 
-'''
+#'''
 str_tmp = 'dist_vp_o_1_2_fes'
 #str_tmp = 'fes.dist_vp_o_1_2'
 grid_plt(
@@ -241,9 +241,9 @@ grid_plt(
         [f'{str_tmp}.3.dat', '4ns'],
         [f'{str_tmp}.4.dat', '5ns'],
         [f'{str_tmp}.5.dat', '6ns'],
-        #[f'{str_tmp}.6.dat', '7ns'],
+        [f'{str_tmp}.6.dat', '7ns'],
         [f'{str_tmp}.7.dat', '8ns'],
-        #[f'{str_tmp}.8.dat', '9ns'],
+        [f'{str_tmp}.8.dat', '9ns'],
         [f'{str_tmp}.9.dat', '10ns'],
     ],
     str_xlabel = r'R(V$_P$O$_C$) (Å)',
@@ -254,7 +254,7 @@ grid_plt(
     tup_xlim = (0,14)
 )
 #'''
-'''
+#'''
 str_tmp = 'dist_vp_o_1_2_fes'
 #str_tmp = 'fes.dist_vp_o_1_2'
 grid_plt(
@@ -265,9 +265,9 @@ grid_plt(
         [f'{str_tmp}.3.dat', '4ns'],
         [f'{str_tmp}.4.dat', '5ns'],
         [f'{str_tmp}.5.dat', '6ns'],
-        #[f'{str_tmp}.6.dat', '7ns'],
+        [f'{str_tmp}.6.dat', '7ns'],
         [f'{str_tmp}.7.dat', '8ns'],
-        #[f'{str_tmp}.8.dat', '9ns'],
+        [f'{str_tmp}.8.dat', '9ns'],
         [f'{str_tmp}.9.dat', '10ns'],
     ],
     str_xlabel = r'R(V$_P$O$_C$) (Å)',
@@ -279,6 +279,7 @@ grid_plt(
     #tup_ylim = (None, 70)
 )
 #'''
+#----------------------------------------------------------[grid]
 '''
 str_tmp = 'dist_vp_c_hgx'
 grid_plt(
