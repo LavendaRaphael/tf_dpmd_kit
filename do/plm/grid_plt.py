@@ -27,6 +27,7 @@ def grid_plt(
     for list_file in list2d_file:
         str_file = list_file[0]
         str_label = list_file[1]
+        print(str_file)
         if not os.path.isfile(str_file):
             continue
 
@@ -57,63 +58,61 @@ def grid_plt(
         fig.set_size_inches(9, 7)
         fig.savefig(str_save, bbox_inches='tight', dpi=300)
 #------------------------------------------------------------------[Temperature]
-'''
-str_tmp = 'dist_vp_c_deltag'
+#'''
+str_tmp = 'dist_vp_o_1_2_fes_deltag'
+str_dir = 'sum_hills'
 grid_plt(
     list2d_file = [
-        [f'290K/reweight_bias/{str_tmp}.csv', '290K'],
-        [f'310K/reweight_bias/{str_tmp}.csv', '310K'],
-        [f'330K/reweight_bias/{str_tmp}.csv', '330K'],
-        [f'350K/reweight_bias/{str_tmp}.csv', '350K'],
-        [f'370K/reweight_bias/{str_tmp}.csv', '370K'],
-        [f'390K/reweight_bias/{str_tmp}.csv', '390K'],
+        [f'280K.1/{str_dir}/{str_tmp}.csv', '280K'],
+        [f'290K.1/{str_dir}/{str_tmp}.csv', '290K'],
+        [f'300K.1/{str_dir}/{str_tmp}.csv', '300K'],
+        [f'310K.1/{str_dir}/{str_tmp}.csv', '310K'],
+        [f'320K.1/{str_dir}/{str_tmp}.csv', '320K'],
     ],
     str_xlabel = 'Time (ns)',
     str_ylabel = r'$\Delta$G (kJ/mol)',
-    str_save = f'reweight_bias.{str_tmp}.pdf',
+    str_save = f'{str_dir}.{str_tmp}.pdf',
     #tup_xlim = (1.1, 8),
     #tup_ylim = (-10, 70),
-    tup_colormap = (290, 390)
+    tup_colormap = (280, 320)
 )
 #'''
-'''
-str_tmp = 'dist_vp_c_pka'
+#'''
+str_tmp = 'dist_vp_o_1_2_fes_pka'
 grid_plt(
     list2d_file = [
-        [f'290K/reweight_bias/{str_tmp}.csv', '290K'],
-        [f'310K/reweight_bias/{str_tmp}.csv', '310K'],
-        [f'330K/reweight_bias/{str_tmp}.csv', '330K'],
-        [f'350K/reweight_bias/{str_tmp}.csv', '350K'],
-        [f'370K/reweight_bias/{str_tmp}.csv', '370K'],
-        [f'390K/reweight_bias/{str_tmp}.csv', '390K'],
+        [f'280K.1/{str_dir}/{str_tmp}.csv', '280K'],
+        [f'290K.1/{str_dir}/{str_tmp}.csv', '290K'],
+        [f'300K.1/{str_dir}/{str_tmp}.csv', '300K'],
+        [f'310K.1/{str_dir}/{str_tmp}.csv', '310K'],
+        [f'320K.1/{str_dir}/{str_tmp}.csv', '320K'],
     ],
     str_xlabel = 'Time (ns)',
     str_ylabel = 'pKa',
-    str_save = f'reweight_bias.{str_tmp}.pdf',
+    str_save = f'{str_dir}.{str_tmp}.pdf',
     #tup_xlim = (1.1, 8),
-    tup_ylim = (None, 4.2),
-    tup_colormap = (290, 390)
+    #tup_ylim = (None, 4.2),
+    tup_colormap = (280, 320)
 )
 #'''
 '''
-str_tmp='fes.dist_vp_c'
+str_tmp='dist_vp_o_1_2_fes.10'
 grid_plt(
     list2d_file = [
-        [f'290K/sum_hills/{str_tmp}.grid', '290K'],
-        [f'310K/sum_hills/{str_tmp}.grid', '310K'],
-        [f'330K/sum_hills/{str_tmp}.grid', '330K'],
-        [f'350K/sum_hills/{str_tmp}.grid', '350K'],
-        [f'370K/sum_hills/{str_tmp}.grid', '370K'],
-        [f'390K/sum_hills/{str_tmp}.grid', '390K'],
+        [f'280K.1/sum_hills/{str_tmp}.dat', '280K'],
+        [f'290K.1/sum_hills/{str_tmp}.dat', '290K'],
+        [f'300K.1/sum_hills/{str_tmp}.dat', '300K'],
+        [f'310K.1/sum_hills/{str_tmp}.dat', '310K'],
+        [f'320K.1/sum_hills/{str_tmp}.dat', '320K'],
     ],
-    str_xlabel = r'R(CV$_P$) (Å)',
+    str_xlabel = r'R(V$_P$O$_C$) (Å)',
     str_ylabel = 'Hills (kJ/mol)',
     str_save = f'sum_hills.{str_tmp}.pdf',
-    bool_minzero = True,
+    bool_maxzero = True,
     bool_minus = True,
-    tup_xlim = (0,10),
+    tup_xlim = (0,14),
     tup_ylim = (None, None),
-    tup_colormap = (290, 390)
+    tup_colormap = (280, 320)
 )
 #'''
 '''
@@ -230,20 +229,20 @@ grid_plt(
 #'''
 #----------------------------------------------------------[Sum hills]
 
-#'''
+'''
 str_tmp = 'dist_vp_o_1_2_fes'
 #str_tmp = 'fes.dist_vp_o_1_2'
 grid_plt(
     list2d_file = [
-        [f'{str_tmp}.0.dat', '1ns'],
+        #[f'{str_tmp}.0.dat', '1ns'],
         [f'{str_tmp}.1.dat', '2ns'],
-        [f'{str_tmp}.2.dat', '3ns'],
+        #[f'{str_tmp}.2.dat', '3ns'],
         [f'{str_tmp}.3.dat', '4ns'],
-        [f'{str_tmp}.4.dat', '5ns'],
+        #[f'{str_tmp}.4.dat', '5ns'],
         [f'{str_tmp}.5.dat', '6ns'],
-        [f'{str_tmp}.6.dat', '7ns'],
+        #[f'{str_tmp}.6.dat', '7ns'],
         [f'{str_tmp}.7.dat', '8ns'],
-        [f'{str_tmp}.8.dat', '9ns'],
+        #[f'{str_tmp}.8.dat', '9ns'],
         [f'{str_tmp}.9.dat', '10ns'],
     ],
     str_xlabel = r'R(V$_P$O$_C$) (Å)',
@@ -254,20 +253,20 @@ grid_plt(
     tup_xlim = (0,14)
 )
 #'''
-#'''
+'''
 str_tmp = 'dist_vp_o_1_2_fes'
 #str_tmp = 'fes.dist_vp_o_1_2'
 grid_plt(
     list2d_file = [
-        [f'{str_tmp}.0.dat', '1ns'],
+        #[f'{str_tmp}.0.dat', '1ns'],
         [f'{str_tmp}.1.dat', '2ns'],
-        [f'{str_tmp}.2.dat', '3ns'],
+        #[f'{str_tmp}.2.dat', '3ns'],
         [f'{str_tmp}.3.dat', '4ns'],
-        [f'{str_tmp}.4.dat', '5ns'],
+        #[f'{str_tmp}.4.dat', '5ns'],
         [f'{str_tmp}.5.dat', '6ns'],
-        [f'{str_tmp}.6.dat', '7ns'],
+        #[f'{str_tmp}.6.dat', '7ns'],
         [f'{str_tmp}.7.dat', '8ns'],
-        [f'{str_tmp}.8.dat', '9ns'],
+        #[f'{str_tmp}.8.dat', '9ns'],
         [f'{str_tmp}.9.dat', '10ns'],
     ],
     str_xlabel = r'R(V$_P$O$_C$) (Å)',

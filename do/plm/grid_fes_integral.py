@@ -7,8 +7,8 @@ def fes_integral(
     str_file: str,
     tup_xrange: tuple,
     float_T: float = None,
-    str_in: str = '../plm.in',
-    str_log: str = '../plm.log'
+    str_in: str = None,
+    str_log: str = None
 ) -> float:
 
 
@@ -39,13 +39,26 @@ def fes_integral(
     float_integral = -np.log(float_integral) * float_KbT
     return float_integral
 
+def fes_1M_correct(
+    float_volume: float,
+    float_T: float
+) -> float:
+
+    float_Avogadro = 6.02214076e23
+    float_volume_1M = 1e27/float_Avogadro
+    float_KbT = plm.T2KbT(float_T)
+    float_correct = -float_KbT*math.log(float_volume_1M/float_volume)
+
+    return float_correct
+
 def get_pka(
     str_file: str,
     tup_xrange1: tuple,
     tup_xrange2: tuple,
+    float_volume: float,
     float_T: float = None,
-    str_in: str = '../plm.in',
-    str_log: str = '../plm.log'
+    str_in: str = None,
+    str_log: str = None
 ) -> (float, float):
 
     if not float_T:
@@ -55,63 +68,54 @@ def get_pka(
         str_file = str_file,
         tup_xrange = tup_xrange1,
         float_T = float_T,
-        str_in = str_in,
-        str_log = str_log
     )
     
     float_g2 = fes_integral(
         str_file = str_file,
         tup_xrange = tup_xrange2,
         float_T = float_T,
-        str_in = str_in,
-        str_log = str_log
     )
-    
-    float_deltag = float_g2-float_g1
+
+    float_correct = fes_1M_correct(
+        float_volume = float_volume,
+        float_T = float_T
+    )
+
+    float_deltag = float_g2 - float_g1 + float_correct
     float_pka = plm.deltag_to_pka(
         float_deltag = float_deltag,
         float_T = float_T,
-        str_in = str_in,
-        str_log = str_log
     )
 
     return float_deltag, float_pka
 
 def get_pka_time(
-    str_file: str,
+    dict_file: dict,
     tup_xrange1: tuple,
     tup_xrange2: tuple,
+    float_volume: float,
     str_save: str = None,
     float_T: float = None,
-    str_in: str = '../plm.in',
-    str_log: str = '../plm.log'
+    str_in: str = None,
+    str_log: str = None
 ):
 
-    list_file = glob.glob( f'*{str_file}' )
-    int_nfile = len(list_file)
+    int_nfile = len(dict_file)
     np_pka = np.zeros(shape=(int_nfile), dtype=[('time', 'f4'), ('pka', 'f4')])
     np_deltag = np.zeros(shape=(int_nfile), dtype=[('time', 'f4'), ('deltag', 'f4')])
-    for int_i in range(int_nfile-1):
+    if not float_T:
+        float_T, float_KbT = plm.get_temperature( str_in, str_log )
+    for int_i,int_key in enumerate(dict_file):
         float_deltag, float_pka = get_pka(
-            str_file = f'analysis.{int_i}.{str_file}',
+            str_file = dict_file[int_key],
             tup_xrange1 = tup_xrange1,
             tup_xrange2 = tup_xrange2,
             float_T = float_T,
-            str_in = str_in,
-            str_log = str_log
+            float_volume = float_volume
         )
-        np_pka[int_i] = (int_i+1, float_pka)
-        np_deltag[int_i] = (int_i+1, float_deltag)
-    float_deltag, float_pka = get_pka(
-        str_file = str_file,
-        tup_xrange1 = tup_xrange1,
-        tup_xrange2 = tup_xrange2,
-        float_T = float_T,
-        str_in = str_in,
-        str_log = str_log
-    )
-    np_pka[int_nfile-1] = (int_nfile, float_pka)
-    np_deltag[int_nfile-1] = (int_nfile, float_deltag)
+        np_pka[int_i] = (int_key, float_pka)
+        np_deltag[int_i] = (int_key, float_deltag)
+
     if str_save:
         str_save_pka = f'{str_save}_pka.csv'
         print(str_save_pka)
@@ -120,11 +124,25 @@ def get_pka_time(
         print(str_save_deltag)
         np.savetxt(str_save_deltag, np_deltag, header=' '.join(np_deltag.dtype.names))
 
+str_tmp = 'dist_vp_o_1_2_fes'
 get_pka_time(
-    str_file = 'dist_vp_c_fes.grid',
-    tup_xrange1 = (1.16,1.66),
-    tup_xrange2 = (2.56,'1M'),
-    str_save = 'dist_vp_c'
+    dict_file = {
+        1: f'{str_tmp}.0.dat',
+        2: f'{str_tmp}.1.dat',
+        3: f'{str_tmp}.2.dat',
+        4: f'{str_tmp}.3.dat',
+        5: f'{str_tmp}.4.dat',
+        6: f'{str_tmp}.5.dat',
+        7: f'{str_tmp}.6.dat',
+        8: f'{str_tmp}.7.dat',
+        9: f'{str_tmp}.8.dat',
+        10: f'{str_tmp}.9.dat',
+    },
+    tup_xrange1 = (0,2),
+    tup_xrange2 = (2,14),
+    str_save = str_tmp,
+    str_in = 'plm.in',
+    float_volume = 15.6793091675**3
 )
 
 '''
