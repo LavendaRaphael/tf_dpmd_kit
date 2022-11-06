@@ -99,10 +99,9 @@ def write_traj(
                 for i in range(int_line-2):
                     file_new.write(file_old.readline())
 
-int_restartstep = 25000000
+int_restartstep = 21000000
 str_dir = 'bk'
 list_filecp = [
-    'HILLS',
     'restart.1000000'
 ]
 #---------------------------------------------
@@ -116,11 +115,11 @@ for str_file in list_filecp:
     shutil.copy(os.path.join(str_dir, str_file), '.')
 float_timestep = read_timestep('lmp.in')
 float_time = int_restartstep * float_timestep
-#write_hills(
-#    str_old = os.path.join(str_dir, 'HILLS'),
-#    str_new = 'HILLS',
-#    float_time = float_time,
-#)
+write_hills(
+    str_old = os.path.join(str_dir, 'HILLS'),
+    str_new = 'HILLS',
+    float_time = float_time,
+)
 write_colvar(
     str_old = os.path.join(str_dir, 'COLVAR'),
     str_new = 'COLVAR',
