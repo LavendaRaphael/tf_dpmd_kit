@@ -58,7 +58,7 @@ def grid_plt(
         fig.set_size_inches(9, 7)
         fig.savefig(str_save, bbox_inches='tight', dpi=300)
 #------------------------------------------------------------------[Temperature]
-#'''
+'''
 str_tmp = 'dist_vp_o_1_2_fes_deltag'
 str_dir = 'sum_hills'
 grid_plt(
@@ -77,7 +77,7 @@ grid_plt(
     tup_colormap = (280, 320)
 )
 #'''
-#'''
+'''
 str_tmp = 'dist_vp_o_1_2_fes_pka'
 grid_plt(
     list2d_file = [
@@ -212,12 +212,13 @@ grid_plt(
     tup_ylim = (None, 80),
 )
 #'''
-'''
+#'''
 str_tmp = 'dist_vp_o_1_2_fes'
 grid_plt(
     list2d_file = [
         ['../../../02.390K_hills/390K/sum_hills/fes.dist_vp_o_1_2.10.dat', 'Biasfactor 5.0'],
-        [f'{str_tmp}.5.dat', 'Biasfactor 10.0'],
+        [f'../../../04.hills_beta_10/390K/sum_hills/{str_tmp}.5.dat', 'Biasfactor 10.0'],
+        [f'{str_tmp}.10.dat', 'MetaD'],
     ],
     str_xlabel = r'R(V$_P$O$_C$) (Å)',
     str_save = f'{str_tmp}.compare.pdf',
