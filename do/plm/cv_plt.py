@@ -59,7 +59,7 @@ dict_label = {
     'dist_vp_o_1': r'R(V$_p$O$_1$)',
     'dist_vp_o_2': r'R(V$_p$O$_2$)',
     'dist_vp_o_1_2': r'R(V$_p$O$_C$)',
-    'dist_vp_c': r'R(CV$_p$)',
+    'dist_vp_c': r'R(V$_p$C)',
     'cost_o_h': 'cos dh(OH)',
     'dist_o_0_h': r'R(O$_0$H)',
     'metadbias': 'V(s,t)',
@@ -77,8 +77,10 @@ def_multi_plt(
         #['dist_vp_c', (0.5, 1.5)],
         #['lw_vp_cbias'],
 
-        ['dhx_o_0_h'],
-        ['dhx_o_2_h'],
+        ['cn_o_1_2_h'],
+
+        #['dhx_o_0_h'],
+        #['dhx_o_2_h'],
 
         ['metadbias'],
         #['metadrbias'],

@@ -1,4 +1,6 @@
 import math
+import subprocess
+import os
 
 def hills_sum(
     str_cv: str,
