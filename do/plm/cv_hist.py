@@ -2,46 +2,39 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def def_plt(
-    list2d_header: list[list],
+    str_header: str,
     str_save = None
 ) -> None:
     """
 
     """
-    int_nplot = len(list2d_header)
-    fig, axs = plt.subplots(int_nplot, 1)
-    if int_nplot==1:
-        axs = [axs]
+    fig, ax = plt.subplots()
 
     with open('COLVAR', 'r') as colvar:
         list_header = colvar.readline().split()[2:]
     data = np.genfromtxt("COLVAR", dtype=None, names=list_header)
     #print(data.dtype)
 
-    for int_i in range(int_nplot):
-        str_header = list2d_header[int_i][0]
-        ax = axs[int_i]
-        if str_header not in dict_label:
-            str_label = str_header
-        else:
-            str_label = dict_label[str_header]
-        ax.hist(
-            data[str_header],
-            label = str_label,
-            bins = 'auto',
-            density = True
-        )
-        if len(list2d_header[int_i]) > 1:
-            ax.set_xlim(list2d_header[int_i][1])
+    if str_header not in dict_label:
+        str_label = str_header
+    else:
+        str_label = dict_label[str_header]
+    ax.hist(
+        data[str_header],
+        label = str_label,
+        bins = 'auto',
+        density = True
+    )
+    #ax.set_xlim(list2d_header[int_i][1])
 
-        float_std = np.std(data[str_header])
-        float_mean = np.mean(data[str_header])
-        ax.plot([],[],' ',label=f'mean = {float_mean:.3f}')
-        ax.plot([],[],' ',label=f'std = {float_std:.3f}')
+    float_std = np.std(data[str_header])
+    float_mean = np.mean(data[str_header])
+    ax.plot([],[],' ',label=f'mean = {float_mean:.3f}')
+    ax.plot([],[],' ',label=f'std = {float_std:.3f}')
 
-        ax.legend()
-    axs[-1].set_xlabel('CV')
-    axs[1].set_ylabel('Probability Density')
+    ax.legend()
+    ax.set_xlabel('CV')
+    ax.set_ylabel('Probability Density')
     if str_save:
         fig.savefig(str_save, bbox_inches='tight')
 
@@ -58,14 +51,13 @@ dict_label = {
 }
 
 #'''
-def_plt(
-    list2d_header = [
-        ['dist_vp_o_1_2', (1.05,1.25)],
-        ['dh2x_o_0_h'],
-        ['dist_o_0_h', (0.9, 1.2)],
-        ['cn_o_0_h', (0,0.01)],
-    ],
-    str_save = 'cv.prob.pdf'
-)
+list_header = [
+    'dist_c_o_0','dist_c_o_1', 'cn_c_o','dist_c_h_0', 'cn_c_h','dist_o_0_h','cn_o_1_2_h'
+]
+for str_tmp in list_header:
+    def_plt(
+        str_header = str_tmp,
+        str_save = f'{str_tmp}.prob.pdf'
+    )
 #'''
 plt.show()

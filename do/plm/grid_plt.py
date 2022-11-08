@@ -212,7 +212,7 @@ grid_plt(
     tup_ylim = (None, 80),
 )
 #'''
-#'''
+'''
 str_tmp = 'dist_vp_o_1_2_fes'
 grid_plt(
     list2d_file = [
@@ -228,54 +228,77 @@ grid_plt(
     tup_xlim = (0,14)
 )
 #'''
-#----------------------------------------------------------[Sum hills]
-
 '''
-str_tmp = 'dist_vp_o_1_2_fes'
-#str_tmp = 'fes.dist_vp_o_1_2'
+str_tmp = 'dh_o_0_h_fes'
 grid_plt(
     list2d_file = [
-        #[f'{str_tmp}.0.dat', '1ns'],
-        [f'{str_tmp}.1.dat', '2ns'],
-        #[f'{str_tmp}.2.dat', '3ns'],
-        [f'{str_tmp}.3.dat', '4ns'],
-        #[f'{str_tmp}.4.dat', '5ns'],
-        [f'{str_tmp}.5.dat', '6ns'],
-        #[f'{str_tmp}.6.dat', '7ns'],
-        [f'{str_tmp}.7.dat', '8ns'],
-        #[f'{str_tmp}.8.dat', '9ns'],
-        [f'{str_tmp}.9.dat', '10ns'],
+        [f'../../../07.conformer/330K/sum_hills/{str_tmp}.5.dat', 'Biasfactor 5'],
+        [f'{str_tmp}.5.dat', 'Biasfactor 10'],
     ],
-    str_xlabel = r'R(V$_P$O$_C$) (Å)',
-    str_save = f'{str_tmp}.nosft.pdf',
+    str_xlabel = r'dh(O$_0$H)',
+    str_save = f'{str_tmp}.compare.pdf',
     bool_minus = True,
-    bool_minzero = True,
+    bool_maxzero = True,
     str_ylabel = 'Hills (kJ/mol)',
-    tup_xlim = (0,14)
+    tup_xlim = None
 )
 #'''
-'''
-str_tmp = 'dist_vp_o_1_2_fes'
+
+#----------------------------------------------------------[Sum hills]
+
+#'''
+#str_tmp = 'dist_vp_o_1_2_fes'
 #str_tmp = 'fes.dist_vp_o_1_2'
+#str_xlabel = r'R(V$_P$O$_C$) (Å)'
+str_tmp = 'dh_o_0_h_fes'
+str_xlabel = r'dh(O$_0$H)'
 grid_plt(
     list2d_file = [
-        #[f'{str_tmp}.0.dat', '1ns'],
+        [f'{str_tmp}.0.dat', '1ns'],
         [f'{str_tmp}.1.dat', '2ns'],
-        #[f'{str_tmp}.2.dat', '3ns'],
+        [f'{str_tmp}.2.dat', '3ns'],
         [f'{str_tmp}.3.dat', '4ns'],
-        #[f'{str_tmp}.4.dat', '5ns'],
-        [f'{str_tmp}.5.dat', '6ns'],
+        [f'{str_tmp}.4.dat', '5ns'],
+        #[f'{str_tmp}.5.dat', '6ns'],
         #[f'{str_tmp}.6.dat', '7ns'],
-        [f'{str_tmp}.7.dat', '8ns'],
+        #[f'{str_tmp}.7.dat', '8ns'],
         #[f'{str_tmp}.8.dat', '9ns'],
-        [f'{str_tmp}.9.dat', '10ns'],
+        #[f'{str_tmp}.9.dat', '10ns'],
     ],
-    str_xlabel = r'R(V$_P$O$_C$) (Å)',
+    str_xlabel = str_xlabel,
+    str_save = f'{str_tmp}.nosft.pdf',
+    bool_minus = True,
+    #bool_minzero = True,
+    str_ylabel = 'Hills (kJ/mol)',
+    tup_xlim = None
+)
+#'''
+#'''
+#str_tmp = 'dist_vp_o_1_2_fes'
+#str_tmp = 'fes.dist_vp_o_1_2'
+#str_xlabel = r'R(V$_P$O$_C$) (Å)'
+str_tmp = 'dh_o_0_h_fes'
+str_xlabel = r'dh(O$_0$H)'
+
+grid_plt(
+    list2d_file = [
+        [f'{str_tmp}.0.dat', '1ns'],
+        [f'{str_tmp}.1.dat', '2ns'],
+        [f'{str_tmp}.2.dat', '3ns'],
+        [f'{str_tmp}.3.dat', '4ns'],
+        [f'{str_tmp}.4.dat', '5ns'],
+        #[f'{str_tmp}.5.dat', '6ns'],
+        #[f'{str_tmp}.6.dat', '7ns'],
+        #[f'{str_tmp}.7.dat', '8ns'],
+        #[f'{str_tmp}.8.dat', '9ns'],
+        #[f'{str_tmp}.9.dat', '10ns'],
+    ],
+    str_xlabel = str_xlabel,
     str_save = f'{str_tmp}.pdf',
     bool_minus = True,
     bool_maxzero = True,
     str_ylabel = 'Hills (kJ/mol)',
-    tup_xlim = (0, 14),
+    tup_xlim = None,
     #tup_ylim = (None, 70)
 )
 #'''
