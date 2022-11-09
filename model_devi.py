@@ -7,11 +7,14 @@ import dpdata
 
 def devi_plt():
     data = np.genfromtxt("model_devi.out", names=True)
-    plt.plot(data['step'], data["max_devi_f"])
-    plt.legend()
-    plt.xlabel('Step')
-    plt.ylabel('max_devi_f')
-    plt.grid()
+    
+    fig, ax = plt.subplots()
+
+    ax.scatter(data['step'], data["max_devi_f"], s=0.5)
+    ax.legend()
+    ax.set_xlabel('Step')
+    ax.set_ylabel('max_devi_f')
+    ax.grid()
     #plt.savefig('max_devi_f.pdf', bbox_inches='tight')
     plt.show()
 
