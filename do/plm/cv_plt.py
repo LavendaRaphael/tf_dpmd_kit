@@ -24,29 +24,29 @@ plm.colvar_plt(
         #['lw_vp_cbias'],
 
         #['cn_o_1_2_h'],
-        ['cn_o_h'],
+        #['cn_o_h'],
 
         #['cn_c_h'],
 
-        ['cn_c_o'],
+        #['cn_c_o'],
 
-        #['dhx_o_0_h'],
-        #['dhx_o_2_h'],
+        ['dhx_o_0_h'],
+        ['dhx_o_2_h'],
 
         ['metadbias'],
         #['metadrbias'],
         #['metadrct'],
 
-        #['dist_o_0_h'],
+        ['dist_o_0_h'],
+        ['dist_o_2_h'],
         #['dist_o_0_h', (1.1, 1.2)],
         #['uw_dist_o_0_hbias'],
 
         #['cn_o_0_h'],
         #['uw_cn_o_0_hbias'],
     ],
-    #float_timescale = 1/1000,
+    float_timescale = 1/1000,
     #float_timescale = 1/0.0005/50,
-    float_timescale = 1/0.0005,
     #float_timescale = 1/0.000048378/10
     #tup_xlim = (360800, 363300),
     #str_save = 'cv.png',
