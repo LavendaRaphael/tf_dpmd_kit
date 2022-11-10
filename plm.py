@@ -113,10 +113,10 @@ def colvar_plt(
         fig.savefig(str_save, bbox_inches='tight', dpi=300)
 
 def hills_sum(
-    str_cv: str,
     str_min: str,
     str_max: str,
     str_bin: str,
+    str_cv: str = None,
     str_outfile: str = None,
     str_in: str = None,
     str_log: str = None,
@@ -130,8 +130,10 @@ def hills_sum(
 
     str_cmd = f'source {os.environ["HOME"]}/.config/.tianff &&'
     str_cmd += 'source ${homedir}/.local/bin/bashrc_plm.sh ;'
-    str_cmd += f'plumed sum_hills --hills {str_hills} --stride 20000 --outfile {str_outfile} --min {str_min} --max {str_max} --bin {str_bin} --negbias --idw {str_cv} --kt {float_KbT}'
-    
+    str_cmd += f'plumed sum_hills --hills {str_hills} --stride 20000 --outfile {str_outfile} --min {str_min} --max {str_max} --bin {str_bin} --negbias --kt {float_KbT}'
+    if str_cv:
+        str_cmd += f' --idw {str_cv}'
+
     subprocess_results = subprocess.run( str_cmd, shell=True, check=True, text=True, executable='/bin/bash')
 
     print(subprocess_results.stdout)
