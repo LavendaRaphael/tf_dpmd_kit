@@ -1,4 +1,5 @@
 from tf_dpmd_kit import plm
+import matplotlib.pyplot as plt
 
 #------------------------------------------------------------------[Temperature]
 '''
@@ -38,15 +39,15 @@ grid_plt(
     tup_colormap = (280, 320)
 )
 #'''
-'''
-str_tmp='dist_vp_o_1_2_fes.10'
-grid_plt(
+#'''
+str_tmp='dist_vp_o_1_2_fes.15'
+plm.grid_plt(
     list2d_file = [
-        [f'280K.1/sum_hills/{str_tmp}.dat', '280K'],
-        [f'290K.1/sum_hills/{str_tmp}.dat', '290K'],
-        [f'300K.1/sum_hills/{str_tmp}.dat', '300K'],
-        [f'310K.1/sum_hills/{str_tmp}.dat', '310K'],
-        [f'320K.1/sum_hills/{str_tmp}.dat', '320K'],
+        [f'280K.2/sum_hills/{str_tmp}.dat', '280K'],
+        [f'290K.2/sum_hills/{str_tmp}.dat', '290K'],
+        [f'300K.2/sum_hills/{str_tmp}.dat', '300K'],
+        [f'310K.2/sum_hills/{str_tmp}.dat', '310K'],
+        [f'320K.2/sum_hills/{str_tmp}.dat', '320K'],
     ],
     str_xlabel = r'R(V$_P$O$_C$) (Å)',
     str_ylabel = 'Hills (kJ/mol)',
@@ -97,65 +98,6 @@ grid_plt(
     tup_ylim = (None, 60),
     bool_minzero = True,
     tup_colormap = (290, 390)
-)
-#'''
-grid_plt(
-    list2d_file = [
-        [f'../../../03.390K_hills_reweight/390K/reweight_bias/{str_tmp}.grid', 'Biasfactor 5.0'],
-        [f'{str_tmp}.grid', 'Biasfactor 10.0'],
-    ],
-    str_xlabel = r'R(V$_P$C) (Å)',
-    str_save = f'{str_tmp}.compare.pdf',
-    bool_minzero = True,
-    str_ylabel = 'FES (kJ/mol)',
-    tup_xlim = (0,10),
-    tup_ylim = (None, 80),
-)
-#'''
-'''
-str_tmp = 'dist_vp_o_1_2_fes'
-grid_plt(
-    list2d_file = [
-        [f'../../../03.390K_hills_reweight/390K/reweight_bias/{str_tmp}.grid', 'Biasfactor 5.0'],
-        [f'{str_tmp}.grid', 'Biasfactor 10.0'],
-    ],
-    str_xlabel = r'R(V$_P$O$_C$) (Å)',
-    str_save = f'{str_tmp}.compare.pdf',
-    bool_minzero = True,
-    str_ylabel = 'FES (kJ/mol)',
-    tup_xlim = (0,14),
-    tup_ylim = (None, 80),
-)
-#'''
-'''
-str_tmp = 'dist_vp_o_1_2_fes'
-grid_plt(
-    list2d_file = [
-        ['../../../02.390K_hills/390K/sum_hills/fes.dist_vp_o_1_2.10.dat', 'Biasfactor 5.0'],
-        [f'../../../04.hills_beta_10/390K/sum_hills/{str_tmp}.5.dat', 'Biasfactor 10.0'],
-        [f'{str_tmp}.10.dat', 'MetaD'],
-    ],
-    str_xlabel = r'R(V$_P$O$_C$) (Å)',
-    str_save = f'{str_tmp}.compare.pdf',
-    bool_minus = True,
-    bool_maxzero = True,
-    str_ylabel = 'Hills (kJ/mol)',
-    tup_xlim = (0,14)
-)
-#'''
-'''
-str_tmp = 'dh_o_0_h_fes'
-grid_plt(
-    list2d_file = [
-        [f'../../../07.conformer/330K/sum_hills/{str_tmp}.5.dat', 'Biasfactor 5'],
-        [f'{str_tmp}.5.dat', 'Biasfactor 10'],
-    ],
-    str_xlabel = r'dh(O$_0$H)',
-    str_save = f'{str_tmp}.compare.pdf',
-    bool_minus = True,
-    bool_maxzero = True,
-    str_ylabel = 'Hills (kJ/mol)',
-    tup_xlim = None
 )
 #'''
 plt.show()

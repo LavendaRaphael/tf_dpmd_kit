@@ -21,7 +21,7 @@ def grid_plt(
     rc('font',**{'size':15, 'family':'sans-serif','sans-serif':['Arial']})
 
     if tup_colormap:
-        sm = plt.cm.ScalarMappable(cmap=cm.coolwarm, norm=plt.Normalize(vmin=tup_colormap[0], vmax=tup_colormap[1]))
+        sm = plt.cm.ScalarMappable(cmap='coolwarm', norm=plt.Normalize(vmin=tup_colormap[0], vmax=tup_colormap[1]))
 
     fig, ax = plt.subplots()
     for list_file in list2d_file:
@@ -117,6 +117,7 @@ def hills_sum(
     str_min: str,
     str_max: str,
     str_bin: str,
+    str_outfile: str = None,
     str_in: str = None,
     str_log: str = None,
     str_hills: str = 'HILLS'
@@ -124,9 +125,12 @@ def hills_sum(
 
     float_T, float_KbT = get_temperature(str_in, str_log)
 
+    if not str_outfile:
+        str_outfile = str_cv+'_fes.'
+
     str_cmd = f'source {os.environ["HOME"]}/.config/.tianff &&'
     str_cmd += 'source ${homedir}/.local/bin/bashrc_plm.sh ;'
-    str_cmd += f'plumed sum_hills --hills {str_hills} --stride 20000 --outfile {str_cv}_fes. --min {str_min} --max {str_max} --bin {str_bin} --negbias --idw {str_cv} --kt {float_KbT}'
+    str_cmd += f'plumed sum_hills --hills {str_hills} --stride 20000 --outfile {str_outfile} --min {str_min} --max {str_max} --bin {str_bin} --negbias --idw {str_cv} --kt {float_KbT}'
     
     subprocess_results = subprocess.run( str_cmd, shell=True, check=True, text=True, executable='/bin/bash')
 

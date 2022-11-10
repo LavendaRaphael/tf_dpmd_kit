@@ -57,7 +57,7 @@ grid_plt(
     tup_ylim = (None, 80),
 )
 #'''
-#'''
+'''
 str_tmp = 'dist_vp_o_1_2_fes'
 plm.grid_plt(
     list2d_file = [
@@ -72,12 +72,12 @@ plm.grid_plt(
     tup_xlim = (0,14)
 )
 #'''
-'''
+#'''
 str_tmp = 'dh_o_0_h_fes'
 plm.grid_plt(
     list2d_file = [
-        [f'../../../07.conformer/330K/sum_hills/{str_tmp}.5.dat', 'Biasfactor 5'],
-        [f'{str_tmp}.5.dat', 'Biasfactor 10'],
+        [f'../../../07.conformer/330K.1/sum_hills/{str_tmp}.10.dat', 'Biasfactor 5'],
+        [f'{str_tmp}.10.dat', 'Biasfactor 10'],
     ],
     str_xlabel = r'dh(O$_0$H)',
     str_save = f'{str_tmp}.compare.pdf',
