@@ -48,8 +48,8 @@ def grid2d_plt(
         z,
         origin = 'lower',
         extent=(np.amin(x), np.amax(x), np.amin(y), np.amax(y)),
-        #cmap='coolwarm',
-        cmap='Reds',
+        cmap='coolwarm',
+        #cmap='Reds',
         aspect='auto'
     )
     fig.colorbar(image)
@@ -67,12 +67,11 @@ def grid2d_plt(
         fig.savefig(str_save, bbox_inches='tight')
 
 grid2d_plt(
-    str_file = 'cv_2d.5.dat',
-    bool_minus = True,
+    str_file = 'fes_2d.grid',
     bool_minzero = True,
     #str_xlabel = r'dh(O$_0$H$_0$) (rad)',
     #str_ylabel = r'dh(O$_1$V$_H$) (rad)',
-    str_save = 'cv_2d.5.pdf'
+    str_save = 'fes_2d.pdf'
 )
 
 plt.show()
