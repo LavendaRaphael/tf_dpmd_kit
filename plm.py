@@ -107,6 +107,8 @@ def get_pka_time(
     if not float_T:
         float_T, float_KbT = get_temperature( str_in, str_log )
     for int_i,int_key in enumerate(dict_file):
+        if not os.path.isfile(dict_file[int_key]):
+            continue
         float_deltag, float_pka = get_pka(
             str_file = dict_file[int_key],
             tup_xrange1 = tup_xrange1,

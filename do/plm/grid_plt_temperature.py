@@ -2,44 +2,45 @@ from tf_dpmd_kit import plm
 import matplotlib.pyplot as plt
 
 #------------------------------------------------------------------[Temperature]
-'''
+#'''
 str_tmp = 'dist_vp_o_1_2_fes_deltag'
-str_dir = 'sum_hills'
-grid_plt(
+plm.grid_plt(
     list2d_file = [
-        [f'280K.1/{str_dir}/{str_tmp}.csv', '280K'],
-        [f'290K.1/{str_dir}/{str_tmp}.csv', '290K'],
-        [f'300K.1/{str_dir}/{str_tmp}.csv', '300K'],
-        [f'310K.1/{str_dir}/{str_tmp}.csv', '310K'],
-        [f'320K.1/{str_dir}/{str_tmp}.csv', '320K'],
+        [f'290K/reweight/{str_tmp}.csv', '290K'],
+        [f'310K/reweight/{str_tmp}.csv', '310K'],
+        [f'330K/reweight/{str_tmp}.csv', '330K'],
+        [f'350K/reweight/{str_tmp}.csv', '350K'],
+        [f'370K/reweight/{str_tmp}.csv', '370K'],
+        [f'390K/reweight/{str_tmp}.csv', '390K'],
     ],
     str_xlabel = 'Time (ns)',
     str_ylabel = r'$\Delta$G (kJ/mol)',
-    str_save = f'{str_dir}.{str_tmp}.pdf',
+    str_save = f'reweight.{str_tmp}.pdf',
     #tup_xlim = (1.1, 8),
     #tup_ylim = (-10, 70),
-    tup_colormap = (280, 320)
+    tup_colormap = (290, 390)
 )
 #'''
-'''
+#'''
 str_tmp = 'dist_vp_o_1_2_fes_pka'
-grid_plt(
+plm.grid_plt(
     list2d_file = [
-        [f'280K.1/{str_dir}/{str_tmp}.csv', '280K'],
-        [f'290K.1/{str_dir}/{str_tmp}.csv', '290K'],
-        [f'300K.1/{str_dir}/{str_tmp}.csv', '300K'],
-        [f'310K.1/{str_dir}/{str_tmp}.csv', '310K'],
-        [f'320K.1/{str_dir}/{str_tmp}.csv', '320K'],
+        [f'290K/reweight/{str_tmp}.csv', '290K'],
+        [f'310K/reweight/{str_tmp}.csv', '310K'],
+        [f'330K/reweight/{str_tmp}.csv', '330K'],
+        [f'350K/reweight/{str_tmp}.csv', '350K'],
+        [f'370K/reweight/{str_tmp}.csv', '370K'],
+        [f'390K/reweight/{str_tmp}.csv', '390K'],
     ],
     str_xlabel = 'Time (ns)',
     str_ylabel = 'pKa',
-    str_save = f'{str_dir}.{str_tmp}.pdf',
+    str_save = f'reweight.{str_tmp}.pdf',
     #tup_xlim = (1.1, 8),
     #tup_ylim = (None, 4.2),
-    tup_colormap = (280, 320)
+    tup_colormap = (290, 390)
 )
 #'''
-#'''
+'''
 str_tmp='dist_vp_o_1_2_fes.15'
 plm.grid_plt(
     list2d_file = [
@@ -61,14 +62,13 @@ plm.grid_plt(
 #'''
 '''
 str_tmp = 'dist_vp_o_1_2_fes'
-grid_plt(
+plm.grid_plt(
     list2d_file = [
-        [f'290K/reweight_bias/{str_tmp}.grid', '290K'],
-        [f'310K/reweight_bias/{str_tmp}.grid', '310K'],
-        [f'330K/reweight_bias/{str_tmp}.grid', '330K'],
-        [f'350K/reweight_bias/{str_tmp}.grid', '350K'],
-        [f'370K/reweight_bias/{str_tmp}.grid', '370K'],
-        [f'390K/reweight_bias/{str_tmp}.grid', '390K'],
+        [f'280K/reweight/{str_tmp}.grid', '280K'],
+        [f'290K/reweight/{str_tmp}.grid', '290K'],
+        [f'300K/reweight/{str_tmp}.grid', '300K'],
+        [f'310K/reweight/{str_tmp}.grid', '310K'],
+        [f'320K/reweight/{str_tmp}.grid', '320K'],
     ],
     str_xlabel = r'R(V$_P$O$_C$) (Å)',
     str_ylabel = 'FES (kJ/mol)',
@@ -76,28 +76,7 @@ grid_plt(
     bool_minzero = True,
     tup_xlim = (0, 14),
     tup_ylim = (None, 60),
-    tup_colormap = (290, 390),
-)
-#'''
-'''
-str_tmp = 'dist_vp_c_fes'
-#str_tmp = 'fes.dist_vp_c'
-grid_plt(
-    list2d_file = [
-        [f'290K/reweight_bias/{str_tmp}.grid', '290K'],
-        [f'310K/reweight_bias/{str_tmp}.grid', '310K'],
-        [f'330K/reweight_bias/{str_tmp}.grid', '330K'],
-        [f'350K/reweight_bias/{str_tmp}.grid', '350K'],
-        [f'370K/reweight_bias/{str_tmp}.grid', '370K'],
-        [f'390K/reweight_bias/{str_tmp}.grid', '390K'],
-    ],
-    str_xlabel = r'R(V$_P$C) (Å)',
-    str_ylabel = 'FES (kJ/mol)',
-    str_save = f'reweight_bias.{str_tmp}.pdf',
-    tup_xlim = (0, 10),
-    tup_ylim = (None, 60),
-    bool_minzero = True,
-    tup_colormap = (290, 390)
+    tup_colormap = (280, 320),
 )
 #'''
 plt.show()

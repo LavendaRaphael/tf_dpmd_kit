@@ -66,12 +66,23 @@ def grid2d_plt(
     if str_save:
         fig.savefig(str_save, bbox_inches='tight')
 
+'''
 grid2d_plt(
     str_file = 'fes_2d.grid',
     bool_minzero = True,
     #str_xlabel = r'dh(O$_0$H$_0$) (rad)',
     #str_ylabel = r'dh(O$_1$V$_H$) (rad)',
     str_save = 'fes_2d.pdf'
+)
+#'''
+
+grid2d_plt(
+    str_file = 'fes_2d.10.dat',
+    bool_minus = True,
+    bool_minzero = True,
+    #str_xlabel = r'dh(O$_0$H$_0$) (rad)',
+    #str_ylabel = r'dh(O$_1$V$_H$) (rad)',
+    str_save = 'fes_2d.10.pdf'
 )
 
 plt.show()

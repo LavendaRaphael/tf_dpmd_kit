@@ -27,7 +27,7 @@ def run(
     ax.set_ylabel(str_ylabel)
     ax.legend()
     if str_save:
-        fig.set_size_inches(9, 7)
+        fig.set_size_inches(11, 9)
         fig.savefig(str_save, bbox_inches='tight', dpi=300)
 
 str_home = os.environ['homedir']
@@ -42,14 +42,23 @@ run(
     str_save = 'exp_pka.pdf'
 )
 #'''
-str_tmp = 'dist_vp_o_1_2_fes'
+#str_tmp = 'dist_vp_o_1_2_fes'
+#str_tmp = 'cn_o_h_fes'
+str_tmp = 'compare'
+
 run(
     dict_file = {
         str_exp+'/2019_PNAS_DanielAminov/Fig_1_kelvin.csv': '2019 PNAS',
         str_exp+'/2010_JPCA_WangXiaoguang/Sfig_3_kelvin.csv': '2010 JPCA',
         str_exp+'/2009_Science_KatrinAdamczyk/pka_kelvin.csv': '2009 Science (Deuterium)',
-        f'../08.cn_o_h/reweight.{str_tmp}_pka.csv': 'DPMD Biasfactor 5',
-        f'reweight.{str_tmp}_pka.csv': 'DPMD Biasfactor 10'
+        f'02.390K_hills/reweight.dist_vp_o_1_2_fes_pka.csv': 'R(V$_P$O$_C$) 390K Beta 5',
+        f'03.390K_hills_beta/reweight.dist_vp_o_1_2_fes_pka.csv': 'R(V$_P$O$_C$) 390K Beta 10',
+        f'04.metad/reweight.dist_vp_o_1_2_fes_pka.csv': 'R(V$_P$O$_C$) MetaD',
+        f'08.cn_o_h/reweight.dist_vp_o_1_2_fes_pka.csv': 'R(V$_P$O$_C$)+cn(O$_C$H) Beta 5',
+        f'09.cn_o_h_beta/reweight.dist_vp_o_1_2_fes_pka.csv': 'R(V$_P$O$_C$)+cn(O$_C$H) Beta 10',
+        f'10.cn_o_h/reweight.cn_o_h_fes_pka.csv': 'cn(O$_C$H) Beta 5',
+        f'10.cn_o_h_beta/reweight.cn_o_h_fes_pka.csv': 'cn(O$_C$H) Beta 10',
+        #f'reweight.{str_tmp}_pka.csv': 'DPMD Beta 10'
     },
     str_save = f'reweight.{str_tmp}_pka_exp.pdf',
     str_ylabel = 'pKa'
@@ -60,8 +69,14 @@ run(
         str_exp+'/2019_PNAS_DanielAminov/Fig_1_deltag.csv': '2019 PNAS',
         str_exp+'/2010_JPCA_WangXiaoguang/Sfig_3_deltag.csv': '2010 JPCA',
         str_exp+'/2009_Science_KatrinAdamczyk/deltag.csv': '2009 Science (Deuterium)',
-        f'../08.cn_o_h/reweight.{str_tmp}_deltag.csv': 'DPMD Biasfactor 5',
-        f'reweight.{str_tmp}_deltag.csv': 'DPMD Biasfactor 10'
+        f'02.390K_hills/reweight.dist_vp_o_1_2_fes_deltag.csv': 'R(V$_P$O$_C$) 390K Beta 5',
+        f'03.390K_hills_beta/reweight.dist_vp_o_1_2_fes_deltag.csv': 'R(V$_P$O$_C$) 390K Beta 10',
+        f'04.metad/reweight.dist_vp_o_1_2_fes_deltag.csv': 'R(V$_P$O$_C$) MetaD',
+        f'08.cn_o_h/reweight.dist_vp_o_1_2_fes_deltag.csv': 'R(V$_P$O$_C$)+cn(O$_C$H) Beta 5',
+        f'09.cn_o_h_beta/reweight.dist_vp_o_1_2_fes_deltag.csv': 'R(V$_P$O$_C$)+cn(O$_C$H) Beta 10',
+        f'10.cn_o_h/reweight.cn_o_h_fes_deltag.csv': 'cn(O$_C$H) Beta 5',
+        f'10.cn_o_h_beta/reweight.cn_o_h_fes_deltag.csv': 'cn(O$_C$H) Beta 10',
+        #f'reweight.{str_tmp}_deltag.csv': 'DPMD Beta 10'
     },
     str_save = f'reweight.{str_tmp}_deltag_exp.pdf',
     str_ylabel = r'$\Delta$G (KJ/mol)'

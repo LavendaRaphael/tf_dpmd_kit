@@ -1,9 +1,12 @@
 import os
 import numpy as np
 
-list_temp = [330]
+list_temp = [390]
+#list_temp = [280,290,300,310,320]
+#list_temp = [290,310,330,350,370,390]
 
 str_tmp = 'dist_vp_o_1_2_fes'
+#str_tmp = 'cn_o_h_fes'
 
 str_data_deltag = f'{str_tmp}_deltag.csv'
 str_data_pka = f'{str_tmp}_pka.csv'
@@ -12,7 +15,7 @@ str_save_deltag = f'reweight.{str_tmp}_deltag.csv'
 str_save_pka = f'reweight.{str_tmp}_pka.csv'
 
 int_ntemp = len(list_temp)
-np_pka = np.zeros(int_ntemp, dtype=[('Temperature(K)', 'i4'), ('pka', 'f4')])
+np_pka = np.zeros(int_ntemp, dtype=[('Temperature(K)', 'i4'), ('pKa', 'f4')])
 np_deltag = np.zeros(int_ntemp, dtype=[('Temperature(K)', 'i4'), ('DeltaG(kJ/mol)', 'f4')])
 
 for int_i in range(int_ntemp):
