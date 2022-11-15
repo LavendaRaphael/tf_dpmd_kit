@@ -99,7 +99,7 @@ def write_traj(
                 for i in range(int_line-2):
                     file_new.write(file_old.readline())
 
-int_restartstep = 23000000
+int_restartstep = 2000000
 str_dir = 'bk'
 list_filecp = [
     'restart.1000000'
