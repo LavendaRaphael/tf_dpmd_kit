@@ -7,18 +7,11 @@ from matplotlib import rc
 
 def fes_integral(
     str_file: str,
-    tup_xrange: tuple,
+    tup_xrange: tuple = None,
     float_T: float = None,
     str_in: str = None,
     str_log: str = None
 ) -> float:
-
-    float_xlow = tup_xrange[0]
-    float_xup = tup_xrange[1]
-    if float_xup == '1M':
-        float_Avogadro = 6.02214076e23
-        float_xup = 1e27/float_Avogadro
-        float_xup = (float_xup/(4/3*math.pi))**(1.0/3.0)
 
     np_data = np.loadtxt(str_file)    
     np_data[:,1] -= min(np_data[:,1])
@@ -29,12 +22,24 @@ def fes_integral(
         float_KbT = T2KbT(float_T)
     
     np_data[:,1] = np.exp(-np_data[:,1]/float_KbT)
- 
-    np_indices = np.searchsorted(np_data[:,0], [float_xlow, float_xup])
-    slice_range = slice(np_indices[0], np_indices[1])
+
+    if tup_xrange is None:
+        np_data_trapz = np_data
+    else:
+        float_xlow = tup_xrange[0]
+        float_xup = tup_xrange[1]
+        if float_xup == '1M':
+            float_Avogadro = 6.02214076e23
+            float_xup = 1e27/float_Avogadro
+            float_xup = (float_xup/(4/3*math.pi))**(1.0/3.0)
+
+        np_indices = np.searchsorted(np_data[:,0], [float_xlow, float_xup])
+        slice_range = slice(np_indices[0], np_indices[1])
+        np_data_trapz = np_data[slice_range, :]
+
     float_integral = np.trapz(
-        np_data[slice_range, 1],
-        x = np_data[slice_range, 0]
+        np_data_trapz[:, 1],
+        x = np_data_trapz[:, 0]
     )
 
     float_integral = -np.log(float_integral) * float_KbT
@@ -52,7 +57,7 @@ def fes_1M_correct(
 
     return float_correct
 
-def get_pka(
+def get_pka_x(
     str_file: str,
     tup_xrange1: tuple,
     tup_xrange2: tuple,
@@ -90,11 +95,77 @@ def get_pka(
 
     return float_deltag, float_pka
 
+def get_pka(
+    str_file: str,
+    dict_coef: dict,
+    float_volume: float,
+    tup_srange_tot: tuple,
+    float_T: float = None,
+    str_in: str = None,
+    str_log: str = None
+) -> (float, float):
+
+    '''Compute pka.
+
+    Args:
+        dict_coef: 
+            {
+                (s0, s1): c0,
+                (s1, s2): c1,
+                ...
+            }
+        float_volume: volume
+            V
+        tup_srange_tot:
+            (sl, sr)
+        float_T: temperature
+            T
+
+    Returns:
+          DeltaF 
+        = 
+          c0*[-kB*T*ln(P(s0,s1)/P(sl,sr))]
+        + c1*[-kB*T*ln(P(s1,s2)/P(sl,sr))]
+        + [-kB*T*ln(V_x/V)]
+
+    '''
+
+    if not float_T:
+        float_T, float_KbT = get_temperature( str_in, str_log )
+
+    float_h_tot = fes_integral(
+        str_file = str_file,
+        tup_xrange = tup_srange_tot,
+        float_T = float_T,
+    )
+ 
+    float_deltag = 0
+    for tup_srange, float_coef in dict_coef.items():
+        float_h = fes_integral(
+            str_file = str_file,
+            tup_xrange = tup_srange,
+            float_T = float_T,
+        )
+        float_deltag += float_coef*(float_h-float_h_tot)
+
+    float_correct = fes_1M_correct(
+        float_volume = float_volume,
+        float_T = float_T
+    )
+
+    float_deltag += float_correct
+    float_pka = deltag_to_pka(
+        float_deltag = float_deltag,
+        float_T = float_T,
+    )
+
+    return float_deltag, float_pka
+
 def get_pka_time(
     dict_file: dict,
-    tup_xrange1: tuple,
-    tup_xrange2: tuple,
+    dict_coef: dict,
     float_volume: float,
+    tup_srange_tot: tuple = None,
     str_save: str = None,
     float_T: float = None,
     str_in: str = None,
@@ -111,8 +182,8 @@ def get_pka_time(
             continue
         float_deltag, float_pka = get_pka(
             str_file = dict_file[int_key],
-            tup_xrange1 = tup_xrange1,
-            tup_xrange2 = tup_xrange2,
+            dict_coef = dict_coef,
+            tup_srange_tot = tup_srange_tot,
             float_T = float_T,
             float_volume = float_volume
         )

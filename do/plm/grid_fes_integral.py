@@ -20,9 +20,11 @@ plm.get_pka_time(
         #14: f'analysis.13.{str_tmp}.grid',
         5: f'{str_tmp}.grid',
     },
-    tup_xrange1 = (0,2),
-    tup_xrange2 = (2,14),
-    str_save = str_tmp,
+    dict_coef = {
+        (0,2): -1,
+        (2,14): 2
+    },
+    str_save = str_tmp+'_m4',
     str_in = 'plm.in',
     float_volume = 15.6793091675**3
 )
@@ -37,13 +39,15 @@ plm.get_pka_time(
         4: f'analysis.3.{str_tmp}.grid',
         5: f'{str_tmp}.grid',
     },
-    tup_xrange1 = (1.4,2.5),
-    tup_xrange2 = (0.7,1.4),
-    str_save = str_tmp,
+    dict_coef = {
+        (0.7,1.4): 2,
+        (1.4,2.5): -1
+    },
+    str_save = str_tmp+'_m4',
     str_in = 'plm.in',
     float_volume = 15.6793091675**3
 )
-'''
+#'''
 '''
 run(
     str_file = 'dist_vp_c_fes.grid',
