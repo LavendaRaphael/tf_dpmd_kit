@@ -74,7 +74,7 @@ def list_ase2pwscf(
         os.mkdir('snap')
     os.chdir('snap')
     for int_snap in np_snap:
-        str_dir = f'snap_{int_snap:0>5d}'
+        str_dir = f'snap_{int_snap:0>6d}'
         if (not os.path.exists(str_dir)):
             os.mkdir(str_dir)
         os.chdir(str_dir)

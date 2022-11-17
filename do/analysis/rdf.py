@@ -1,6 +1,6 @@
 import MDAnalysis as mda
-from MDAnalysis.analysis.rdf import InterRDF
 import numpy as np
+from tf_dpmd_kit import analysis
 
 # read structrue
 
@@ -19,87 +19,39 @@ dict_atomgroup = {
     'c': mda_universe.atoms[[383]]
 }
 
-# function
-
-def def_rdf(
-    str_atomgroup_0: str,
-    str_atomgroup_1: str,
-    list2d_range: list[list],
-    dict_atomgroup: dict,
-) -> None:
-    int_nbins = 200
-    
-    mda_rdf = InterRDF( 
-        dict_atomgroup[str_atomgroup_0], 
-        dict_atomgroup[str_atomgroup_1],
-        nbins = int_nbins,
-        range=(1.0, 6.0),
-    )
-    for list_range in list2d_range:
-        str_save = f'rdf.{str_atomgroup_0}.{str_atomgroup_1}.{list_range[0]:07d}_{list_range[-1]:07d}.csv'
-        print(str_save)
-
-        mda_rdf.run(
-            start = list_range[0],
-            stop = list_range[1],
-            verbose = True,
-        )
-        array_final = np.empty( shape=(int_nbins,2) )
-        array_final[:,0] = mda_rdf.results.bins
-        array_final[:,1] = mda_rdf.results.rdf
-    
-        np.savetxt(
-            fname = str_save,
-            X = array_final
-        )
-
 # run
 '''
-list2d_range = [
-    [     0,  50000],
-    [ 50000, 100000],
-    [100000, 150000],
-    [150000, 200000],
-]
-#'''
-#'''
-list2d_range = [
-    [ 50000, 150000],
+list_snaprange = [
+    (     0,  50000),
+    ( 50000, 100000),
+    (100000, 150000),
+    (150000, 200000),
 ]
 #'''
 '''
-list2d_range = [
-    [ 1000, 55000],
+list_snaprange = [
+    ( 50000, 150000),
+]
+#'''
+#'''
+list_snaprange = [
+    ( 1000, 64000),
 ]
 #'''
 
-def_rdf(
-    'c',
-    'o_w',
-    list2d_range,
-    dict_atomgroup,
-)
-def_rdf(
-    'o_1',
-    'h_w',
-    list2d_range,
-    dict_atomgroup,
-)
-def_rdf(
-    'o_0_2',
-    'h_w',
-    list2d_range,
-    dict_atomgroup,
-)
-def_rdf(
-    'h_0_1',
-    'o_w',
-    list2d_range,
-    dict_atomgroup,
-)
-def_rdf(
-    'o_w',
-    'o_w',
-    list2d_range,
-    dict_atomgroup,
-)
+list_atompair = [
+    ('c', 'o_w'),
+    ('o_1', 'h_w'),
+    ('o_0_2','h_w'),
+    ('h_0_1','o_w'),
+    ('o_w','o_w')
+]
+
+for tup_atompair in list_atompair:
+    analysis.rdf(
+        mda_atomgroup_0 = dict_atomgroup[tup_atompair[0]],
+        mda_atomgroup_1 = dict_atomgroup[tup_atompair[1]],
+        list_snaprange = list_snaprange,
+        str_save = f'rdf.{tup_atompair[0]}.{tup_atompair[1]}.',
+        tup_rrange = (1.0,6.0)
+    )

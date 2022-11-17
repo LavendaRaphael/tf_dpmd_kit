@@ -10,7 +10,7 @@ list_ase = ase.io.read(
 )
 print(list_ase[0])
 
-np_snap = range(68000, 71400, 40)
+np_snap = range(0, 200000, 500)
 
 convert.list_ase2pwscf(
     list_ase = list_ase,

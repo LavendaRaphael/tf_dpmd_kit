@@ -5,6 +5,36 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rc
 
+def colvar_hist_plt(
+    str_header: str,
+    str_label: str,
+    str_save: str = None
+) -> None:
+    fig, ax = plt.subplots()
+
+    with open('COLVAR', 'r') as colvar:
+        list_header = colvar.readline().split()[2:]
+    data = np.genfromtxt("COLVAR", dtype=None, names=list_header)
+    #print(data.dtype)
+
+    ax.hist(
+        data[str_header],
+        bins = 'auto',
+        density = True
+    )
+    #ax.set_xlim(list2d_header[int_i][1])
+
+    float_std = np.std(data[str_header])
+    float_mean = np.mean(data[str_header])
+    ax.plot([],[],' ',label=f'MEAN = {float_mean:.3f}')
+    ax.plot([],[],' ',label=f'STD = {float_std:.3f}')
+
+    ax.legend()
+    ax.set_xlabel(str_label)
+    ax.set_ylabel('Probability Density')
+    if str_save:
+        fig.savefig(str_save, bbox_inches='tight')
+
 def fes_integral(
     str_file: str,
     tup_xrange: tuple = None,
@@ -57,49 +87,11 @@ def fes_1M_correct(
 
     return float_correct
 
-def get_pka_x(
-    str_file: str,
-    tup_xrange1: tuple,
-    tup_xrange2: tuple,
-    float_volume: float,
-    float_T: float = None,
-    str_in: str = None,
-    str_log: str = None
-) -> (float, float):
-
-    if not float_T:
-        float_T, float_KbT = get_temperature( str_in, str_log )
-
-    float_g1 = fes_integral(
-        str_file = str_file,
-        tup_xrange = tup_xrange1,
-        float_T = float_T,
-    )
-    
-    float_g2 = fes_integral(
-        str_file = str_file,
-        tup_xrange = tup_xrange2,
-        float_T = float_T,
-    )
-
-    float_correct = fes_1M_correct(
-        float_volume = float_volume,
-        float_T = float_T
-    )
-
-    float_deltag = float_g2 - float_g1 + float_correct
-    float_pka = deltag_to_pka(
-        float_deltag = float_deltag,
-        float_T = float_T,
-    )
-
-    return float_deltag, float_pka
-
 def get_pka(
     str_file: str,
     dict_coef: dict,
-    float_volume: float,
     tup_srange_tot: tuple,
+    float_volume: float = None,
     float_T: float = None,
     str_in: str = None,
     str_log: str = None
@@ -148,12 +140,13 @@ def get_pka(
         )
         float_deltag += float_coef*(float_h-float_h_tot)
 
-    float_correct = fes_1M_correct(
-        float_volume = float_volume,
-        float_T = float_T
-    )
+    if not (float_volume is None):
+        float_correct = fes_1M_correct(
+            float_volume = float_volume,
+            float_T = float_T
+        )
+        float_deltag += float_correct
 
-    float_deltag += float_correct
     float_pka = deltag_to_pka(
         float_deltag = float_deltag,
         float_T = float_T,
@@ -164,7 +157,7 @@ def get_pka(
 def get_pka_time(
     dict_file: dict,
     dict_coef: dict,
-    float_volume: float,
+    float_volume: float = None,
     tup_srange_tot: tuple = None,
     str_save: str = None,
     float_T: float = None,

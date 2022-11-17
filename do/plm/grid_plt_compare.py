@@ -4,42 +4,16 @@ import matplotlib.pyplot as plt
 #----------------------------------------------------------[Compare]
 
 #'''
-str_tmp = 'dist_vp_o_1_2_fes_pka'
-#str_tmp = 'cn_o_h_fes_pka'
 plm.grid_plt(
     list2d_file = [
-        [f'../../../02.390K_hills/390K/reweight/{str_tmp}.csv', 'Biasfactor 5.0'],
-        [f'{str_tmp}.csv', 'Biasfactor 10.0'],
-    ],
-    str_xlabel = 'Time (ns)',
-    str_ylabel = 'pKa',
-    str_save = f'{str_tmp}.compare.pdf'
-)
-#'''
-#'''
-str_tmp = 'dist_vp_o_1_2_fes_deltag'
-#str_tmp = 'cn_o_h_fes_deltag'
-plm.grid_plt(
-    list2d_file = [
-        [f'../../../02.390K_hills/390K/reweight/{str_tmp}.csv', 'Biasfactor 5.0'],
-        [f'{str_tmp}.csv', 'Biasfactor 10.0'],
+        [f'../../../04.conformer/330K/reweight/dhx_o_h_fes_CT_deltag.csv', 'CT Beta 5.0'],
+        [f'dhx_o_h_fes_CT_deltag.csv', 'CT Beta 10'],
+        [f'../../../04.conformer/330K/reweight/dhx_o_h_fes_CC_deltag.csv', 'CC Beta 5.0'],
+        [f'dhx_o_h_fes_CC_deltag.csv', 'CC Beta 10'],
     ],
     str_xlabel = 'Time (ns)',
     str_ylabel = r'$\Delta$G (kJ/mol)',
-    str_save = f'{str_tmp}.compare.pdf'
-)
-#'''
-'''
-str_tmp = 'dhx_o_h_fes'
-plm.grid_plt(
-    list2d_file = [
-        [f'../../../07.conformer/330K.2/reweight/{str_tmp}.grid', 'Biasfactor 5.0'],
-        [f'{str_tmp}.grid', 'Biasfactor 10.0'],
-    ],
-    str_xlabel = r'dhx(OH)',
-    str_save = f'{str_tmp}.compare.pdf',
-    bool_minzero = True,
-    str_ylabel = 'FES (kJ/mol)',
+    str_save = f'dhx_o_h_fes_deltag.compare.pdf'
 )
 #'''
 '''
@@ -69,20 +43,6 @@ plm.grid_plt(
     bool_minus = True,
     bool_maxzero = True,
     str_ylabel = 'Hills (kJ/mol)',
-    tup_xlim = None
-)
-#'''
-'''
-str_tmp = 'cn_o_h_fes'
-plm.grid_plt(
-    list2d_file = [
-        [f'../../../10.cn_o_h/330K/reweight/{str_tmp}.grid', 'Biasfactor 5'],
-        [f'{str_tmp}.grid', 'Biasfactor 10'],
-    ],
-    str_xlabel = r'cn(O$_C$H)',
-    str_save = f'{str_tmp}.compare.pdf',
-    bool_minzero = True,
-    str_ylabel = 'FES (kJ/mol)',
     tup_xlim = None
 )
 #'''

@@ -27,9 +27,9 @@ def grid2d_plt(
             if list_line[0] != '#!':
                 break
             if list_line[2] == f'nbins_{list_field[0]}':
-                int_nbin_x = int(list_line[3])
+                int_nbin_x = int(list_line[3]) + 1
             elif list_line[2] == f'nbins_{list_field[1]}':
-                int_nbin_y = int(list_line[3])
+                int_nbin_y = int(list_line[3]) + 1
         if not (int_nbin_x and int_nbin_y):
             raise
 
@@ -66,16 +66,16 @@ def grid2d_plt(
     if str_save:
         fig.savefig(str_save, bbox_inches='tight')
 
-'''
+#'''
 grid2d_plt(
-    str_file = 'fes_2d.grid',
+    str_file = '2d_fes.grid',
     bool_minzero = True,
     #str_xlabel = r'dh(O$_0$H$_0$) (rad)',
     #str_ylabel = r'dh(O$_1$V$_H$) (rad)',
-    str_save = 'fes_2d.pdf'
+    str_save = '2d_fes.pdf'
 )
 #'''
-
+'''
 grid2d_plt(
     str_file = 'fes_2d.10.dat',
     bool_minus = True,
@@ -84,7 +84,7 @@ grid2d_plt(
     #str_ylabel = r'dh(O$_1$V$_H$) (rad)',
     str_save = 'fes_2d.10.pdf'
 )
-
+#'''
 plt.show()
 
 

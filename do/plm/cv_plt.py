@@ -17,32 +17,32 @@ plm.colvar_plt(
     list_header = [
         #['dist_vp_o_1'],
         #['dist_vp_o_2'],
-        #['dist_vp_o_1_2'],
+        ['dist_vp_o_1_2'],
 
-        #['dist_vp_c'],
+        ['dist_vp_c'],
         #['dist_vp_c', (0.5, 1.5)],
         #['lw_vp_cbias'],
 
         #['cn_o_1_2_h'],
-        ['cn_o_h'],
+        #['cn_o_h'],
 
         #['cn_c_h'],
 
-        ['cn_c_o'],
+        #['cn_c_o'],
 
-        #['dhx_o_0_h'],
+        ['dhx_o_0_h'],
         #['dhx_o_2_h'],
 
         ['metadbias'],
         #['metadrbias'],
         #['metadrct'],
 
-        #['dist_o_0_h'],
+        ['dist_o_0_h'],
         #['dist_o_2_h'],
         #['dist_o_0_h', (1.1, 1.2)],
         #['uw_dist_o_0_hbias'],
 
-        #['cn_o_0_h'],
+        ['cn_o_0_h'],
         #['uw_cn_o_0_hbias'],
     ],
     float_timescale = 1/1000,
