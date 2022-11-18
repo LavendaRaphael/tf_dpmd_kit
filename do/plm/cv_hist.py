@@ -6,7 +6,7 @@ dict_label = {
 
 #'''
 list_header = [
-    'dist_vp_o_1_2', 'dhx_o_0_h','dhx_o_2_h', 'dist_o_0_h','cn_o_0_h'
+    'dist_vp_o_1_2', 'dhx_o_0_h','dhx_o_2_h', 'dist_o_0_h', 'dist_o_2_h','cn_o_0_h'
 ]
 for str_tmp in list_header:
     if str_tmp in dict_label:

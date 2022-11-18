@@ -245,17 +245,17 @@ def grid_plt(
         fig.savefig(str_save, bbox_inches='tight', dpi=300)
 
 def colvar_plt(
-    list_header: list,
+    dict_header: dict,
+    str_xlabel: str = 'time (ps)',
     float_timescale: float = 1.0,
     tup_xlim: tuple = None,
     str_save: str = None,
     str_color: str = None,
-    dict_label: dict = None,
 ) -> None:
 
     rc('font',**{'size':15, 'family':'sans-serif','sans-serif':['Arial']})
 
-    int_nplot = len(list_header)
+    int_nplot = len(dict_header)
     fig, axs = plt.subplots(int_nplot, 1, sharex='all')
     if int_nplot==1:
         axs = [axs]
@@ -274,8 +274,7 @@ def colvar_plt(
                 else:
                     break
             data = np.genfromtxt(list_tmp, dtype=None, names=list_field, invalid_raise=False)
-            for int_i in range(int_nplot):
-                str_header = list_header[int_i][0]
+            for int_i,str_header in enumerate(dict_header):
                 if str_header not in data.dtype.names:
                     continue
                 axs[int_i].scatter(data['time']*float_timescale, data[str_header], s=0.5, color=str_color)
@@ -283,17 +282,11 @@ def colvar_plt(
                 break
             list_tmp = [str_line]
             list_field = str_line.split()[2:]
-    for int_i in range(int_nplot):
-        str_header = list_header[int_i][0]
-        if str_header not in dict_label:
-            str_label = str_header
-        else:
-            str_label = dict_label[str_header]
+    for int_i,str_header in enumerate(dict_header):
+        str_label = dict_header[str_header]
         axs[int_i].set_ylabel(str_label)
-        axs[int_i].set_xlim(tup_xlim)
-        if len(list_header[int_i]) > 1:
-            axs[int_i].set_ylim(list_header[int_i][1])
-    axs[-1].set_xlabel(('time (ns)'))
+    axs[-1].set_xlim(tup_xlim)
+    axs[-1].set_xlabel(str_xlabel)
     if str_save:
         fig.set_size_inches(11, 5)
         fig.savefig(str_save, bbox_inches='tight', dpi=300)
