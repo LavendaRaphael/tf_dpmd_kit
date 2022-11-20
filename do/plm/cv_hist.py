@@ -16,7 +16,8 @@ for str_tmp in list_header:
     plm.colvar_hist_plt(
         str_header = str_tmp,
         str_save = f'{str_tmp}.prob.pdf',
-        str_label = str_tmp
+        str_label = str_tmp,
+        tup_timerange = (0,28)
     )
 #'''
 plt.show()

@@ -8,24 +8,34 @@ from matplotlib import rc
 def colvar_hist_plt(
     str_header: str,
     str_label: str,
-    str_save: str = None
+    str_save: str = None,
+    tup_timerange: tuple = None,
 ) -> None:
     fig, ax = plt.subplots()
 
     with open('COLVAR', 'r') as colvar:
         list_header = colvar.readline().split()[2:]
-    data = np.genfromtxt("COLVAR", dtype=None, names=list_header)
+    np_data = np.genfromtxt("COLVAR", dtype=None, names=list_header)
     #print(data.dtype)
 
+    if tup_timerange is None:
+        np_data_new = np_data_new = data[str_header]
+    else:
+        np_data_time = np_data['time']
+        list_tof = (np_data_time >= tup_timerange[0]) & (np_data_time <= tup_timerange[1])
+        np_data_time_new = np_data_time[list_tof]
+        print(np_data_time_new[0],np_data_time_new[-1])
+        np_data_new = np_data[str_header][ list_tof ]
+
     ax.hist(
-        data[str_header],
+        np_data_new,
         bins = 'auto',
         density = True
     )
     #ax.set_xlim(list2d_header[int_i][1])
 
-    float_std = np.std(data[str_header])
-    float_mean = np.mean(data[str_header])
+    float_std = np.std(np_data_new)
+    float_mean = np.mean(np_data_new)
     ax.plot([],[],' ',label=f'MEAN = {float_mean:.3f}')
     ax.plot([],[],' ',label=f'STD = {float_std:.3f}')
 

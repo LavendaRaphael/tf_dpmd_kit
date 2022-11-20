@@ -28,14 +28,15 @@ list_snaprange = [
     (150000, 200000),
 ]
 #'''
-'''
+#'''
 list_snaprange = [
-    ( 50000, 150000),
+    ( 50000, 200000),
 ]
 #'''
-#'''
+'''
 list_snaprange = [
-    ( 1000, 64000),
+    ( 10000, 30000),
+    ( 30000, 50000),
 ]
 #'''
 
@@ -47,11 +48,12 @@ list_atompair = [
     ('o_w','o_w')
 ]
 
-for tup_atompair in list_atompair:
-    analysis.rdf(
-        mda_atomgroup_0 = dict_atomgroup[tup_atompair[0]],
-        mda_atomgroup_1 = dict_atomgroup[tup_atompair[1]],
-        list_snaprange = list_snaprange,
-        str_save = f'rdf.{tup_atompair[0]}.{tup_atompair[1]}.',
-        tup_rrange = (1.0,6.0)
-    )
+for tup_snaprange in list_snaprange:
+    for tup_atompair in list_atompair:
+        analysis.rdf(
+            mda_atomgroup_0 = dict_atomgroup[tup_atompair[0]],
+            mda_atomgroup_1 = dict_atomgroup[tup_atompair[1]],
+            tup_snaprange = tup_snaprange,
+            str_save = f'rdf.{tup_atompair[0]}.{tup_atompair[1]}.{tup_snaprange[0]:07d}_{tup_snaprange[1]:07d}.csv',
+            tup_rrange = (1.0,6.0)
+        )

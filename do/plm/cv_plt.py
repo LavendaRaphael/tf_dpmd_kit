@@ -33,7 +33,7 @@ def gen_dict_header(
             dict_header[str_header] = str_header
     return dict_header
 
-#'''
+'''
 list_header = [
     'dist_o_0_h',
     'dist_o_2_h',
@@ -66,13 +66,28 @@ list_header = [
 ]
 str_save = None
 #'''
-
+'''
+list_header = [
+    'dhx_o_0_h',
+    'dhx_o_2_h',
+    'metadbias',
+    'dist_o_0_h',
+    'dist_o_2_h',
+]
+str_save = None
+#'''
+#'''
+list_header = [
+    'cn_o_h',
+]
+str_save = None
+#'''
 
 plm.colvar_plt(
     dict_header = gen_dict_header(list_header, dict_label),
 
     #float_timescale = 1/1000,
-    #float_timescale = 1/0.0005/50,
+    float_timescale = 1/0.0005/10,
     #float_timescale = 1/0.000048378/10
 
     #tup_xlim = (360800, 363300),
