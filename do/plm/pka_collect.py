@@ -28,12 +28,13 @@ def pka_collect(
     np.savetxt(str_save_deltag, np_deltag, header=' '.join(np_deltag.dtype.names))
 
 #list_temp = [390]
-list_temp = [330]
-#list_temp = [280,290,300,310,320]
+#list_temp = [330]
+list_temp = [280,290,300,310,320]
 #list_temp = [290,310,330,350,370,390]
 
-#str_tmp = 'dist_vp_o_1_2_fes_m4'
-str_tmp = 'cn_o_h_fes_m4'
+#str_tmp = 'dist_vp_o_1_2_fes'
+#str_tmp = 'cn_o_h_fes_m4'
+str_tmp = 'dhx_o_h_fes_CT'
 
 pka_collect(
     list_temperature = list_temp,

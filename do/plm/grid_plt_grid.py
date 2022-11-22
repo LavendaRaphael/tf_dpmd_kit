@@ -1,14 +1,11 @@
 from tf_dpmd_kit import plm
 import matplotlib.pyplot as plt
 
-#str_tmp = 'dist_vp_o_1_2_fes'
-#str_xlabel = r'R(V$_P$O$_C$) (Å)'
+str_tmp = 'dist_vp_o_1_2_fes'
+str_xlabel = r'R(V$_P$O$_C$) (Å)'
 
-#str_tmp = 'dhx_o_0_h_fes'
-#str_xlabel = r'dhx(O$_0$H)'
-
-str_tmp = 'dhx_o_h_fes'
-str_xlabel = r'dhx(OH)'
+#str_tmp = 'dhx_o_h_fes'
+#str_xlabel = r'dhx(OH)'
 
 #str_tmp = 'cn_o_h_fes'
 #str_xlabel = r'cn(O$_C$H)'

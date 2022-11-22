@@ -3,6 +3,51 @@ import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import rc
 
+def plt_subplots(
+    dict_subplot: dict,
+    dict_data: dict,
+    str_xlabel: str,
+    str_ylabel: str,
+    tup_xlim: tuple,
+    str_save: str = None,
+    tup_size: tuple = None,
+    bool_legend: bool = True,
+) -> None:
+    
+    rc('font',**{'size':15, 'family':'sans-serif','sans-serif':['Arial']})
+
+    int_nplot = len(dict_subplot)
+    fig, axs = plt.subplots(int_nplot, 1, sharex='all')
+    if int_nplot==1:
+        axs = [axs]
+
+    for ax, str_title in zip(axs, dict_subplot):
+        tup_ylim = dict_subplot[str_title]
+        ax.set_ylim(tup_ylim)
+        ax.set_ylabel(str_ylabel)
+        ax.text(
+            x=0.9,
+            y=0.9,
+            s = str_title,
+            horizontalalignment = 'right',
+            verticalalignment = 'top',
+            transform=ax.transAxes
+        )
+        for str_label,dict_tmp in dict_data.items():
+            if not (str_title in dict_tmp):
+                continue
+            str_file = dict_tmp[str_title]
+            np_data = np.loadtxt(str_file)
+            ax.plot( np_data[:,0], np_data[:,1], label=str_label)
+    if bool_legend:
+        axs[0].legend(loc='upper center') 
+    axs[-1].set_xlabel(str_xlabel)
+    axs[0].set_xlim(tup_xlim)
+    if str_save:
+        if not tup_size is None:
+            fig.set_size_inches(tup_size)
+        fig.savefig(str_save, bbox_inches='tight', dpi=300)
+
 def rdf_plt_compare(
     dict_data: dict,
     tup_xrange: tuple = None,
@@ -15,12 +60,16 @@ def rdf_plt_compare(
         'dotted',
         'dashed',
         (5,(10,3))
-    ]
+    ],
+    tup_colormap: tuple =  None,
 ) -> None:
 
     rc('font',**{'size':15, 'family':'sans-serif','sans-serif':['Arial']})
 
     fig, ax = plt.subplots()
+
+    if tup_colormap:
+        sm = plt.cm.ScalarMappable(cmap='coolwarm', norm=plt.Normalize(vmin=tup_colormap[0], vmax=tup_colormap[1]))
 
     if not (str_title is None):
         ax.plot([], linestyle='', label=str_title)
@@ -31,13 +80,19 @@ def rdf_plt_compare(
             str_linestyle = None
         else:
             str_linestyle = list_linestyle[int_id]
+
+        if tup_colormap:
+            color = sm.to_rgba(int(str_label[:3]))
+        else:
+            color = None
         
         ax.plot(
             array_rdf[:,0],
             array_rdf[:,1],
             label = str_label,
             linewidth = 2,
-            linestyle = str_linestyle
+            linestyle = str_linestyle,
+            color = color
         )
     ax.legend()
     #ax.set_title(str_title)

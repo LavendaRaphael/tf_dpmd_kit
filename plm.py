@@ -259,6 +259,7 @@ def colvar_plt(
     str_xlabel: str = 'time (ps)',
     float_timescale: float = 1.0,
     tup_xlim: tuple = None,
+    tup_ylim: tuple = None,
     str_save: str = None,
     str_color: str = None,
 ) -> None:
@@ -295,7 +296,8 @@ def colvar_plt(
     for int_i,str_header in enumerate(dict_header):
         str_label = dict_header[str_header]
         axs[int_i].set_ylabel(str_label)
-    axs[-1].set_xlim(tup_xlim)
+    axs[0].set_xlim(tup_xlim)
+    axs[0].set_ylim(tup_ylim)
     axs[-1].set_xlabel(str_xlabel)
     if str_save:
         fig.set_size_inches(11, 5)

@@ -48,7 +48,7 @@ str_tmp = 'dist_vp_o_1_2_fes'
 #str_tmp = 'cn_o_h_fes'
 #str_tmp = 'compare'
 
-str_tmp2 = '_m4_pka'
+str_tmp2 = '_pka'
 run(
     dict_file = {
         str_exp+'/2019_PNAS_DanielAminov/Fig_1_kelvin.csv': '2019 PNAS',
@@ -56,7 +56,7 @@ run(
         str_exp+'/2009_Science_KatrinAdamczyk/pka_kelvin.csv': '2009 Science (Deuterium)',
         #str_dir+f'/02.390K_hills/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'R(V$_P$O$_C$) 390K Beta 5',
         #str_dir+f'/02.390K_hills_beta/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'R(V$_P$O$_C$) 390K Beta 10',
-        str_dir+f'/03.metad/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'R(V$_P$O$_C$) MetaD',
+        str_dir+f'/03.metad/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'DPMD',
         #str_dir+f'/05.dist_vp.cn_o_h/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'R(V$_P$O$_C$)+cn(O$_C$H) Beta 5',
         #str_dir+f'/05.dist_vp.cn_o_h_beta/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'R(V$_P$O$_C$)+cn(O$_C$H) Beta 10',
         #str_dir+f'/06.cn_o_h/reweight.cn_o_h_fes{str_tmp2}.csv': 'cn(O$_C$H) Beta 5',
@@ -66,7 +66,7 @@ run(
     str_ylabel = 'pKa'
 )
 
-str_tmp2 = '_m4_deltag'
+str_tmp2 = '_deltag'
 run(
     dict_file = {
         str_exp+'/2019_PNAS_DanielAminov/Fig_1_deltag.csv': '2019 PNAS',
@@ -74,7 +74,7 @@ run(
         str_exp+'/2009_Science_KatrinAdamczyk/deltag.csv': '2009 Science (Deuterium)',
         #str_dir+f'/02.390K_hills/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'R(V$_P$O$_C$) 390K Beta 5',
         #str_dir+f'/02.390K_hills_beta/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'R(V$_P$O$_C$) 390K Beta 10',
-        str_dir+f'/03.metad/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'R(V$_P$O$_C$) MetaD',
+        str_dir+f'/03.metad/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'DPMD',
         #str_dir+f'/05.dist_vp.cn_o_h/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'R(V$_P$O$_C$)+cn(O$_C$H) Beta 5',
         #str_dir+f'/05.dist_vp.cn_o_h_beta/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'R(V$_P$O$_C$)+cn(O$_C$H) Beta 10',
         #str_dir+f'/06.cn_o_h/reweight.cn_o_h_fes{str_tmp2}.csv': 'cn(O$_C$H) Beta 5',
