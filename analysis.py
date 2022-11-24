@@ -2,6 +2,7 @@ from MDAnalysis.analysis.rdf import InterRDF
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import rc
+from tf_dpmd_kit import plm
 
 def plt_subplots(
     dict_subplot: dict,
@@ -50,56 +51,41 @@ def plt_subplots(
 
 def rdf_plt_compare(
     dict_data: dict,
-    tup_xrange: tuple = None,
-    tup_yrange: tuple = None,
+    tup_xlim: tuple = None,
+    tup_ylim: tuple = None,
     str_title: str = None,
     str_save: str = None,
-    list_linestyle: list = [
-        'solid',
-        'dashdot',
-        'dotted',
-        'dashed',
-        (5,(10,3))
-    ],
-    tup_colormap: tuple =  None,
+    str_xlabel: str = None,
+    str_ylabel: str = None,
+    tup_colormap: tuple = None,
+    dict_temperature: dict = None,
+    list_linestyle: list = None,
 ) -> None:
 
-    rc('font',**{'size':15, 'family':'sans-serif','sans-serif':['Arial']})
+    rc('font',**{'size':15, 'family':'sans-serif','sans-serif':['Arial']}) 
 
-    fig, ax = plt.subplots()
+    fig, ax = plm.grid_plt(
+        dict_data = dict_data,
+        str_xlabel = str_xlabel,
+        str_ylabel = str_ylabel,
+        str_save = None,
+        tup_xlim = tup_xlim,
+        tup_ylim = tup_ylim,
+        tup_colormap = tup_colormap,
+        dict_temperature = dict_temperature,
+        list_linestyle = list_linestyle,
+    )
 
-    if tup_colormap:
-        sm = plt.cm.ScalarMappable(cmap='coolwarm', norm=plt.Normalize(vmin=tup_colormap[0], vmax=tup_colormap[1]))
+    ax.text(
+        x=0.9,
+        y=0.9,
+        s = str_title,
+        horizontalalignment = 'right',
+        verticalalignment = 'top',
+        transform=ax.transAxes
+    )
+    ax.legend(loc='upper center')
 
-    if not (str_title is None):
-        ax.plot([], linestyle='', label=str_title)
-    for int_id,str_label in enumerate(dict_data):
-        array_rdf = np.loadtxt(dict_data[str_label])
-
-        if list_linestyle is None:
-            str_linestyle = None
-        else:
-            str_linestyle = list_linestyle[int_id]
-
-        if tup_colormap:
-            color = sm.to_rgba(int(str_label[:3]))
-        else:
-            color = None
-        
-        ax.plot(
-            array_rdf[:,0],
-            array_rdf[:,1],
-            label = str_label,
-            linewidth = 2,
-            linestyle = str_linestyle,
-            color = color
-        )
-    ax.legend()
-    #ax.set_title(str_title)
-    ax.set_xlabel('r (Å)')
-    ax.set_ylabel('RDF')
-    ax.set_xlim(tup_xrange)
-    ax.set_ylim(tup_yrange)
     if str_save:
         #fig.set_size_inches(6, 5)
         fig.savefig(str_save, bbox_inches='tight')

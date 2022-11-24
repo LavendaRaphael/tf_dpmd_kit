@@ -24,7 +24,7 @@ def gen_data(
 
 # setup
 
-'''
+#'''
 list_id = [
     (      0, 50000),
     (  50000,100000),
@@ -34,66 +34,45 @@ list_id = [
 float_timestep = 0.005
 #'''
 
-'''
-list_id.append((1000,46000))
-list_id.append((1000,55000))
-float_timestep = 4.837769e-04
-#'''
-
-#'''
-list_id = [
-    (  10000, 30000),
-    (  30000, 50000),
-    (  50000, 90000),
-    (  90000,130000),
-]
-float_timestep = 0.005
-#'''
-
-str_pair = 'c.o_w'
+str_pair = 'o_1.h_w.TT'
 analysis.rdf_plt_compare(
     dict_data = gen_data(str_pair, list_id, float_timestep),
-    tup_xrange = (2,6),
-    tup_yrange = (0,2.5),
-    str_save = f'rdf.{str_pair}.converge.pdf',
-    str_title = r'C-O$_W$',
-    list_linestyle = None,
-)
-str_pair = 'o_1.h_w'
-analysis.rdf_plt_compare(
-    dict_data = gen_data(str_pair, list_id, float_timestep),
-    tup_xrange = (1,6),
-    tup_yrange = (0,2),
+    tup_xlim = (1,6),
+    tup_ylim = (0,2),
     str_save = f'rdf.{str_pair}.converge.pdf',
     str_title = r'$^=$O-H$_W$',
-    list_linestyle = None,
+    str_xlabel = 'r (Å)',
+    str_ylabel = 'g(r)',
 )
-str_pair = 'o_0_2.h_w'
+str_pair = 'o_0_2.h_w.TT'
 analysis.rdf_plt_compare(
     dict_data = gen_data(str_pair, list_id, float_timestep),
-    tup_xrange = (1,6),
-    tup_yrange = (0,2),
+    tup_xlim = (1,6),
+    tup_ylim = (0,2),
     str_save = f'rdf.{str_pair}.converge.pdf',
     str_title = r'O$_H$-H$_W$',
-    list_linestyle = None
+    str_xlabel = 'r (Å)',
+    str_ylabel = 'g(r)',
 )
-str_pair = 'h_0_1.o_w'
+str_pair = 'h_0_1.o_w.TT'
 analysis.rdf_plt_compare(
     dict_data = gen_data(str_pair, list_id, float_timestep),
-    tup_xrange = (1,6),
-    tup_yrange = (0,3),
+    tup_xlim = (1,6),
+    tup_ylim = (0,3),
     str_save = f'rdf.{str_pair}.converge.pdf',
     str_title = r'H$_O$-O$_W$',
-    list_linestyle = None
+    str_xlabel = 'r (Å)',
+    str_ylabel = 'g(r)',
 )
-str_pair = 'o_w.o_w'
+str_pair = 'o_w.o_w.TT'
 analysis.rdf_plt_compare(
     dict_data = gen_data(str_pair, list_id, float_timestep),
-    tup_xrange = (2,6),
-    tup_yrange = (0,3.5),
+    tup_xlim = (2,6),
+    tup_ylim = (0,4),
     str_save = f'rdf.{str_pair}.converge.pdf',
     str_title = r'O$_W$-O$_W$',
-    list_linestyle = None
+    str_xlabel = 'r (Å)',
+    str_ylabel = 'g(r)',
 )
 plt.show()
 

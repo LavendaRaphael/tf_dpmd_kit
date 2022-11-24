@@ -1,17 +1,25 @@
 from matplotlib import pyplot as plt
-from tf_dpmd_kit import analysis
+from tf_dpmd_kit import analysis,plm
 
 # data
 
 dict_input = {
-    '280K': ('280K/rdf/', '0050000_0200000'),
-    '290K': ('290K/rdf/', '0050000_0200000'),
-    '300K': ('300K/rdf/', '0050000_0200000'),
-    '310K': ('310K/rdf/', '0050000_0200000'),
-    '320K': ('320K/rdf/', '0050000_0200000'),
+    '280K': ('280K.0/rdf/', '0050000_0200000'),
+    '290K': ('290K.0/rdf/', '0050000_0200000'),
+    '300K': ('300K.0/rdf/', '0050000_0200000'),
+    '310K': ('310K.0/rdf/', '0050000_0200000'),
+    '320K': ('320K.0/rdf/', '0050000_0200000'),
 }
 
-tup_colormap = (280,320)
+dict_temperature = {
+    '280K': 280,
+    '290K': 290,
+    '300K': 300,
+    '310K': 310,
+    '320K': 320
+}
+
+tup_colormap = (280,330)
 
 def gen_data(
     str_pair: str,
@@ -24,58 +32,47 @@ def gen_data(
 
     return dict_data
 
-str_pair = 'c.o_w'
+str_pair = 'o_1.h_w.TT'
 analysis.rdf_plt_compare(
     dict_data = gen_data(str_pair=str_pair, dict_input=dict_input),
-    tup_xrange = (2,6),
-    tup_yrange = (0,2.5),
-    str_save = f'rdf.{str_pair}.pdf',
-    str_title = r'C-O$_W$',
-    list_linestyle = None,
-    tup_colormap = tup_colormap
-)
-
-str_pair = 'o_1.h_w'
-analysis.rdf_plt_compare(
-    dict_data = gen_data(str_pair=str_pair, dict_input=dict_input),
-    tup_xrange = (1,6),
-    tup_yrange = (0,2.5),
+    dict_temperature = dict_temperature,
+    tup_xlim = (1,6),
+    tup_ylim = (0,2.5),
     str_save = f'rdf.{str_pair}.pdf',
     str_title = r'$^=$O-H$_W$',
-    list_linestyle = None,
     tup_colormap = tup_colormap
 )
 
-str_pair = 'o_0_2.h_w'
+str_pair = 'o_0_2.h_w.TT'
 analysis.rdf_plt_compare(
     dict_data = gen_data(str_pair=str_pair, dict_input=dict_input),
-    tup_xrange = (1,6),
-    tup_yrange = (0,2.5),
+    dict_temperature = dict_temperature,
+    tup_xlim = (1,6),
+    tup_ylim = (0,2.5),
     str_save = f'rdf.{str_pair}.pdf',
     str_title = r'O$_H$-H$_W$',
-    list_linestyle = None,
     tup_colormap = tup_colormap
 )
 
-str_pair = 'h_0_1.o_w'
+str_pair = 'h_0_1.o_w.TT'
 analysis.rdf_plt_compare(
     dict_data = gen_data(str_pair=str_pair, dict_input=dict_input),
-    tup_xrange = (1,6),
-    tup_yrange = (0,3),
+    dict_temperature = dict_temperature,
+    tup_xlim = (1,6),
+    tup_ylim = (0,3),
     str_save = f'rdf.{str_pair}.pdf',
     str_title = r'H$_O$-O$_W$',
-    list_linestyle = None,
     tup_colormap = tup_colormap
 )
 
-str_pair = 'o_w.o_w'
+str_pair = 'o_w.o_w.TT'
 analysis.rdf_plt_compare(
     dict_data = gen_data(str_pair=str_pair, dict_input=dict_input),
-    tup_xrange = (2,6),
-    tup_yrange = (0,4),
+    dict_temperature = dict_temperature,
+    tup_xlim = (2,6),
+    tup_ylim = (0,4),
     str_save = f'rdf.{str_pair}.pdf',
     str_title = r'O$_W$-O$_W$',
-    list_linestyle = None,
     tup_colormap = tup_colormap
 )
 

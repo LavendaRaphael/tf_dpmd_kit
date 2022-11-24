@@ -202,16 +202,18 @@ def get_pka_time(
         np.savetxt(str_save_deltag, np_deltag, header=' '.join(np_deltag.dtype.names))
 
 def grid_plt(
-    list2d_file: list[list],
+    dict_data: dict,
     str_xlabel: str,
     str_ylabel: str,
-    str_save: str=None,
+    str_save: str = None,
     tup_xlim: tuple = None,
     tup_ylim: tuple = None,
     tup_colormap: tuple = None,
+    dict_temperature: dict = None,
     bool_minzero: bool = False,
     bool_maxzero: bool = False,
-    bool_minus: bool = False,
+    bool_minus: bool = False, 
+    list_linestyle: list = None,
 ) -> None:
 
     rc('font',**{'size':15, 'family':'sans-serif','sans-serif':['Arial']})
@@ -220,17 +222,21 @@ def grid_plt(
         sm = plt.cm.ScalarMappable(cmap='coolwarm', norm=plt.Normalize(vmin=tup_colormap[0], vmax=tup_colormap[1]))
 
     fig, ax = plt.subplots()
-    for list_file in list2d_file:
-        str_file = list_file[0]
-        str_label = list_file[1]
+    for int_id, str_label in enumerate(dict_data):
+        str_file = dict_data[str_label]
         print(str_file)
         if not os.path.isfile(str_file):
             continue
 
         if tup_colormap:
-            color = sm.to_rgba(int(str_label[:-1]))
+            color = sm.to_rgba(dict_temperature[str_label])
         else:
             color = None
+
+        if list_linestyle is None:
+            str_linestyle = None
+        else:
+            str_linestyle = list_linestyle[int_id]
 
         np_data = np.loadtxt(str_file)
         np_data_y = np_data[:,1]
@@ -242,8 +248,7 @@ def grid_plt(
 
         if bool_maxzero:
             np_data_y -= max(np_data_y)
-
-        ax.plot( np_data[:,0], np_data_y, label=str_label, linewidth=2, color=color)
+        ax.plot( np_data[:,0], np_data_y, label=str_label, linewidth=1.5, color=color, linestyle=str_linestyle)
     
     ax.legend()
     ax.set_xlabel(str_xlabel)
@@ -253,6 +258,8 @@ def grid_plt(
     if str_save:
         fig.set_size_inches(9, 7)
         fig.savefig(str_save, bbox_inches='tight', dpi=300)
+
+    return fig, ax
 
 def colvar_plt(
     dict_header: dict,
@@ -299,6 +306,40 @@ def colvar_plt(
     axs[0].set_xlim(tup_xlim)
     axs[0].set_ylim(tup_ylim)
     axs[-1].set_xlabel(str_xlabel)
+    if str_save:
+        fig.set_size_inches(11, 5)
+        fig.savefig(str_save, bbox_inches='tight', dpi=300)
+
+    return fig, axs
+
+def insert_img(
+    fig,
+    ax,
+    dict_img: dict,
+    dict_arrow: dict,
+    str_save: str = None,
+) -> None:
+
+    for str_img, tup_pos in dict_img.items():
+        image = plt.imread(str_img)
+        axin = ax.inset_axes(tup_pos)
+        im = axin.imshow(image)
+        axin.axis('off')
+
+    for tup_xy, tup_xytext in dict_arrow.items():
+        ax.annotate(
+            text = '',
+            xy = tup_xy,
+            xycoords = 'data',
+            xytext = tup_xytext,
+            textcoords = 'axes fraction',
+            arrowprops = dict(
+                arrowstyle= '-|>',
+                linestyle='--',
+                color = 'orange',
+                linewidth = 2.0
+            )
+        )
     if str_save:
         fig.set_size_inches(11, 5)
         fig.savefig(str_save, bbox_inches='tight', dpi=300)
