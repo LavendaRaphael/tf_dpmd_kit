@@ -14,9 +14,13 @@ print(mda_universe.trajectory)
 dict_atomgroup = {
     'o_w': mda_universe.atoms[0:126],
     'o_0_2': mda_universe.atoms[[126,128]],
+    'o_0': mda_universe.atoms[[126]],
+    'o_2': mda_universe.atoms[[128]],
     'o_1': mda_universe.atoms[[127]],
     'h_w': mda_universe.atoms[129:381],
     'h_0_1': mda_universe.atoms[[381,382]],
+    'h_0': mda_universe.atoms[[381]],
+    'h_1': mda_universe.atoms[[382]],
     'c': mda_universe.atoms[[383]]
 }
 #'''
@@ -41,15 +45,25 @@ list_snaprange = [
     ( 50000, 100000),
     (100000, 150000),
     (150000, 200000),
-    #( 50000, 200000),
+    ( 50000, 200000),
 ]
 #'''
-
+'''
 list_atompair = [
     ('o_1', 'h_w'),
     ('o_0_2','h_w'),
     ('h_0_1','o_w'),
     ('o_w','o_w')
+]
+#'''
+
+list_atompair = [
+    ('o_0', 'h_w'),
+    ('o_1', 'h_w'),
+    ('o_2', 'h_w'),
+    ('h_0', 'o_w'),
+    ('h_1', 'o_w'),
+    ('o_w', 'o_w'),
 ]
 
 for tup_snaprange in list_snaprange:

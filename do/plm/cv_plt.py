@@ -54,9 +54,12 @@ list_header = [
     'dist_o_0_h',
     'dist_o_2_h',
 ]
-str_save = None
+plm.colvar_plt(
+    dict_header = gen_dict_header(list_header, dict_label),
+    float_timescale = 1/0.005
+)
 #'''
-#'''
+'''
 list_header = [
     'cn_o_h',
     'cos_o_h',
@@ -78,4 +81,28 @@ fig, axs = plm.colvar_plt(
     #float_timescale = 1/0.005
 )
 #'''
+#'''
+list_header = [
+    'cn_o_h',
+    #'dist_o_0_h',
+    #'dist_o_2_h',
+    'dhx_o_0_h',
+    'dhx_o_1_h',
+    #'dhx_o_h',
+]
+plm.colvar_plt(
+    dict_header = gen_dict_header(list_header, dict_label),
+    str_save = 'cv.time.png',
+)
+#'''
+'''
+list_header = [
+    'dist_vp_c',
+]
+plm.colvar_plt(
+    dict_header = gen_dict_header(list_header, dict_label),
+    str_save = 'dist_vp_c.time.png',
+)
+#'''
+
 plt.show()

@@ -4,10 +4,11 @@ from tf_dpmd_kit import analysis
 # data
 
 dict_input = {
-    'AIMD (28 ps)': ('/home/faye/research_d/202203_MDCarbonicAcid/server/01.init/H2CO3_TT_H2O_126/rdf/', '0001000_0057877'),
-    'DPMD-0': ('/home/faye/research_d/202203_MDCarbonicAcid/server/04.md/04.H2CO3_TT_H2O_126/330K/rdf/', 'TT.0050000_0130000'),
-    'DPMD-1': ('/home/faye/research_d/202203_MDCarbonicAcid/server/04.md/04.H2CO3_CT_H2O_126/330K/rdf/', 'TT.0050000_0200000'),
-    'DPMD-2': ('/home/faye/research_d/202203_MDCarbonicAcid/server/04.md/04.H2CO3_CC_H2O_126/330K/rdf/', 'TT.0100000_0200000'),
+    'AIMD (28 ps)': ('/home/faye/research_d/202203_MDCarbonicAcid/server/01.init/H2CO3_TT_H2O_126/rdf/', 'TT.0001000_0057877'),
+    'DPMD-0': ('/home/faye/research_d/202203_MDCarbonicAcid/server/04.md/H2CO3_TT_H2O_126/330K/rdf/', 'TT.0050000_0130000'),
+    'DPMD-1': ('/home/faye/research_d/202203_MDCarbonicAcid/server/04.md/H2CO3_CT_H2O_126/330K/rdf/', 'TT.0050000_0200000'),
+    #'DPMD-2': ('/home/faye/research_d/202203_MDCarbonicAcid/server/04.md/H2CO3_CC_H2O_126/330K/rdf/', 'TT.0100000_0200000'),
+    'DPMD-wall': ('/home/faye/research_d/202203_MDCarbonicAcid/server/04.md_wall/H2CO3_TT_H2O_126/330K/rdf/', 'TT.0050000_0200000'),
 }
 
 def gen_data(
