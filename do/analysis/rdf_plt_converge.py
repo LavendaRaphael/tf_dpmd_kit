@@ -26,15 +26,14 @@ def gen_data(
 
 #'''
 list_id = [
-    (      0, 50000),
-    (  50000,100000),
-    ( 100000,150000),
-    ( 150000,200000)
+    (      0,100000),
+    ( 100000,200000),
+    ( 200000,300000),
+    ( 300000,400000),
 ]
 float_timestep = 0.005
-#'''
 
-str_pair = 'o_1.h_w.TT'
+str_pair = 'o_1.h_w'
 analysis.rdf_plt_compare(
     dict_data = gen_data(str_pair, list_id, float_timestep),
     tup_xlim = (1,6),
@@ -44,7 +43,7 @@ analysis.rdf_plt_compare(
     str_xlabel = 'r (Å)',
     str_ylabel = 'g(r)',
 )
-str_pair = 'o_0_2.h_w.TT'
+str_pair = 'o_0_2.h_w'
 analysis.rdf_plt_compare(
     dict_data = gen_data(str_pair, list_id, float_timestep),
     tup_xlim = (1,6),
@@ -54,7 +53,7 @@ analysis.rdf_plt_compare(
     str_xlabel = 'r (Å)',
     str_ylabel = 'g(r)',
 )
-str_pair = 'h_0_1.o_w.TT'
+str_pair = 'h_0_1.o_w'
 analysis.rdf_plt_compare(
     dict_data = gen_data(str_pair, list_id, float_timestep),
     tup_xlim = (1,6),
@@ -64,7 +63,7 @@ analysis.rdf_plt_compare(
     str_xlabel = 'r (Å)',
     str_ylabel = 'g(r)',
 )
-str_pair = 'o_w.o_w.TT'
+str_pair = 'o_w.o_w'
 analysis.rdf_plt_compare(
     dict_data = gen_data(str_pair, list_id, float_timestep),
     tup_xlim = (2,6),

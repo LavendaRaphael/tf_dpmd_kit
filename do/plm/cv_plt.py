@@ -33,76 +33,20 @@ def gen_dict_header(
             dict_header[str_header] = str_header
     return dict_header
 
-'''
-list_header = [
-    'dist_vp_o_1_2',
-    'dist_vp_c',
-    'dhx_o_0_h',
-    'metadbias',
-    'dist_o_0_h',
-    'cn_o_0_h',
-]
-plm.colvar_plt(
-    dict_header = gen_dict_header(list_header, dict_label),
-)
-#'''
-'''
-list_header = [
-    'dhx_o_0_h',
-    'dhx_o_2_h',
-    'metadbias',
-    'dist_o_0_h',
-    'dist_o_2_h',
-]
-plm.colvar_plt(
-    dict_header = gen_dict_header(list_header, dict_label),
-    float_timescale = 1/0.005
-)
-#'''
-'''
-list_header = [
-    'cn_o_h',
-    'cos_o_h',
-]
-fig, axs = plm.colvar_plt(
-    dict_header = gen_dict_header(list_header, dict_label),
-    str_save = 'cv.time.png',
-)
-#'''
-'''
-list_header = ['cn_o_h']
-fig, axs = plm.colvar_plt(
-    dict_header = gen_dict_header(list_header, dict_label),
-    str_save = 'cn_o_h.time.png',
-    tup_xlim = (0,None),
-    #tup_ylim = (0,None),
-    #tup_xlim = (669.5,672.5),
-    #float_timescale = 1/0.000484
-    #float_timescale = 1/0.005
-)
-#'''
-#'''
 list_header = [
     'cn_o_h',
     #'dist_o_0_h',
-    #'dist_o_2_h',
-    'dhx_o_0_h',
-    'dhx_o_1_h',
+    #'dist_o_1_h',
+    #'dhx_o_0_h',
+    #'dhx_o_1_h',
+    #'cos_o_0_h',
+    #'cos_o_1_h',
     #'dhx_o_h',
 ]
 plm.colvar_plt(
+    list_data = ['COLVAR.0', 'COLVAR'],
     dict_header = gen_dict_header(list_header, dict_label),
     str_save = 'cv.time.png',
 )
-#'''
-'''
-list_header = [
-    'dist_vp_c',
-]
-plm.colvar_plt(
-    dict_header = gen_dict_header(list_header, dict_label),
-    str_save = 'dist_vp_c.time.png',
-)
-#'''
 
 plt.show()

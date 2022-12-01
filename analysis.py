@@ -3,6 +3,43 @@ import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import rc
 from tf_dpmd_kit import plm
+from MDAnalysis.analysis.hydrogenbonds.hbond_analysis import HydrogenBondAnalysis
+
+def hbonds(
+    universe,
+    hydrogens_sel,
+    acceptors_sel,
+    tup_snaprange: tuple,
+    str_save: str,
+    int_ave: int = 1.0,
+    d_a_cutoff: float = 3.0,
+    d_h_a_angle_cutoff: float = 150,
+) -> None:
+
+    mda_hba = HydrogenBondAnalysis(
+        universe = universe,
+        hydrogens_sel = hydrogens_sel,
+        acceptors_sel = acceptors_sel,
+        d_a_cutoff = d_a_cutoff,
+        d_h_a_angle_cutoff = d_h_a_angle_cutoff
+    )
+
+    mda_hba.run(
+        start = tup_snaprange[0],
+        stop = tup_snaprange[1],
+        verbose = True,
+    )
+
+    np_final = np.zeros( shape=(tup_snaprange[1]-tup_snaprange[0]), dtype=[('snap', 'i4'), ('nhbond', 'f4')])
+    
+    np_final['snap'] = mda_hba.times
+    np_final['nhbond'] = mda_hba.count_by_time()/int_ave
+
+    np.savetxt(
+        fname = str_save,
+        X = np_final,
+        header = ' '.join(np_final.dtype.names)
+    )
 
 def plt_subplots(
     dict_subplot: dict,

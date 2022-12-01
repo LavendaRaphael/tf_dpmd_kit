@@ -214,6 +214,7 @@ def grid_plt(
     bool_maxzero: bool = False,
     bool_minus: bool = False, 
     list_linestyle: list = None,
+    bool_legend: bool = True,
 ) -> None:
 
     rc('font',**{'size':15, 'family':'sans-serif','sans-serif':['Arial']})
@@ -250,7 +251,8 @@ def grid_plt(
             np_data_y -= max(np_data_y)
         ax.plot( np_data[:,0], np_data_y, label=str_label, linewidth=1.5, color=color, linestyle=str_linestyle)
     
-    ax.legend()
+    if bool_legend:
+        ax.legend()
     ax.set_xlabel(str_xlabel)
     ax.set_ylabel(str_ylabel)
     ax.set_xlim(tup_xlim)
@@ -263,6 +265,7 @@ def grid_plt(
 
 def colvar_plt(
     dict_header: dict,
+    list_data: list = ['COLVAR'],
     str_xlabel: str = 'time (ps)',
     float_timescale: float = 1.0,
     tup_xlim: tuple = None,
@@ -278,28 +281,29 @@ def colvar_plt(
     if int_nplot==1:
         axs = [axs]
 
-    with open('COLVAR', 'r') as file_open:
-        str_line = file_open.readline()
-        list_tmp = [str_line]
-        list_field = str_line.split()[2:]
-        int_count = 0
-        for str_line in file_open:
-            print(list_tmp)
-            list_tmp.append(str_line)
-            for str_line in file_open:
-                if str_line[:9] != '#! FIELDS':
-                    list_tmp.append(str_line)
-                else:
-                    break
-            data = np.genfromtxt(list_tmp, dtype=None, names=list_field, invalid_raise=False)
-            for int_i,str_header in enumerate(dict_header):
-                if str_header not in data.dtype.names:
-                    continue
-                axs[int_i].scatter(data['time']*float_timescale, data[str_header], s=0.5, color=str_color)
-            if str_line[0] != '#':
-                break
+    for str_file in list_data:
+        with open(str_file, 'r') as file_open:
+            str_line = file_open.readline()
             list_tmp = [str_line]
             list_field = str_line.split()[2:]
+            int_count = 0
+            for str_line in file_open:
+                print(list_tmp)
+                list_tmp.append(str_line)
+                for str_line in file_open:
+                    if str_line[:9] != '#! FIELDS':
+                        list_tmp.append(str_line)
+                    else:
+                        break
+                data = np.genfromtxt(list_tmp, dtype=None, names=list_field, invalid_raise=False)
+                for int_i,str_header in enumerate(dict_header):
+                    if str_header not in data.dtype.names:
+                        continue
+                    axs[int_i].scatter(data['time']*float_timescale, data[str_header], s=0.5, color=str_color)
+                if str_line[0] != '#':
+                    break
+                list_tmp = [str_line]
+                list_field = str_line.split()[2:]
     for int_i,str_header in enumerate(dict_header):
         str_label = dict_header[str_header]
         axs[int_i].set_ylabel(str_label)
@@ -318,6 +322,7 @@ def insert_img(
     dict_img: dict,
     dict_arrow: dict,
     str_save: str = None,
+    tup_size: tuple = None,
 ) -> None:
 
     for str_img, tup_pos in dict_img.items():
@@ -341,7 +346,8 @@ def insert_img(
             )
         )
     if str_save:
-        fig.set_size_inches(11, 5)
+        if tup_size:
+            fig.set_size_inches(tup_size)
         fig.savefig(str_save, bbox_inches='tight', dpi=300)
 
 def hills_sum(
