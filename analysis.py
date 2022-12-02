@@ -7,33 +7,48 @@ from MDAnalysis.analysis.hydrogenbonds.hbond_analysis import HydrogenBondAnalysi
 
 def hbonds(
     universe,
-    hydrogens_sel,
-    acceptors_sel,
-    tup_snaprange: tuple,
+    hydrogens_sel: str,
+    acceptors_sel: str,
     str_save: str,
-    int_ave: int = 1.0,
+    donors_sel: str = None,
+    update_selections: bool = False,
+    float_ave: float = 1.0,
     d_a_cutoff: float = 3.0,
     d_h_a_angle_cutoff: float = 150,
+    tup_snaprange: tuple = None,
+    int_sperate: int = 10000,
 ) -> None:
+
+    print(str_save)
 
     mda_hba = HydrogenBondAnalysis(
         universe = universe,
         hydrogens_sel = hydrogens_sel,
         acceptors_sel = acceptors_sel,
+        donors_sel = donors_sel,
         d_a_cutoff = d_a_cutoff,
-        d_h_a_angle_cutoff = d_h_a_angle_cutoff
+        d_h_a_angle_cutoff = d_h_a_angle_cutoff,
+        update_selections = update_selections,
     )
 
-    mda_hba.run(
-        start = tup_snaprange[0],
-        stop = tup_snaprange[1],
-        verbose = True,
-    )
+    if tup_snaprange is None:
+        tup_snaprange = (0, len(universe.trajectory))
 
-    np_final = np.zeros( shape=(tup_snaprange[1]-tup_snaprange[0]), dtype=[('snap', 'i4'), ('nhbond', 'f4')])
-    
-    np_final['snap'] = mda_hba.times
-    np_final['nhbond'] = mda_hba.count_by_time()/int_ave
+    np_final = np.zeros( shape=tup_snaprange[1], dtype=[('snap', 'i4'), ('nhbond', 'f4')])
+
+    for start in range(tup_snaprange[0], tup_snaprange[1], int_sperate):
+        stop = start + int_sperate
+        if stop > tup_snaprange[1]:
+            stop = tup_snaprange[1]
+        print(f'{start} -> {stop}/{tup_snaprange[1]}')
+        mda_hba.run(
+            start = start,
+            stop = stop,
+            verbose = True,
+        )
+
+        np_final['snap'][start:stop] = mda_hba.times
+        np_final['nhbond'][start:stop] = mda_hba.count_by_time()/float_ave
 
     np.savetxt(
         fname = str_save,
