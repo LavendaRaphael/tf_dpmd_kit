@@ -22,56 +22,71 @@ def gen_data(
 
     return dict_data
 
+def plot(
+    dict_title: dict,
+    dict_data: dict,
+    dict_xlim: dict,
+    dict_ylim: dict,
+    dict_save: dict,
+) -> None:
+
+    for str_key, str_titile in dict_title.items():
+        analysis.rdf_plt_compare(
+            dict_data = dict_data[str_key],
+            tup_xlim = dict_xlim[str_key],
+            tup_ylim = dict_ylim[str_key],
+            str_save = dict_save[str_key],
+            str_title = dict_title[str_key],
+            str_xlabel = 'r (Å)',
+            str_ylabel = 'g(r)',
+        )
+
 # setup
 
-#'''
+dict_title = {
+    'o_0.h_w': r'O$_H$-H$_W$',
+    'o_1_2.h_w': r'$^=$O-H$_W$',
+    'h_0.o_w': r'H$_O$-O$_W$',
+}
+
+dict_xlim = {
+    'o_0.h_w': (1,6),
+    'o_1_2.h_w': (1,6),
+    'h_0.o_w': (1,6),
+}
+
+dict_ylim = {
+    'o_0.h_w': (0,2.5),
+    'o_1_2.h_w': (0,2.5),
+    'h_0.o_w': (0,3),
+}
+
 list_id = [
     (      0,100000),
     ( 100000,200000),
     ( 200000,300000),
-    ( 300000,400000),
+    ( 300000,400000)
 ]
 float_timestep = 0.005
+dict_data = {
+    'o_0.h_w': gen_data('o_0.h_w', list_id, float_timestep),
+    'o_1_2.h_w': gen_data('o_1_2.h_w', list_id, float_timestep),
+    'h_0.o_w': gen_data('h_0.o_w', list_id, float_timestep),
+}
 
-str_pair = 'o_1.h_w'
-analysis.rdf_plt_compare(
-    dict_data = gen_data(str_pair, list_id, float_timestep),
-    tup_xlim = (1,6),
-    tup_ylim = (0,2),
-    str_save = f'rdf.{str_pair}.converge.pdf',
-    str_title = r'$^=$O-H$_W$',
-    str_xlabel = 'r (Å)',
-    str_ylabel = 'g(r)',
+dict_save = {
+    'o_0.h_w': f'rdf.o_0.h_w.converge.pdf',
+    'o_1_2.h_w': f'rdf.o_1_2.h_w.converge.pdf',
+    'h_0.o_w': f'rdf.h_0.o_w.converge.pdf',
+}
+
+plot(
+    dict_title = dict_title,
+    dict_data = dict_data,
+    dict_xlim = dict_xlim,
+    dict_ylim = dict_ylim,
+    dict_save = dict_save,
 )
-str_pair = 'o_0_2.h_w'
-analysis.rdf_plt_compare(
-    dict_data = gen_data(str_pair, list_id, float_timestep),
-    tup_xlim = (1,6),
-    tup_ylim = (0,2),
-    str_save = f'rdf.{str_pair}.converge.pdf',
-    str_title = r'O$_H$-H$_W$',
-    str_xlabel = 'r (Å)',
-    str_ylabel = 'g(r)',
-)
-str_pair = 'h_0_1.o_w'
-analysis.rdf_plt_compare(
-    dict_data = gen_data(str_pair, list_id, float_timestep),
-    tup_xlim = (1,6),
-    tup_ylim = (0,3),
-    str_save = f'rdf.{str_pair}.converge.pdf',
-    str_title = r'H$_O$-O$_W$',
-    str_xlabel = 'r (Å)',
-    str_ylabel = 'g(r)',
-)
-str_pair = 'o_w.o_w'
-analysis.rdf_plt_compare(
-    dict_data = gen_data(str_pair, list_id, float_timestep),
-    tup_xlim = (2,6),
-    tup_ylim = (0,4),
-    str_save = f'rdf.{str_pair}.converge.pdf',
-    str_title = r'O$_W$-O$_W$',
-    str_xlabel = 'r (Å)',
-    str_ylabel = 'g(r)',
-)
+
 plt.show()
 

@@ -34,47 +34,25 @@ str_home = os.environ['homedir']
 str_exp = os.path.join(str_home, 'research/202203_MDCarbonicAcid/record/ref')
 str_dir = os.path.join(str_home, 'research_d/202203_MDCarbonicAcid/server/05.metad')
 
-str_tmp = 'dist_vp_o_1_2_fes'
-#str_tmp = 'cn_o_h_fes'
-#str_tmp = 'compare'
-
-str_tmp2 = '_pka'
 run(
     dict_file = {
         str_exp+'/2019_PNAS_DanielAminov/Fig_1_kelvin.csv': '2019 PNAS',
         str_exp+'/2010_JPCA_WangXiaoguang/Sfig_3_kelvin.csv': '2010 JPCA',
         str_exp+'/2009_Science_KatrinAdamczyk/pka_kelvin.csv': '2009 Science (Deuterium)',
-        #str_dir+f'/02.390K_hills/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'R(V$_P$O$_C$) 390K Beta 5',
-        #str_dir+f'/02.390K_hills_beta/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'R(V$_P$O$_C$) 390K Beta 10',
-        str_dir+f'/03.metad/320K.5/reweight/dist_vp_o_1_2_fes{str_tmp2}.tmp.csv': 'DPMD',
-        #str_dir+f'/03.metad/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'DPMD',
-        #str_dir+f'/03.metad_CT/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'DPMD 2',
-        #str_dir+f'/05.dist_vp.cn_o_h/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'R(V$_P$O$_C$)+cn(O$_C$H) Beta 5',
-        #str_dir+f'/05.dist_vp.cn_o_h_beta/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'R(V$_P$O$_C$)+cn(O$_C$H) Beta 10',
-        #str_dir+f'/06.cn_o_h/reweight.cn_o_h_fes{str_tmp2}.csv': 'cn(O$_C$H) Beta 5',
-        #str_dir+f'/06.cn_o_h_beta/reweight.cn_o_h_fes{str_tmp2}.csv': 'cn(O$_C$H) Beta 10',
+        str_dir+f'/03.metad/reweight.dist_vp_o_1_2_fes_pka.csv': 'DPMD',
     },
-    str_save = f'reweight.{str_tmp}{str_tmp2}_exp.pdf',
+    str_save = f'reweight.dist_vp_o_1_2_fes_pka_exp.pdf',
     str_ylabel = 'pKa'
 )
 
-str_tmp2 = '_deltag'
 run(
     dict_file = {
         str_exp+'/2019_PNAS_DanielAminov/Fig_1_deltag.csv': '2019 PNAS',
         str_exp+'/2010_JPCA_WangXiaoguang/Sfig_3_deltag.csv': '2010 JPCA',
         str_exp+'/2009_Science_KatrinAdamczyk/deltag.csv': '2009 Science (Deuterium)',
-        #str_dir+f'/02.390K_hills/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'R(V$_P$O$_C$) 390K Beta 5',
-        #str_dir+f'/02.390K_hills_beta/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'R(V$_P$O$_C$) 390K Beta 10',
-        str_dir+f'/03.metad/320K.5/reweight/dist_vp_o_1_2_fes{str_tmp2}.tmp.csv': 'DPMD',
-        #str_dir+f'/03.metad/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'DPMD',
-        #str_dir+f'/03.metad_CT/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'DPMD 2',
-        #str_dir+f'/05.dist_vp.cn_o_h/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'R(V$_P$O$_C$)+cn(O$_C$H) Beta 5',
-        #str_dir+f'/05.dist_vp.cn_o_h_beta/reweight.dist_vp_o_1_2_fes{str_tmp2}.csv': 'R(V$_P$O$_C$)+cn(O$_C$H) Beta 10',
-        #str_dir+f'/06.cn_o_h/reweight.cn_o_h_fes{str_tmp2}.csv': 'cn(O$_C$H) Beta 5',
-        #str_dir+f'/06.cn_o_h_beta/reweight.cn_o_h_fes{str_tmp2}.csv': 'cn(O$_C$H) Beta 10',
+        str_dir+f'/03.metad/reweight.dist_vp_o_1_2_fes_deltag.csv': 'DPMD',
     },
-    str_save = f'reweight.{str_tmp}{str_tmp2}_exp.pdf',
+    str_save = f'reweight.dist_vp_o_1_2_fes_deltag_exp.pdf',
     str_ylabel = r'$\Delta$G (KJ/mol)'
 )
 

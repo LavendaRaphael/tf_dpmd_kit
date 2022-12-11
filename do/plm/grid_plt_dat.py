@@ -1,14 +1,8 @@
 from tf_dpmd_kit import plm
 import matplotlib.pyplot as plt
 
-str_tmp = 'dh_o_0_h_fes'
-str_xlabel = r'dh(O$_0$H)'
-
-#str_tmp = 'dist_vp_o_1_2_fes'
-#str_xlabel = r'R(V$_P$O$_C$) (Å)'
-
-#str_tmp = 'cn_o_h_fes'
-#str_xlabel = r'cn(O$_C$H)'
+str_tmp = 'dist_vp_o_1_2_fes'
+str_xlabel = r'R(V$_P$O$_C$) (Å)'
 
 '''
 plm.grid_plt(

@@ -225,9 +225,10 @@ def grid_plt(
     fig, ax = plt.subplots()
     for int_id, str_label in enumerate(dict_data):
         str_file = dict_data[str_label]
-        print(str_file)
         if not os.path.isfile(str_file):
+            print(str_file, 'Not found')
             continue
+        print(str_file)
 
         if tup_colormap:
             color = sm.to_rgba(dict_temperature[str_label])

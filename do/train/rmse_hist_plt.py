@@ -79,7 +79,7 @@ def_plt(
     str_save = 'dptest.e.pdf',
 )
 #'''
-'''
+#'''
 def_plt(
     str_file = 'dptest.f.out',
     tup_xlim = (0,0.4),

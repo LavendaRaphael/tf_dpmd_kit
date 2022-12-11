@@ -8,4 +8,4 @@ list_ase = ase.io.read(
 )
 print(list_ase[0])
 
-ase.io.write( filename='traj.xyz', images=list_ase, format='xyz' )
+ase.io.write( filename='traj.xyz', images=list_ase, format='xyz', fmt='%14.7f' )
