@@ -137,7 +137,7 @@ def plt_subplots(
             fig.set_size_inches(tup_size)
         fig.savefig(str_save, bbox_inches='tight', dpi=300)
 
-def rdf_plt_compare(
+def plt_compare_text(
     dict_data: dict,
     tup_xlim: tuple = None,
     tup_ylim: tuple = None,
@@ -152,7 +152,7 @@ def rdf_plt_compare(
 
     rc('font',**{'size':15, 'family':'sans-serif','sans-serif':['Arial']}) 
 
-    fig, ax = plm.grid_plt(
+    fig, ax = plm.plt_compare(
         dict_data = dict_data,
         str_xlabel = str_xlabel,
         str_ylabel = str_ylabel,

@@ -201,7 +201,7 @@ def get_pka_time(
         print(str_save_deltag)
         np.savetxt(str_save_deltag, np_deltag, header=' '.join(np_deltag.dtype.names))
 
-def grid_plt(
+def plt_compare(
     dict_data: dict,
     str_xlabel: str,
     str_ylabel: str,
@@ -215,6 +215,7 @@ def grid_plt(
     bool_minus: bool = False, 
     list_linestyle: list = None,
     bool_legend: bool = True,
+    tup_size: tuple = None,
 ) -> None:
 
     rc('font',**{'size':15, 'family':'sans-serif','sans-serif':['Arial']})
@@ -259,14 +260,14 @@ def grid_plt(
     ax.set_xlim(tup_xlim)
     ax.set_ylim(tup_ylim)
     if str_save:
-        fig.set_size_inches(9, 7)
+        fig.set_size_inches(tup_size)
         fig.savefig(str_save, bbox_inches='tight', dpi=300)
 
     return fig, ax
 
 def colvar_plt(
     dict_header: dict,
-    list_data: list = ['COLVAR'],
+    list_data: list = None,
     str_xlabel: str = 'time (ps)',
     float_timescale: float = 1.0,
     tup_xlim: tuple = None,
@@ -276,6 +277,9 @@ def colvar_plt(
 ) -> None:
 
     rc('font',**{'size':15, 'family':'sans-serif','sans-serif':['Arial']})
+
+    if list_data is None:
+        list_data = ['COLVAR']
 
     int_nplot = len(dict_header)
     fig, axs = plt.subplots(int_nplot, 1, sharex='all')

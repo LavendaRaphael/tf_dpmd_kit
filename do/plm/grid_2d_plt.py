@@ -6,7 +6,6 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.ticker as plticker
 
-
 def grid2d_plt(
     str_file: str,
     str_xlabel: str = None,
@@ -27,9 +26,9 @@ def grid2d_plt(
             if list_line[0] != '#!':
                 break
             if list_line[2] == f'nbins_{list_field[0]}':
-                int_nbin_x = int(list_line[3]) + 1
+                int_nbin_x = int(list_line[3]) 
             elif list_line[2] == f'nbins_{list_field[1]}':
-                int_nbin_y = int(list_line[3]) + 1
+                int_nbin_y = int(list_line[3])
         if not (int_nbin_x and int_nbin_y):
             raise
 
@@ -44,17 +43,21 @@ def grid2d_plt(
     z = z.reshape(int_nbin_y, int_nbin_x)
 
     fig, ax = plt.subplots()
+
+    cmap_coolwarm_new = plt.get_cmap('coolwarm', 10)
+
     image = ax.imshow(
         z,
         origin = 'lower',
-        extent=(np.amin(x), np.amax(x), np.amin(y), np.amax(y)),
-        cmap='coolwarm',
-        #cmap='Reds',
-        aspect='auto'
+        extent = (np.amin(x), np.amax(x), np.amin(y), np.amax(y)),
+        cmap = cmap_coolwarm_new,
+        aspect = 'auto'
     )
+
     fig.colorbar(image)
-    #loc = plticker.MultipleLocator(base=1.0) # this locator puts ticks at regular intervals
-    #ax.xaxis.set_major_locator(loc)
+
+    loc = plticker.MultipleLocator(base=1.0) # this locator puts ticks at regular intervals
+    ax.xaxis.set_major_locator(loc)
 
     if not str_xlabel:
         str_xlabel = list_field[0]
@@ -62,29 +65,18 @@ def grid2d_plt(
         str_ylabel = list_field[1]
     ax.set_xlabel(str_xlabel)
     ax.set_ylabel(str_ylabel)
-    #fig.set_size_inches(8, 8)
     if str_save:
+        #fig.set_size_inches(9, 8)
         fig.savefig(str_save, bbox_inches='tight')
 
 #'''
 grid2d_plt(
-    str_file = '2d_fes.grid',
+    str_file = 'fes_2d.grid',
     bool_minzero = True,
-    #str_xlabel = r'dh(O$_0$H$_0$) (rad)',
-    #str_ylabel = r'dh(O$_1$V$_H$) (rad)',
-    str_save = '2d_fes.pdf'
-)
-#'''
-'''
-grid2d_plt(
-    str_file = 'fes_2d.10.dat',
-    bool_minus = True,
-    bool_minzero = True,
-    #str_xlabel = r'dh(O$_0$H$_0$) (rad)',
-    #str_ylabel = r'dh(O$_1$V$_H$) (rad)',
-    str_save = 'fes_2d.10.pdf'
+    str_xlabel = r"$\alpha'$ (rad)",
+    str_ylabel = r"$\beta'$ (rad)",
+    str_save = 'fes_2d.pdf'
 )
 #'''
 plt.show()
-
 
