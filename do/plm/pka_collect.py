@@ -33,8 +33,8 @@ str_tmp = 'dist_vp_o_1_2_fes'
 
 pka_collect(
     list_temperature = list_temp,
-    str_data_deltag = f'{str_tmp}_deltag.csv',
-    str_data_pka = f'{str_tmp}_pka.csv',
-    str_save_deltag = f'reweight.{str_tmp}_deltag.csv',
-    str_save_pka = f'reweight.{str_tmp}_pka.csv'
+    str_data_deltag = f'{str_tmp}.deltag.csv',
+    str_data_pka = f'{str_tmp}.pka.csv',
+    str_save_deltag = f'reweight.{str_tmp}.deltag.csv',
+    str_save_pka = f'reweight.{str_tmp}.pka.csv'
 )

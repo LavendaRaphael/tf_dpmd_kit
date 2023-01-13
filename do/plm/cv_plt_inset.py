@@ -25,6 +25,7 @@ fig, axs = plm.colvar_plt(
     dict_header = gen_dict_header(list_header, dict_label),
     tup_xlim = (0,None),
     tup_ylim = (0,None),
+    str_label = 'AIMD'
 )
 ax = axs[0]
 plm.insert_img(

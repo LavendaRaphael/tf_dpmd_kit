@@ -28,10 +28,10 @@ def plot(
 
 plot(
     dict_data = {
-        '': 'hbonds.h_0_1.o_w.0000000_0057877.csv',
-    }
+        '': 'hbonds.h_0_1.o_w.csv',
+    },
     #str_save = 'hbonds.pdf',
-    float_scale = 1/0.005
+    #float_scale = 0.005
 )
 
 plt.show()

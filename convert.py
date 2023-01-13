@@ -4,7 +4,7 @@ import numpy
 import os
 import json
 
-def def_poscar2perturb(
+def poscar2perturb(
     str_poscar: str = "POSCAR",
     str_dir: str = "perturb"
 ):
@@ -64,6 +64,30 @@ def ase2pwscf(
         pseudopotentials = dict_pwpseudop 
     )
 
+def list_ase2poscar(
+    list_ase,
+    np_snap
+):
+    print(np_snap)
+    
+    if (not os.path.exists('snap')):
+        os.mkdir('snap')
+    os.chdir('snap')
+    for int_snap in np_snap:
+        str_dir = f'snap_{int_snap:0>6d}'
+        if (not os.path.exists(str_dir)):
+            os.mkdir(str_dir)
+        os.chdir(str_dir)
+        
+        ase.io.write(
+            filename = 'POSCAR',
+            images = list_ase[int_snap],
+            format = 'vasp'
+        )
+        
+        os.chdir('..')
+
+
 def list_ase2pwscf(
     list_ase,
     np_snap
@@ -83,7 +107,7 @@ def list_ase2pwscf(
         
         os.chdir('..')
 
-def def_dpgen2ase(
+def dpgen2ase(
         array_id,
         type_map,       # ["O", "H"]
         ):
@@ -99,7 +123,7 @@ def def_dpgen2ase(
     print(dp_sys)
     return dp_sys.to('ase/structure')
 
-def def_poscar2cp_cp():
+def poscar2cp_cp():
     dict_pwscfin = {}
     dict_pwscfin['CONTROL'] = {
         'calculation': 'cp',
@@ -151,7 +175,7 @@ def def_poscar2cp_cp():
         input_data = dict_pwscfin,
         pseudopotentials = dict_pwpseudop )
 
-def def_poscar2cp_cpbo():
+def poscar2cp_cpbo():
     dict_pwscfin = {}
     dict_pwscfin['CONTROL'] = {
         'calculation': 'cp',
@@ -209,7 +233,7 @@ def def_poscar2cp_cpbo():
         input_data = dict_pwscfin,
         pseudopotentials = dict_pwpseudop )
 
-def def_poscar2cp_gs():
+def poscar2cp_gs():
 
     dict_pwscfin = {}
     dict_pwscfin['CONTROL'] = {
@@ -260,7 +284,7 @@ def def_poscar2cp_gs():
         input_data = dict_pwscfin,
         pseudopotentials = dict_pwpseudop )
 
-def def_poscar2vccp_cpbo():
+def poscar2vccp_cpbo():
     dict_pwscfin = {}
     dict_pwscfin['CONTROL'] = {
         'calculation': 'vc-cp',
@@ -330,7 +354,7 @@ def def_poscar2vccp_cpbo():
     with open('cp.in', 'a') as open_in:
         open_in.write(f'REF_CELL_PARAMETERS angstrom\n  {float_cell_ref} 0.0 0.0\n  0.0 {float_cell_ref} 0.0\n  0.0 0.0 {float_cell_ref}')
 
-def def_poscar2vccp_cp():
+def poscar2vccp_cp():
     dict_pwscfin = {}
     dict_pwscfin['CONTROL'] = {
         'calculation': 'vc-cp',
@@ -395,7 +419,7 @@ def def_poscar2vccp_cp():
     with open('cp.in', 'a') as open_in:
         open_in.write(f'REF_CELL_PARAMETERS angstrom\n  {float_cell_ref} 0.0 0.0\n  0.0 {float_cell_ref} 0.0\n  0.0 0.0 {float_cell_ref}')
 
-def def_poscar2vccp_gs():
+def poscar2vccp_gs():
 
     dict_pwscfin = {}
     dict_pwscfin['CONTROL'] = {

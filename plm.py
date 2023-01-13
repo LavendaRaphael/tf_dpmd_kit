@@ -3,7 +3,8 @@ import subprocess
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import rc
+import matplotlib as mpl
+from tf_dpmd_kit import plot
 
 def colvar_hist_plt(
     str_header: str,
@@ -180,6 +181,7 @@ def get_pka_time(
     np_deltag = np.zeros(shape=(int_nfile), dtype=[('time', 'f4'), ('deltag', 'f4')])
     if not float_T:
         float_T, float_KbT = get_temperature( str_in, str_log )
+    print(float_T)
     for int_i,int_key in enumerate(dict_file):
         if not os.path.isfile(dict_file[int_key]):
             continue
@@ -194,89 +196,28 @@ def get_pka_time(
         np_deltag[int_i] = (int_key, float_deltag)
 
     if str_save:
-        str_save_pka = f'{str_save}_pka.csv'
+        str_save_pka = f'{str_save}.pka.csv'
         print(str_save_pka)
         np.savetxt(str_save_pka, np_pka, header=' '.join(np_pka.dtype.names))
-        str_save_deltag = f'{str_save}_deltag.csv'
+        str_save_deltag = f'{str_save}.deltag.csv'
         print(str_save_deltag)
         np.savetxt(str_save_deltag, np_deltag, header=' '.join(np_deltag.dtype.names))
-
-def plt_compare(
-    dict_data: dict,
-    str_xlabel: str,
-    str_ylabel: str,
-    str_save: str = None,
-    tup_xlim: tuple = None,
-    tup_ylim: tuple = None,
-    tup_colormap: tuple = None,
-    dict_temperature: dict = None,
-    bool_minzero: bool = False,
-    bool_maxzero: bool = False,
-    bool_minus: bool = False, 
-    list_linestyle: list = None,
-    bool_legend: bool = True,
-    tup_size: tuple = None,
-) -> None:
-
-    rc('font',**{'size':15, 'family':'sans-serif','sans-serif':['Arial']})
-
-    if tup_colormap:
-        sm = plt.cm.ScalarMappable(cmap='coolwarm', norm=plt.Normalize(vmin=tup_colormap[0], vmax=tup_colormap[1]))
-
-    fig, ax = plt.subplots()
-    for int_id, str_label in enumerate(dict_data):
-        str_file = dict_data[str_label]
-        if not os.path.isfile(str_file):
-            print(str_file, 'Not found')
-            continue
-        print(str_file)
-
-        if tup_colormap:
-            color = sm.to_rgba(dict_temperature[str_label])
-        else:
-            color = None
-
-        if list_linestyle is None:
-            str_linestyle = None
-        else:
-            str_linestyle = list_linestyle[int_id]
-
-        np_data = np.loadtxt(str_file)
-        np_data_y = np_data[:,1]
-        if bool_minus:
-            np_data_y *= -1
-
-        if bool_minzero:
-            np_data_y -= min(np_data_y)
-
-        if bool_maxzero:
-            np_data_y -= max(np_data_y)
-        ax.plot( np_data[:,0], np_data_y, label=str_label, linewidth=1.5, color=color, linestyle=str_linestyle)
-    
-    if bool_legend:
-        ax.legend()
-    ax.set_xlabel(str_xlabel)
-    ax.set_ylabel(str_ylabel)
-    ax.set_xlim(tup_xlim)
-    ax.set_ylim(tup_ylim)
-    if str_save:
-        fig.set_size_inches(tup_size)
-        fig.savefig(str_save, bbox_inches='tight', dpi=300)
-
-    return fig, ax
 
 def colvar_plt(
     dict_header: dict,
     list_data: list = None,
-    str_xlabel: str = 'time (ps)',
+    str_xlabel: str = 'Time (ps)',
     float_timescale: float = 1.0,
     tup_xlim: tuple = None,
     tup_ylim: tuple = None,
     str_save: str = None,
     str_color: str = None,
+    tup_size: tuple = None,
+    str_title: str = None,
+    str_legeng_loc: str = None,
 ) -> None:
 
-    rc('font',**{'size':15, 'family':'sans-serif','sans-serif':['Arial']})
+    plot.set_rcparam()
 
     if list_data is None:
         list_data = ['COLVAR']
@@ -304,56 +245,33 @@ def colvar_plt(
                 for int_i,str_header in enumerate(dict_header):
                     if str_header not in data.dtype.names:
                         continue
-                    axs[int_i].scatter(data['time']*float_timescale, data[str_header], s=0.5, color=str_color)
+                    axs[int_i].scatter(data['time']*float_timescale, data[str_header], s=1, color=str_color, edgecolors='none')
                 if str_line[0] != '#':
                     break
                 list_tmp = [str_line]
                 list_field = str_line.split()[2:]
     for int_i,str_header in enumerate(dict_header):
-        str_label = dict_header[str_header]
-        axs[int_i].set_ylabel(str_label)
+        str_ylabel = dict_header[str_header]
+        axs[int_i].set_ylabel(str_ylabel)
+
+    if str_title:
+        axs[0].legend(
+            loc = str_legeng_loc,
+            title = str_title,
+            frameon = False,
+        )
     axs[0].set_xlim(tup_xlim)
     axs[0].set_ylim(tup_ylim)
-    axs[-1].set_xlabel(str_xlabel)
+    if str_xlabel:
+        axs[-1].set_xlabel(str_xlabel)
+
+    fig.set_tight_layout(True)
     if str_save:
-        fig.set_size_inches(11, 5)
-        fig.savefig(str_save, bbox_inches='tight', dpi=300)
+        if not(tup_size is None):
+            fig.set_size_inches(tup_size)
+        fig.savefig(str_save, dpi=600)
 
     return fig, axs
-
-def insert_img(
-    fig,
-    ax,
-    dict_img: dict,
-    dict_arrow: dict,
-    str_save: str = None,
-    tup_size: tuple = None,
-) -> None:
-
-    for str_img, tup_pos in dict_img.items():
-        image = plt.imread(str_img)
-        axin = ax.inset_axes(tup_pos)
-        im = axin.imshow(image)
-        axin.axis('off')
-
-    for tup_xy, tup_xytext in dict_arrow.items():
-        ax.annotate(
-            text = '',
-            xy = tup_xy,
-            xycoords = 'data',
-            xytext = tup_xytext,
-            textcoords = 'axes fraction',
-            arrowprops = dict(
-                arrowstyle= '-|>',
-                linestyle='--',
-                color = 'orange',
-                linewidth = 2.0
-            )
-        )
-    if str_save:
-        if tup_size:
-            fig.set_size_inches(tup_size)
-        fig.savefig(str_save, bbox_inches='tight', dpi=300)
 
 def hills_sum(
     str_min: str,

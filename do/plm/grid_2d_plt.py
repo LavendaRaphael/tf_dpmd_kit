@@ -45,6 +45,7 @@ def grid2d_plt(
     fig, ax = plt.subplots()
 
     cmap_coolwarm_new = plt.get_cmap('coolwarm', 10)
+    #cmap_coolwarm_new = plt.get_cmap('coolwarm')
 
     image = ax.imshow(
         z,
@@ -75,7 +76,7 @@ grid2d_plt(
     bool_minzero = True,
     str_xlabel = r"$\alpha'$ (rad)",
     str_ylabel = r"$\beta'$ (rad)",
-    str_save = 'fes_2d.pdf'
+    str_save = 'fes_2d.svg'
 )
 #'''
 plt.show()
