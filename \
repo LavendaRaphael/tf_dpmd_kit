@@ -12,56 +12,10 @@ def set_rcparam():
     mpl.rcParams['ps.fonttype'] = 42
     mpl.rcParams['font.family'] = 'Arial'
 
-def save(
-    fig,
-    str_save: str = None,
-    tup_size: tuple = None,
-) -> None:
-
-    fig.set_tight_layout(True)
-    if not tup_size is None:
-        fig.set_size_inches(tup_size)
-    if str_save:
-        fig.savefig(str_save, dpi=600)
-
-    return fig
-
-def add_text(
+def inset_text(
     ax,
-    dict_text: dict,
+    dict_arrow: dict,
 ) -> None:
-
-    for str_text, tup_xy in dict_text.items():
-        ax.text(
-            x = tup_xy[0],
-            y = tup_xy[1],
-            s = str_text,
-            horizontalalignment = 'center',
-        )
-    
-    return ax
-
-def inset_img(
-    ax,
-    dict_img: dict,
-    dict_imgcolor: dict = None,
-    dict_arrow: dict = None,
-) -> None:
-
-    if dict_imgcolor is None:
-        dict_imgcolor = {}
-
-    for str_img, tup_pos in dict_img.items():
-        axin = ax.inset_axes(tup_pos)
-        image = plt.imread(str_img)
-        im = axin.imshow(image)
-        #axin.axis('off')
-        axin.set_xticks([])
-        axin.set_yticks([])
-        if str_img in dict_imgcolor:
-            for spine in axin.spines.values():
-                spine.set_edgecolor(dict_imgcolor[str_img])
-                spine.set_linewidth(0.5)
 
     if not(dict_arrow is None):
         for tup_xy, tup_xytext in dict_arrow.items():
@@ -77,9 +31,50 @@ def inset_img(
                     #linewidth = 2.0
                 )
             )
-
-    return ax
     
+def inset_img(
+    ax,
+    dict_img: dict,
+    dict_imgcolor: dict,
+    dict_arrow: dict = None,
+    str_save: str = None,
+    tup_size: tuple = None,
+) -> None:
+
+    set_rcparam()
+
+    for str_img, tup_pos in dict_img.items():
+        axin = ax.inset_axes(tup_pos)
+        image = plt.imread(str_img)
+        im = axin.imshow(image)
+        #axin.axis('off')
+        axin.set_xticks([])
+        axin.set_yticks([])
+        if str_img in dict_imgcolor:
+            for spine in axin.spines.values():
+                spine.set_edgecolor(dict_imgcolor[str_img])
+
+    if not(dict_arrow is None):
+        for tup_xy, tup_xytext in dict_arrow.items():
+            ax.annotate(
+                text = '',
+                xy = tup_xy,
+                xytext = tup_xytext,
+                textcoords = ax.transAxes,
+                arrowprops = dict(
+                    arrowstyle= '-|>',
+                    linestyle='--',
+                    color = 'orange',
+                    #linewidth = 2.0
+                )
+            )
+    
+    fig.set_tight_layout(True)
+    if str_save:
+        if tup_size:
+            fig.set_size_inches(tup_size)
+        fig.savefig(str_save, dpi=600)
+
 def plt_subplots(
     dict_title: dict,
     dict2d_data: dict[dict],
@@ -87,12 +82,17 @@ def plt_subplots(
     str_ylabel: str,
     tup_xlim: tuple = (None, None),
     dict_ylim: dict = None,
+    str_save: str = None,
+    tup_size: tuple = None,
     dict_legend: dict = None,
     bool_scatter: bool = False,
     bool_error: bool = False,
     str_yaxisformat: str = None,
 ) -> None:
     
+    set_rcparam()
+    mpl.rcParams['font.size'] = 6
+
     int_nplot = len(dict_title)
     fig, axs = plt.subplots(int_nplot, 1, sharex='all')
     if int_nplot==1:
@@ -134,24 +134,33 @@ def plt_subplots(
     axs[-1].set_xlabel(str_xlabel)
     axs[0].set_xlim(tup_xlim)
     
-    return fig, ax
+    fig.set_tight_layout(True)
+    if str_save:
+        if not tup_size is None:
+            fig.set_size_inches(tup_size)
+        fig.savefig(str_save, dpi=600)
 
 def plt_compare_text(
     dict_data: dict,
     tup_xlim: tuple = None,
     tup_ylim: tuple = None,
     str_title: str = None,
+    str_save: str = None,
     str_xlabel: str = None,
     str_ylabel: str = None,
+    tup_size: tuple = None,
     dict_color: dict = None,
     bool_error: bool = False,
     float_lw: float = None,
 ) -> None:
 
+    set_rcparam()
+
     fig, ax = plt_compare(
         dict_data = dict_data,
         str_xlabel = str_xlabel,
         str_ylabel = str_ylabel,
+        str_save = None,
         tup_xlim = tup_xlim,
         tup_ylim = tup_ylim,
         dict_color = dict_color,
@@ -171,7 +180,11 @@ def plt_compare_text(
         #labelspacing = 0.1,
     )
 
-    return fig, ax
+    fig.set_tight_layout(True)
+    if str_save:
+        if not(tup_size is None):
+            fig.set_size_inches(tup_size)
+        fig.savefig(str_save, dpi=600)
 
 def dict_color_temperature(
     tup_colormap: tuple,
@@ -189,16 +202,20 @@ def plt_compare(
     dict_data: dict,
     str_xlabel: str,
     str_ylabel: str,
+    str_save: str = None,
     tup_xlim: tuple = None,
     tup_ylim: tuple = None,
     bool_minzero: bool = False,
     bool_maxzero: bool = False,
     bool_minus: bool = False, 
     bool_legend: bool = True,
+    tup_size: tuple = None,
     dict_color: dict = None,
     bool_error: bool = False,
     float_lw: float = None,
 ) -> None:
+
+    set_rcparam()
 
     fig, ax = plt.subplots()
 
@@ -245,16 +262,27 @@ def plt_compare(
     ax.set_xlim(tup_xlim)
     ax.set_ylim(tup_ylim)
 
+    fig.set_tight_layout(True)
+    if str_save:
+        if not(tup_size is None):
+            fig.set_size_inches(tup_size)
+        fig.savefig(str_save, dpi=600)
+
     return fig, ax
 
 def plt_error(
     dict_data: dict,
     str_xlabel: str,
     str_ylabel: str,
+    str_save: str = None,
+    tup_size: tuple = None,
     tup_ylim: tuple = None,
     tup_xlim: tuple = None,
     str_title: str = None,
 ) -> None:
+
+    set_rcparam()
+    mpl.rcParams['font.size'] = 6
 
     fig, ax = plt.subplots()
 
@@ -279,4 +307,8 @@ def plt_error(
         title = str_title
     )
 
-    return fig, ax
+    fig.set_tight_layout(True)
+    if not(tup_size is None):
+        fig.set_size_inches(tup_size)
+    if str_save:
+        fig.savefig(str_save, dpi=600)

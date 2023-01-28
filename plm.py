@@ -210,14 +210,10 @@ def colvar_plt(
     float_timescale: float = 1.0,
     tup_xlim: tuple = None,
     tup_ylim: tuple = None,
-    str_save: str = None,
     str_color: str = None,
-    tup_size: tuple = None,
     str_title: str = None,
     str_legeng_loc: str = None,
 ) -> None:
-
-    plot.set_rcparam()
 
     if list_data is None:
         list_data = ['COLVAR']
@@ -264,12 +260,6 @@ def colvar_plt(
     axs[0].set_ylim(tup_ylim)
     if str_xlabel:
         axs[-1].set_xlabel(str_xlabel)
-
-    fig.set_tight_layout(True)
-    if str_save:
-        if not(tup_size is None):
-            fig.set_size_inches(tup_size)
-        fig.savefig(str_save, dpi=600)
 
     return fig, axs
 

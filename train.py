@@ -59,12 +59,9 @@ def datastatus_from_dptest():
 def dptest_plt(
     str_file: str,
     int_natoms: int = None,
-    str_save: str = None,
     str_plt_type: str = 'inset',
     tup_hist_xlim: tuple = None,
 ) -> None:
-
-    plot.set_rcparam()
 
     with open(str_file, 'r') as file_open:
         list_line = file_open.readline().split()
@@ -146,11 +143,8 @@ def dptest_plt(
         frameon = False,
         loc = 'upper left'
     )
-    fig.set_tight_layout(True)
-    if str_save:
-        cm = 1/2.54
-        fig.set_size_inches(4.3*cm, 3.7*cm)
-        fig.savefig(str_save, dpi=600)
+
+    return fig
 
 def get_rmse():
     with open('log', 'r') as fp:
