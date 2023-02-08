@@ -213,6 +213,8 @@ def colvar_plt(
     str_color: str = None,
     str_title: str = None,
     str_legeng_loc: str = None,
+    bool_scatter: bool = True,
+    float_lw: float = None,
 ) -> None:
 
     if list_data is None:
@@ -220,6 +222,7 @@ def colvar_plt(
 
     int_nplot = len(dict_header)
     fig, axs = plt.subplots(int_nplot, 1, sharex='all')
+
     if int_nplot==1:
         axs = [axs]
 
@@ -241,14 +244,21 @@ def colvar_plt(
                 for int_i,str_header in enumerate(dict_header):
                     if str_header not in data.dtype.names:
                         continue
-                    axs[int_i].scatter(data['time']*float_timescale, data[str_header], s=1, color=str_color, edgecolors='none')
+                    #for tup_
+                    if bool_scatter:
+                        axs[int_i].scatter(data['time']*float_timescale, data[str_header], s=1, color=str_color, edgecolors='none')
+                    else:
+                        axs[int_i].plot(data['time']*float_timescale, data[str_header], color=str_color, linewidth=float_lw)
+
                 if str_line[0] != '#':
                     break
                 list_tmp = [str_line]
                 list_field = str_line.split()[2:]
+
     for int_i,str_header in enumerate(dict_header):
         str_ylabel = dict_header[str_header]
         axs[int_i].set_ylabel(str_ylabel)
+        plot.set_lw( axs[int_i], float_lw )
 
     if str_title:
         axs[0].legend(

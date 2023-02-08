@@ -4,13 +4,78 @@ import numpy as np
 from matplotlib.lines import Line2D
 import os
 import matplotlib as mpl
+import pandas as pd
 
 def set_rcparam():
 
-    mpl.rcParams['font.size'] = 7
+    mpl.rcParams['font.size'] = 6
     mpl.rcParams['pdf.fonttype'] = 42
     mpl.rcParams['ps.fonttype'] = 42
     mpl.rcParams['font.family'] = 'Arial'
+    mpl.rcParams['figure.dpi'] = 600
+    #mpl.rcParams["figure.autolayout"] = True
+    mpl.rcParams['figure.constrained_layout.use'] = True
+
+def set_lw(
+    ax,
+    float_lw,
+):
+    for spin in ax.spines.values():
+        spin.set_linewidth(float_lw)
+    ax.tick_params(width=float_lw)
+
+def plt_hist(
+    dict_data: dict,
+    str_xlabel: str,
+    str_ylabel: str,
+    tup_xlim: tuple = None,
+    tup_ylim: tuple = None,
+    bool_legend: bool = True,
+    dict_color: dict = None,
+    bool_error: bool = False,
+    float_lw: float = None,
+    float_scale: float = 1.0,
+) -> None:
+
+    fig, ax = plt.subplots()
+
+    if dict_color is None:
+        dict_color = {}
+
+    for str_label in dict_data:
+        str_file = dict_data[str_label]
+        print(str_file)
+        if not os.path.isfile(str_file):
+            print('Not found')
+            continue
+
+        if str_label in dict_color:
+            color = dict_color[str_label]
+        else:
+            color = None
+
+        df_data = pd.read_csv(str_file)
+        print(df_data)
+        ax.hist(
+            df_data*float_scale,
+            label = str_label,
+            bins = 'auto',
+            density = True,
+            color = color,
+        )
+
+    if bool_legend:
+        ax.legend(
+            frameon = False,
+            handlelength = 1.0,
+            labelspacing = 0.1,
+        )
+    ax.set_xlabel(str_xlabel)
+    ax.set_ylabel(str_ylabel)
+    ax.set_xlim(tup_xlim)
+    ax.set_ylim(tup_ylim)
+
+    return fig, ax
 
 def save(
     fig,
@@ -18,13 +83,10 @@ def save(
     tup_size: tuple = None,
 ) -> None:
 
-    fig.set_tight_layout(True)
     if not tup_size is None:
         fig.set_size_inches(tup_size)
     if str_save:
-        fig.savefig(str_save, dpi=600)
-
-    return fig
+        fig.savefig(str_save)
 
 def add_text(
     ax,
@@ -38,14 +100,13 @@ def add_text(
             s = str_text,
             horizontalalignment = 'center',
         )
-    
-    return ax
 
 def inset_img(
     ax,
     dict_img: dict,
     dict_imgcolor: dict = None,
     dict_arrow: dict = None,
+    float_lw: float = None,
 ) -> None:
 
     if dict_imgcolor is None:
@@ -58,10 +119,10 @@ def inset_img(
         #axin.axis('off')
         axin.set_xticks([])
         axin.set_yticks([])
-        if str_img in dict_imgcolor:
-            for spine in axin.spines.values():
+        for spine in axin.spines.values():
+            spine.set_linewidth(float_lw)
+            if str_img in dict_imgcolor:
                 spine.set_edgecolor(dict_imgcolor[str_img])
-                spine.set_linewidth(0.5)
 
     if not(dict_arrow is None):
         for tup_xy, tup_xytext in dict_arrow.items():
@@ -74,11 +135,9 @@ def inset_img(
                     arrowstyle= '-|>',
                     linestyle='--',
                     color = 'orange',
-                    #linewidth = 2.0
+                    linewidth = float_lw,
                 )
             )
-
-    return ax
     
 def plt_subplots(
     dict_title: dict,
@@ -91,10 +150,12 @@ def plt_subplots(
     bool_scatter: bool = False,
     bool_error: bool = False,
     str_yaxisformat: str = None,
+    float_lw: float = None,
 ) -> None:
     
     int_nplot = len(dict_title)
     fig, axs = plt.subplots(int_nplot, 1, sharex='all')
+
     if int_nplot==1:
         axs = [axs]
 
@@ -118,7 +179,7 @@ def plt_subplots(
             if bool_scatter:
                 ax.scatter( np_data[:,0], np_data[:,1], label=str_label, s=0.5)
             else:
-                line, = ax.plot( np_data[:,0], np_data[:,1], label=str_label, lw=1)
+                line, = ax.plot( np_data[:,0], np_data[:,1], label=str_label, lw=float_lw)
                 if bool_error:
                     ax.fill_between( np_data[:,0], np_data[:,1]-np_data[:,2], np_data[:,1]+np_data[:,2], alpha=0.5)
 
@@ -136,42 +197,18 @@ def plt_subplots(
     
     return fig, ax
 
-def plt_compare_text(
-    dict_data: dict,
-    tup_xlim: tuple = None,
-    tup_ylim: tuple = None,
-    str_title: str = None,
-    str_xlabel: str = None,
-    str_ylabel: str = None,
-    dict_color: dict = None,
-    bool_error: bool = False,
-    float_lw: float = None,
-) -> None:
+def add_text(
+    ax,
+    dict_text: dict,
+):
 
-    fig, ax = plt_compare(
-        dict_data = dict_data,
-        str_xlabel = str_xlabel,
-        str_ylabel = str_ylabel,
-        tup_xlim = tup_xlim,
-        tup_ylim = tup_ylim,
-        dict_color = dict_color,
-        bool_error = bool_error,
-        float_lw = float_lw,
-    )
-
-    ax.text(
-        x=0.35,
-        y=0.9,
-        s = str_title,
-        transform=ax.transAxes
-    )
-    ax.legend(
-        frameon = False,
-        handlelength = 1.0,
-        #labelspacing = 0.1,
-    )
-
-    return fig, ax
+    for str_text, tup_pos in dict_text.items():
+        ax.text(
+            x = tup_pos[0],
+            y = tup_pos[1],
+            s = str_text,
+            transform=ax.transAxes
+        )
 
 def dict_color_temperature(
     tup_colormap: tuple,
@@ -234,6 +271,8 @@ def plt_compare(
         if bool_error:
             ax.fill_between( np_data[:,0], np_data_y-np_data[:,2], np_data_y+np_data[:,2], color=color, alpha=0.5)
     
+    set_lw(ax, float_lw)
+
     if bool_legend:
         ax.legend(
             frameon = False,
@@ -254,6 +293,7 @@ def plt_error(
     tup_ylim: tuple = None,
     tup_xlim: tuple = None,
     str_title: str = None,
+    float_lw: float = None,
 ) -> None:
 
     fig, ax = plt.subplots()
@@ -265,7 +305,11 @@ def plt_error(
             yerr = np_data[:,2]
         else:
             yerr = None
-        ax.errorbar(np_data[:,0], np_data[:,1], yerr=yerr, linestyle=':', marker=str_marker, label=str_label, capsize=2, lw=0.75, markersize=2)
+        ax.errorbar(np_data[:,0], np_data[:,1], yerr=yerr, linestyle=':', marker=str_marker, label=str_label, capsize=2, lw=float_lw, markersize=2)
+
+    for spin in ax.spines.values():
+        spin.set_linewidth(float_lw)
+    ax.tick_params(width=float_lw)
 
     ax.set_xlabel(str_xlabel)
     ax.set_ylabel(str_ylabel)

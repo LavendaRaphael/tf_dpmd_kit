@@ -8,25 +8,32 @@ fig = train.dptest_plt(
     str_file = 'dptest.e.out',
     int_natoms = 384,
     str_plt_type = 'dft_dnn',
+    float_lw = 0.75,
 )
 cm = 1/2.54
 plot.save(
     fig,
     tup_size = (4.3*cm, 3.7*cm),
-    str_save = 'dptest.e.dft_dnn.png',
+    str_save = 'dptest.e.dft_dnn.pdf',
 )
-'''
-tf_dpmd_kit.train.dptest_plt(
+
+fig = train.dptest_plt(
     str_file = 'dptest.e.out',
     int_natoms = 384,
     str_plt_type = 'hist',
-    tup_hist_xlim = (-1.1, 1.1)
+    tup_hist_xlim = (-1.1, 1.1),
+    float_lw = 0.75,
+)
+plot.save(
+    fig,
+    tup_size = (4.3*cm, 3.7*cm),
+    str_save = 'dptest.e.hist.pdf',
 )
 
-
-tf_dpmd_kit.train.dptest_plt(
+fig = train.dptest_plt(
     str_file = 'dptest.f.out',
     str_plt_type = 'dft_dnn',
+    float_lw = 0.75,
 )
 plot.save(
     fig,
@@ -34,9 +41,14 @@ plot.save(
     str_save = 'dptest.f.dft_dnn.png',
 )
 
-tf_dpmd_kit.train.dptest_plt(
+fig = train.dptest_plt(
     str_file = 'dptest.f.out',
     str_plt_type = 'hist',
 )
-#'''
+plot.save(
+    fig,
+    tup_size = (4.3*cm, 3.7*cm),
+    str_save = 'dptest.f.hist.pdf',
+)
+
 plt.show()

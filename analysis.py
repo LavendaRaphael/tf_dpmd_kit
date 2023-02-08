@@ -5,6 +5,86 @@ from tf_dpmd_kit import plm
 from MDAnalysis.analysis.rdf import InterRDF
 from MDAnalysis.analysis.hydrogenbonds.hbond_analysis import HydrogenBondAnalysis
 import MDAnalysis.analysis.msd
+from MDAnalysis.analysis.base import AnalysisBase
+import pandas as pd
+from MDAnalysis.lib.distances import capped_distance, calc_angles
+
+class HbondLength(AnalysisBase):
+
+    def __init__(
+        self,
+        hydroxyl_o,
+        hydroxyl_h,
+        water_o,
+        f_cutoff = 4.0):
+
+        trajectory = hydroxyl_o.universe.trajectory
+        super(HbondLength, self).__init__(trajectory)
+
+        self.hydroxyl_o = hydroxyl_o
+        self.hydroxyl_h = hydroxyl_h
+        self.water_o = water_o
+        self.f_cutoff = f_cutoff
+
+    def _prepare(self):
+
+        self.results = np.zeros((self.n_frames, 5))
+
+    def _single_frame(self):
+
+        self.results[self._frame_index, 2:] = self._hbondlength()
+        self.results[self._frame_index, 0] = self._ts.frame
+        self.results[self._frame_index, 1] = self._trajectory.time
+
+    def _conclude(self):
+
+        columns = ['Frame', 'Time(ps)',
+                   'OhWaterDistance',
+                   'OhWaterAngle',
+                   'WaterWaterDistance']
+        self.df = pd.DataFrame(self.results, columns=columns)
+    
+    def _hbondlength(self):
+    
+        box = self._ts.dimensions
+
+        np_indices, np_distances = capped_distance(
+            reference = self.hydroxyl_o,
+            configuration = self.water_o,
+            max_cutoff = self.f_cutoff,
+            min_cutoff = 1.0,
+            box = box,
+            return_distances = True,
+        )
+        if np.size(np_indices) == 0:
+            raise RuntimeError('No 1st neighbor')
+    
+        i_indice = np.argmin(np_distances)
+        f_1st_distance = np_distances[i_indice]
+        
+        water_1st = self.water_o[[np_indices[i_indice, 1]]]
+        f_1st_angle = calc_angles(
+            self.hydroxyl_h.positions,
+            self.hydroxyl_o.positions,
+            water_1st.positions,
+            box=box
+        )[0]
+
+        np_indices, np_distances = capped_distance(
+            reference = water_1st,
+            configuration = self.water_o,
+            max_cutoff = self.f_cutoff,
+            min_cutoff = 1.0,
+            box = box,
+            return_distances = True,
+        )
+        if np.size(np_indices) == 0:
+            raise RuntimeError('No 2st neighbor')
+    
+        i_indice = np.argmin(np_distances)
+        f_2st_distance = np_distances[i_indice]
+    
+        return f_1st_distance, f_1st_angle, f_2st_distance
 
 def error(
     list_file: str,

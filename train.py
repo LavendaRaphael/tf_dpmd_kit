@@ -59,8 +59,9 @@ def datastatus_from_dptest():
 def dptest_plt(
     str_file: str,
     int_natoms: int = None,
-    str_plt_type: str = 'inset',
+    str_plt_type: str = 'dft_dnn',
     tup_hist_xlim: tuple = None,
+    float_lw: float = None,
 ) -> None:
 
     with open(str_file, 'r') as file_open:
@@ -113,7 +114,7 @@ def dptest_plt(
         )
         ax.set_xlabel(tup_dft_dnn_label[0])
         ax.set_ylabel(tup_dft_dnn_label[1])
-        ax.axline([0, 0], [1, 1], color='black', linestyle='--', lw=0.75)
+        ax.axline([0, 0], [1, 1], color='black', linestyle='--', lw=float_lw)
         if str_plt_type == 'inset':
             axin = ax.inset_axes((0.7,0.2,0.28,0.22))
             axin.hist(
@@ -137,6 +138,8 @@ def dptest_plt(
         ax.set_ylabel('Probability Density')
     else:
         raise
+
+    plot.set_lw(ax, float_lw)
 
     ax.legend(
         title = str_title,
@@ -177,7 +180,3 @@ def def_plt_lcurve(
     ax.set_yscale('log')
     ax.set_xlim((None,None))
     ax.grid()
-    if str_save:
-        if tup_size:
-            fig.set_size_inches(tup_size)
-        fig.savefig(str_save, bbox_inches='tight', dpi=300)
