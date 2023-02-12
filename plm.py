@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from tf_dpmd_kit import plot
+import pandas as pd
 
 def colvar_hist_plt(
     str_header: str,
@@ -203,7 +204,70 @@ def get_pka_time(
         print(str_save_deltag)
         np.savetxt(str_save_deltag, np_deltag, header=' '.join(np_deltag.dtype.names))
 
+def colvar_reader(
+    list_data: list,
+):
+
+    df_data = pd.DataFrame()
+    for str_file in list_data:
+        with open(str_file, 'r') as file_open:
+            str_line = file_open.readline()
+            list_field = str_line.split()[2:]
+        df_tmp = pd.read_csv(str_file, sep=' ', comment='#', names=list_field)
+        df_data = pd.concat([df_data, df_tmp])
+
+    return df_data
+
 def colvar_plt(
+    dict_header: dict,
+    list_data: list = None,
+    str_xlabel: str = 'Time (ps)',
+    float_timescale: float = 1.0,
+    tup_xlim: tuple = None,
+    tup_ylim: tuple = None,
+    str_color: str = None,
+    str_title: str = None,
+    str_legeng_loc: str = None,
+    bool_scatter: bool = True,
+    float_lw: float = None,
+) -> None:
+
+    if list_data is None:
+        list_data = ['COLVAR']
+
+    int_nplot = len(dict_header)
+    fig, axs = plt.subplots(int_nplot, 1, sharex='all')
+
+    if int_nplot==1:
+        axs = [axs]
+
+    df_data = colvar_reader(list_data)
+
+    for int_i,str_header in enumerate(dict_header):
+        if bool_scatter:
+            axs[int_i].scatter(df_data['time']*float_timescale, df_data[str_header], s=1, color=str_color, edgecolors='none')
+        else:
+            axs[int_i].plot(df_data['time']*float_timescale, df_data[str_header], color=str_color, linewidth=float_lw)
+
+    for int_i,str_header in enumerate(dict_header):
+        str_ylabel = dict_header[str_header]
+        axs[int_i].set_ylabel(str_ylabel)
+        plot.set_lw( axs[int_i], float_lw )
+
+    if str_title:
+        axs[0].legend(
+            loc = str_legeng_loc,
+            title = str_title,
+            frameon = False,
+        )
+    axs[0].set_xlim(tup_xlim)
+    axs[0].set_ylim(tup_ylim)
+    if str_xlabel:
+        axs[-1].set_xlabel(str_xlabel)
+
+    return fig, axs
+
+def colvar_plt_old(
     dict_header: dict,
     list_data: list = None,
     str_xlabel: str = 'Time (ps)',

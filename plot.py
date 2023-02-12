@@ -33,7 +33,7 @@ def plt_hist(
     bool_legend: bool = True,
     dict_color: dict = None,
     bool_error: bool = False,
-    float_lw: float = None,
+    f_lw: float = None,
     float_scale: float = 1.0,
 ) -> None:
 
@@ -62,7 +62,11 @@ def plt_hist(
             bins = 'auto',
             density = True,
             color = color,
+            histtype = 'step',
+            lw = f_lw
         )
+
+    set_lw(ax, f_lw)
 
     if bool_legend:
         ax.legend(
@@ -105,8 +109,8 @@ def inset_img(
     ax,
     dict_img: dict,
     dict_imgcolor: dict = None,
-    dict_arrow: dict = None,
     float_lw: float = None,
+    bool_rot90: bool = False,
 ) -> None:
 
     if dict_imgcolor is None:
@@ -115,7 +119,9 @@ def inset_img(
     for str_img, tup_pos in dict_img.items():
         axin = ax.inset_axes(tup_pos)
         image = plt.imread(str_img)
-        im = axin.imshow(image)
+        if bool_rot90:
+            image = np.rot90(np.array(image), k=3)
+        axin.imshow(image)
         #axin.axis('off')
         axin.set_xticks([])
         axin.set_yticks([])
@@ -124,20 +130,34 @@ def inset_img(
             if str_img in dict_imgcolor:
                 spine.set_edgecolor(dict_imgcolor[str_img])
 
-    if not(dict_arrow is None):
-        for tup_xy, tup_xytext in dict_arrow.items():
-            ax.annotate(
-                text = '',
-                xy = tup_xy,
-                xytext = tup_xytext,
-                textcoords = ax.transAxes,
-                arrowprops = dict(
-                    arrowstyle= '-|>',
-                    linestyle='--',
-                    color = 'orange',
-                    linewidth = float_lw,
-                )
+def add_arrow(
+    ax,
+    dict_arrow: dict = None,
+    float_lw: float = None,
+    dict_arrowstyle: dict = None,
+    str_color: str = None,
+):
+
+    for key, list_pos in dict_arrow.items():
+        if type(dict_arrowstyle) == str:
+            str_arrowstyle = dict_arrowstyle
+        elif key in dict_arrowstyle:
+            str_arrowstyle = dict_arrowstyle[key]
+        else:
+            str_arrowstyle = '-|>'
+        ax.annotate(
+            text = '',
+            xy = list_pos[1],
+            xytext = list_pos[0],
+            textcoords = ax.transAxes,
+            arrowprops = dict(
+                arrowstyle= str_arrowstyle,
+                #linestyle='--',
+                color = str_color,
+                linewidth = float_lw,
+                mutation_scale = 10,
             )
+        )
     
 def plt_subplots(
     dict_title: dict,
@@ -294,6 +314,8 @@ def plt_error(
     tup_xlim: tuple = None,
     str_title: str = None,
     float_lw: float = None,
+    bool_error: bool = True,
+    float_scale: float = 1.0,
 ) -> None:
 
     fig, ax = plt.subplots()
@@ -301,15 +323,13 @@ def plt_error(
     for str_label, str_marker in zip(dict_data, Line2D.filled_markers):
         str_file = dict_data[str_label]
         np_data = np.loadtxt(str_file, ndmin=2)
-        if np_data.shape[1] > 2:
-            yerr = np_data[:,2]
+        if bool_error:
+            yerr = np_data[:,2]*float_scale
         else:
             yerr = None
-        ax.errorbar(np_data[:,0], np_data[:,1], yerr=yerr, linestyle=':', marker=str_marker, label=str_label, capsize=2, lw=float_lw, markersize=2)
+        ax.errorbar(np_data[:,0], np_data[:,1]*float_scale, yerr=yerr, linestyle=':', marker=str_marker, label=str_label, capsize=2, lw=float_lw, markersize=2)
 
-    for spin in ax.spines.values():
-        spin.set_linewidth(float_lw)
-    ax.tick_params(width=float_lw)
+    set_lw(ax, float_lw)
 
     ax.set_xlabel(str_xlabel)
     ax.set_ylabel(str_ylabel)
