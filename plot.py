@@ -108,13 +108,16 @@ def add_text(
 def inset_img(
     ax,
     dict_img: dict,
-    dict_imgcolor: dict = None,
+    dict_spinecolor: dict = None,
+    dict_spinels: dict = None,
     float_lw: float = None,
     bool_rot90: bool = False,
 ) -> None:
 
-    if dict_imgcolor is None:
-        dict_imgcolor = {}
+    if dict_spinecolor is None:
+        dict_spinecolor = {}
+    if dict_spinels is None:
+        dict_spinelw = {}
 
     for str_img, tup_pos in dict_img.items():
         axin = ax.inset_axes(tup_pos)
@@ -127,8 +130,10 @@ def inset_img(
         axin.set_yticks([])
         for spine in axin.spines.values():
             spine.set_linewidth(float_lw)
-            if str_img in dict_imgcolor:
-                spine.set_edgecolor(dict_imgcolor[str_img])
+            if str_img in dict_spinecolor:
+                spine.set_edgecolor(dict_spinecolor[str_img])
+            if str_img in dict_spinels:
+                spine.set_linestyle(dict_spinels[str_img])
 
 def add_arrow(
     ax,

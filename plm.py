@@ -95,6 +95,7 @@ def fes_1M_correct(
     float_Avogadro = 6.02214076e23
     float_volume_1M = 1e27/float_Avogadro
     float_KbT = T2KbT(float_T)
+    #print(float_volume_1M/float_volume,'mol/L')
     float_correct = -float_KbT*math.log(float_volume_1M/float_volume)
 
     return float_correct
@@ -225,9 +226,11 @@ def colvar_plt(
     float_timescale: float = 1.0,
     tup_xlim: tuple = None,
     tup_ylim: tuple = None,
-    str_color: str = None,
+    str_color: str = 'black',
+    dict_color: dict = None,
     str_title: str = None,
-    str_legeng_loc: str = None,
+    legend_loc: str = None,
+    dict_label: dict = None,
     bool_scatter: bool = True,
     float_lw: float = None,
 ) -> None:
@@ -246,19 +249,25 @@ def colvar_plt(
     for int_i,str_header in enumerate(dict_header):
         if bool_scatter:
             axs[int_i].scatter(df_data['time']*float_timescale, df_data[str_header], s=1, color=str_color, edgecolors='none')
+            if not(dict_color is None):
+                for tup_range, str_color_i in dict_color.items():
+                    df_tmp = df_data.iloc[tup_range[0]:tup_range[1]]
+                    if not(tup_range in dict_label):
+                        dict_label[tup_range] = None
+                    axs[int_i].scatter(df_tmp['time']*float_timescale, df_tmp[str_header], s=1, color=str_color_i, edgecolors='none', label=dict_label[tup_range])
         else:
             axs[int_i].plot(df_data['time']*float_timescale, df_data[str_header], color=str_color, linewidth=float_lw)
 
-    for int_i,str_header in enumerate(dict_header):
         str_ylabel = dict_header[str_header]
         axs[int_i].set_ylabel(str_ylabel)
+
         plot.set_lw( axs[int_i], float_lw )
 
-    if str_title:
-        axs[0].legend(
-            loc = str_legeng_loc,
-            title = str_title,
+        axs[int_i].legend(
+            loc = legend_loc,
             frameon = False,
+            markerscale = 3,
+            labelspacing = 0.3,
         )
     axs[0].set_xlim(tup_xlim)
     axs[0].set_ylim(tup_ylim)

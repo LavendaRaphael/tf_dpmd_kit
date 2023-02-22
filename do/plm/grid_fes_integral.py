@@ -34,7 +34,7 @@ plm.get_pka_time(
         (0,2): -1,
         (2,14): 1
     },
-    str_save = str_tmp,
+    str_save = 'test'+str_tmp,
     str_in = 'plm.in',
     float_volume = 15.6793091675**3
 )
