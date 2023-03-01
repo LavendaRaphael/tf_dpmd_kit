@@ -60,7 +60,7 @@ def dptest_plt(
     str_file: str,
     int_natoms: int = None,
     str_plt_type: str = 'dft_dnn',
-    tup_hist_xlim: tuple = None,
+    tup_xlim: tuple = None,
     float_lw: float = None,
 ) -> None:
 
@@ -87,24 +87,27 @@ def dptest_plt(
         float_rmse_e *= 1000
         np_data_new *= 1000
         np_data_new -= np.average( np_data_new[:,0] )
-
-        tup_dft_dnn_label = ('DFT energy (meV/atom)', 'DNN energy (meV/atom)')
+        if str_plt_type == 'dft_dnn':
+            str_xlabel = 'DFT energy (meV/atom)'
+            str_ylabel =  'DNN energy (meV/atom)'
+        elif str_plt_type == 'hist':
+            str_xlabel = r'E$_{DP}$-E$_{DFT}$ (meV/atom)'
         str_label = f'Energy RMSE = {float_rmse_e:.3f} meV/atom'
         str_title = 'Energy'
-        str_inset_xlabel = 'error'
-        str_hist_xlabel = r'E$_{DP}$-E$_{DFT}$ (meV/atom)'
 
     elif (str_mode=='f'):
         np_data_new = np_data.reshape((np_data.shape[0]*3, 2), order='F')
-
-        tup_dft_dnn_label = ('DFT force (eV/Å)', 'DNN force (eV/Å)')
+        if str_plt_type == 'dft_dnn':
+            str_xlabel = 'DFT force (eV/Å)'
+            str_ylabel = 'DNN force (eV/Å)'
+        elif str_plt_type == 'hist':
+            str_xlabel = r'F$_{DP}$-F$_{DFT}$ (eV/Å)'
         str_label = f'Force RMSE = {float_rmse_f:.3f} eV/Å'
         str_title = 'Force'
-        str_inset_xlabel = 'error'
-        str_hist_xlabel = r'F$_{DP}$-F$_{DFT}$ (eV/Å)'
 
     del_data = np_data_new[:,1] - np_data_new[:,0]
-    if (str_plt_type == 'dft_dnn' or str_plt_type == 'inset'):
+    if (str_plt_type == 'dft_dnn'):
+        ax.axline([0, 0], [1, 1], color='black', linestyle='--', lw=float_lw)
         ax.scatter(
             np_data_new[:,0],
             np_data_new[:,1],
@@ -112,19 +115,9 @@ def dptest_plt(
             edgecolors='none', 
             s=1.5,
         )
-        ax.set_xlabel(tup_dft_dnn_label[0])
-        ax.set_ylabel(tup_dft_dnn_label[1])
-        ax.axline([0, 0], [1, 1], color='black', linestyle='--', lw=float_lw)
-        if str_plt_type == 'inset':
-            axin = ax.inset_axes((0.7,0.2,0.28,0.22))
-            axin.hist(
-                del_data,
-                bins = 'auto',
-                density = True
-            )
-            axin.set_xlim(tup_hist_xlim)
-            axin.set_xlabel(str_inset_xlabel)
-            axin.set_ylabel('Prob. Dens.')
+        ax.set_xlabel(str_xlabel)
+        ax.set_ylabel(str_ylabel)
+        ax.set_ylim(tup_xlim)
 
     elif (str_plt_type == 'hist'):
         ax.hist(
@@ -133,11 +126,12 @@ def dptest_plt(
             bins = 'auto',
             density = True
         )
-        ax.set_xlabel(str_hist_xlabel)
-        ax.set_xlim(tup_hist_xlim)
+        ax.set_xlabel(str_xlabel)
         ax.set_ylabel('Probability Density')
     else:
         raise
+
+    ax.set_xlim(tup_xlim)
 
     plot.set_lw(ax, float_lw)
 
@@ -160,23 +154,18 @@ def get_rmse():
                 float_rmse_v = float(str_line.split()[-2])
     return float_rmse_e, float_rmse_f, float_rmse_v
 
-def def_plt_lcurve(
-    str_save: str = None,
-    tup_size: tuple = None,
-) -> None:
-
-    mpl.rcParams['font.size']=15
-    mpl.rcParams['font.family']='sans-serif'
-    mpl.rcParams['font.sans-serif']=["Arial"]
+def plt_lcurve():
 
     fig, ax = plt.subplots()
 
     data = np.genfromtxt("lcurve.out", names=True)
-    ax.scatter(data['step'], data['rmse_e_trn'], label='Energy', s=0.5)
-    ax.scatter(data['step'], data['rmse_f_trn'], label='Force', s=0.5)
+    ax.scatter(data['step'], data['rmse_e_trn'], label='Energy (eV)', s=0.5)
+    ax.scatter(data['step'], data['rmse_f_trn'], label='Force (eV/Å)', s=0.5)
     ax.legend(loc='lower left')
     ax.set_xlabel('Step')
-    ax.set_ylabel('Loss')
+    ax.set_ylabel('Error')
     ax.set_yscale('log')
     ax.set_xlim((None,None))
     ax.grid()
+
+    return fig, ax

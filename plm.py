@@ -12,7 +12,9 @@ def colvar_hist_plt(
     str_label: str,
     str_save: str = None,
     tup_timerange: tuple = None,
-) -> None:
+    tup_xlim: tuple = None,
+):
+
     fig, ax = plt.subplots()
 
     with open('COLVAR', 'r') as colvar:
@@ -21,7 +23,7 @@ def colvar_hist_plt(
     #print(data.dtype)
 
     if tup_timerange is None:
-        np_data_new = np_data_new = data[str_header]
+        np_data_new = data[str_header]
     else:
         np_data_time = np_data['time']
         list_tof = (np_data_time >= tup_timerange[0]) & (np_data_time <= tup_timerange[1])
@@ -34,18 +36,18 @@ def colvar_hist_plt(
         bins = 'auto',
         density = True
     )
-    #ax.set_xlim(list2d_header[int_i][1])
 
     float_std = np.std(np_data_new)
     float_mean = np.mean(np_data_new)
-    ax.plot([],[],' ',label=f'MEAN = {float_mean:.3f}')
-    ax.plot([],[],' ',label=f'STD = {float_std:.3f}')
 
-    ax.legend()
+    ax.legend(
+        title = f'MEAN = {float_mean:.3f}\nSTD = {float_std:.3f}'
+    )
+    ax.set_xlim(tup_xlim)
     ax.set_xlabel(str_label)
     ax.set_ylabel('Probability Density')
-    if str_save:
-        fig.savefig(str_save, bbox_inches='tight')
+
+    return fig, ax
 
 def fes_integral(
     str_file: str,

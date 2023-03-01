@@ -117,7 +117,7 @@ def inset_img(
     if dict_spinecolor is None:
         dict_spinecolor = {}
     if dict_spinels is None:
-        dict_spinelw = {}
+        dict_spinels = {}
 
     for str_img, tup_pos in dict_img.items():
         axin = ax.inset_axes(tup_pos)
@@ -321,18 +321,24 @@ def plt_error(
     float_lw: float = None,
     bool_error: bool = True,
     float_scale: float = 1.0,
+    dict_ls: dict = None,
 ) -> None:
 
     fig, ax = plt.subplots()
+
+    if dict_ls is None:
+        dict_ls = {}
 
     for str_label, str_marker in zip(dict_data, Line2D.filled_markers):
         str_file = dict_data[str_label]
         np_data = np.loadtxt(str_file, ndmin=2)
         if bool_error:
-            yerr = np_data[:,2]*float_scale
+            yerr = np_data[:,2]
         else:
             yerr = None
-        ax.errorbar(np_data[:,0], np_data[:,1]*float_scale, yerr=yerr, linestyle=':', marker=str_marker, label=str_label, capsize=2, lw=float_lw, markersize=2)
+        if str_label not in dict_ls:
+            dict_ls[str_label] = ''
+        ax.errorbar(np_data[:,0], np_data[:,1], yerr=yerr, linestyle=dict_ls[str_label], marker=str_marker, label=str_label, capsize=2, lw=float_lw, markersize=2)
 
     set_lw(ax, float_lw)
 
