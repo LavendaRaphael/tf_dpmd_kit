@@ -235,10 +235,13 @@ def colvar_plt(
     dict_label: dict = None,
     bool_scatter: bool = True,
     float_lw: float = None,
+    float_scatters: float = None,
 ) -> None:
 
     if list_data is None:
         list_data = ['COLVAR']
+    if dict_label is None:
+        dict_label = {}
 
     int_nplot = len(dict_header)
     fig, axs = plt.subplots(int_nplot, 1, sharex='all')
@@ -250,13 +253,13 @@ def colvar_plt(
 
     for int_i,str_header in enumerate(dict_header):
         if bool_scatter:
-            axs[int_i].scatter(df_data['time']*float_timescale, df_data[str_header], s=1, color=str_color, edgecolors='none')
+            axs[int_i].scatter(df_data['time']*float_timescale, df_data[str_header], s=float_scatters, color=str_color, edgecolors='none')
             if not(dict_color is None):
                 for tup_range, str_color_i in dict_color.items():
                     df_tmp = df_data.iloc[tup_range[0]:tup_range[1]]
                     if not(tup_range in dict_label):
                         dict_label[tup_range] = None
-                    axs[int_i].scatter(df_tmp['time']*float_timescale, df_tmp[str_header], s=1, color=str_color_i, edgecolors='none', label=dict_label[tup_range])
+                    axs[int_i].scatter(df_tmp['time']*float_timescale, df_tmp[str_header], s=float_scatters, color=str_color_i, edgecolors='none', label=dict_label[tup_range])
         else:
             axs[int_i].plot(df_data['time']*float_timescale, df_data[str_header], color=str_color, linewidth=float_lw)
 

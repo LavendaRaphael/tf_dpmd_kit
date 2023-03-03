@@ -1,9 +1,12 @@
 from tf_dpmd_kit import plot
 import matplotlib.pyplot as plt
 
+plot.set_rcparam()
+cm = 1/2.54
+
 str_tmp = 'dist_vp_o_1_2_fes'
 
-plot.plt_compare(
+fig, ax = plot.plt_compare(
     dict_data = {
         # '1ns':  f'analysis.0.{str_tmp}.grid',
         # '2ns':  f'analysis.1.{str_tmp}.grid',
@@ -31,11 +34,23 @@ plot.plt_compare(
         #'24ns': f'analysis.23.{str_tmp}.grid',
          '25ns':             f'{str_tmp}.grid',
     },
-    str_xlabel = r'R(V$_P$O$_C$) (Å)',
-    str_save = f'{str_tmp}.converge.pdf',
-    str_ylabel = 'FES (kJ/mol)',
+    str_xlabel = r'R(V$_P$O$_{CA}$) (Å)',
+    str_ylabel = 'Free energy (kJ/mol)',
     bool_minzero = True,
     #tup_xlim = (1.1, 8),
-    tup_ylim = (None, 60)
+    tup_ylim = (None, 60),
+    #float_lw = 1,
 )
+
+plot.save(
+    fig,
+    tup_size = (8.6*cm, 5*cm),
+    str_save = f'{str_tmp}.converge.svg',
+)
+plot.save(
+    fig,
+    tup_size = (8.6*cm, 5*cm),
+    str_save = f'{str_tmp}.converge.pdf',
+)
+
 plt.show()
