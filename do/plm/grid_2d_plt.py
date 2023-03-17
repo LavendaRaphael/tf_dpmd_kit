@@ -5,6 +5,7 @@ import matplotlib
 import pandas as pd
 import seaborn as sns
 import matplotlib.ticker as plticker
+from tf_dpmd_kit import plot
 
 def grid2d_plt(
     str_file: str,
@@ -14,10 +15,6 @@ def grid2d_plt(
     bool_minzero: bool = False,
     str_save: str = None
 ) -> None:
-
-    matplotlib.rcParams['font.size']=15
-    matplotlib.rcParams['font.family']='sans-serif'
-    matplotlib.rcParams['font.sans-serif']=["Arial"]
 
     with open(str_file, 'r') as file_obj:
         list_field = file_obj.readline().split()[2:]
@@ -59,6 +56,7 @@ def grid2d_plt(
 
     loc = plticker.MultipleLocator(base=1.0) # this locator puts ticks at regular intervals
     ax.xaxis.set_major_locator(loc)
+    ax.yaxis.set_major_locator(loc)
 
     if not str_xlabel:
         str_xlabel = list_field[0]
@@ -66,18 +64,25 @@ def grid2d_plt(
         str_ylabel = list_field[1]
     ax.set_xlabel(str_xlabel)
     ax.set_ylabel(str_ylabel)
-    if str_save:
-        #fig.set_size_inches(9, 8)
-        fig.savefig(str_save, bbox_inches='tight')
 
-#'''
-grid2d_plt(
+    return fig, ax
+
+plot.set_rcparam()
+cm = 1/2.54
+
+fig, ax = grid2d_plt(
     str_file = 'fes_2d.grid',
     bool_minzero = True,
     str_xlabel = r"$\alpha'$ (rad)",
     str_ylabel = r"$\beta'$ (rad)",
-    str_save = 'fes_2d.svg'
 )
-#'''
+
+plot.save(
+    fig,
+    str_save = 'fes_2d',
+    tup_size = (8.6*cm, 6.8*cm),
+    list_type = ['pdf','svg'],
+)
+
 plt.show()
 

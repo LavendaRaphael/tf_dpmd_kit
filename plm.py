@@ -169,6 +169,27 @@ def get_pka(
 
     return float_deltag, float_pka
 
+def prob_to_pka(
+    float_prob: float,
+    float_T: float,
+    float_volume: float
+):
+    float_KbT = T2KbT(float_T)
+
+    float_deltag = -np.log(float_prob) * float_KbT
+    float_correct = fes_1M_correct(
+        float_volume = float_volume,
+        float_T = float_T
+    )
+    float_deltag += float_correct
+
+    float_pka = deltag_to_pka(
+        float_deltag = float_deltag,
+        float_T = float_T,
+    )
+
+    return float_deltag, float_pka
+
 def get_pka_time(
     dict_file: dict,
     dict_coef: dict,
@@ -213,6 +234,7 @@ def colvar_reader(
 
     df_data = pd.DataFrame()
     for str_file in list_data:
+        print(str_file)
         with open(str_file, 'r') as file_open:
             str_line = file_open.readline()
             list_field = str_line.split()[2:]
