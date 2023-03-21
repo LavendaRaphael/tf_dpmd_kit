@@ -6,8 +6,8 @@ plot.set_rcparam()
 cm = 1/2.54
 
 def plt_state(
-    float_xscale,
-    str_xlabel,
+    float_xscale: float = 1,
+    str_xlabel: str = None,
     tup_ylim: tuple = None,
 ):
 
@@ -35,15 +35,11 @@ fig, ax = plt_state(
 '''
 
 fig, ax = plt_state(
-    float_xscale = 0.000005,
-    str_xlabel = 'Time (ns)',
 )
 
 plot.save(
     fig,
     tup_size = (8.6*cm, 3.5*cm),
-    str_save = 'carbonic',
-    list_type = ['png'],
 )
 
 '''

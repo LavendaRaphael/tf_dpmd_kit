@@ -9,9 +9,10 @@ def plt_state(
     float_xscale: float = 1,
     str_xlabel: str = None,
     tup_ylim: tuple = None,
+    str_file: str = 'carbonic_rolling.csv',
 ):
 
-    df_data = pd.read_csv('carbonic_rolling.csv')
+    df_data = pd.read_csv(str_file)
     print(df_data)
     
     list_ticks = [0, 0.5, 1, 1.5, 1.8, 2, 2.2, 2.5, 3]
@@ -35,7 +36,7 @@ def plt_state(
 
     return fig, ax
 
-#'''
+'''
 fig, ax = plt_state(
     float_xscale = 0.0004837769,
     str_xlabel = 'Time (ps)',
@@ -53,16 +54,14 @@ plot.save(
 )
 #'''
 
-'''
+#'''
 fig, ax = plt_state(
-    float_xscale = 0.000005,
+    str_file = 'carbonic_rolling.200.csv',
 )
 
 plot.save(
     fig,
     tup_size = (8.6*cm, 3*cm),
-    str_save = 'carbonic_rolling',
-    list_type = ['png'],
 )
 #'''
 

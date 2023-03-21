@@ -90,9 +90,12 @@ def fes_integral(
     return float_integral
 
 def fes_1M_correct(
-    float_volume: float,
-    float_T: float
+    float_volume: float, # angstrom**3
+    float_T: float  # kelvin
 ) -> float:
+
+    if float_volume == '1M':
+        return 0
 
     float_Avogadro = 6.02214076e23
     float_volume_1M = 1e27/float_Avogadro
@@ -171,8 +174,8 @@ def get_pka(
 
 def prob_to_pka(
     float_prob: float,
-    float_T: float,
-    float_volume: float
+    float_T: float, # kelvin
+    float_volume: float # angstrom**2
 ):
     float_KbT = T2KbT(float_T)
 
@@ -181,6 +184,12 @@ def prob_to_pka(
         float_volume = float_volume,
         float_T = float_T
     )
+    print('energy correct = ', float_correct)
+    pka_correct = deltag_to_pka(
+        float_deltag = float_correct,
+        float_T = float_T,
+    )
+    print('pka correct = ', pka_correct)
     float_deltag += float_correct
 
     float_pka = deltag_to_pka(
@@ -400,12 +409,14 @@ def hills_sum(
     print(subprocess_results.stdout)
 
 def T2KbT(
-    float_T: float,
+    float_T: float, # kelvin
 ) -> float:
 
     float_Avogadro = 6.02214076e23
+
     # J*K^-1
     float_Kb = 1.380649e-23
+
     # KJ*mol^-1
     float_KbT = float_Kb*float_Avogadro*float_T/1000.0
     return float_KbT

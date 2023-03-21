@@ -153,7 +153,7 @@ class CarbonicCutoff(AnalysisBase):
     def _conclude(self):
 
         columns = ['frame',
-                   'ncarbonyl', 'nhydroxyl', 'dihedral0(rad)', 'dihedral1(rad)']
+                   'ncarbonyl', 'noho', 'dihedral0(rad)', 'dihedral1(rad)']
         self.df = pd.DataFrame(self.results, columns=columns)
     
     def _carbonic(self):
@@ -163,6 +163,7 @@ class CarbonicCutoff(AnalysisBase):
         list_carbonyl = []
         list_hydroxyl_o = []
         list_hydroxyl_h = []
+        list_oho = []
         for o_id in range(3):
             np_id, np_distances = capped_distance(
                 reference = self.carbonic_o[[o_id]],
@@ -174,6 +175,8 @@ class CarbonicCutoff(AnalysisBase):
                 list_carbonyl.append(o_id)
                 continue
             h_id = np_id[np.argmin(np_distances), 1]
+            list_hydroxyl_o.append(o_id)
+            list_hydroxyl_h.append(h_id)
 
             np_id, _ = capped_distance(
                 reference = self.atomg_h[[h_id]],
@@ -181,15 +184,15 @@ class CarbonicCutoff(AnalysisBase):
                 max_cutoff = self.cutoff,
                 box = box,
             )
-            if np.size(np_id) == 0:
-                list_hydroxyl_o.append(o_id)
-                list_hydroxyl_h.append(h_id)
+            if np.size(np_id) != 0:
+                list_oho.append(o_id)
 
         len_carbonyl = len(list_carbonyl)
         len_hydroxyl = len(list_hydroxyl_o)
+        len_oho = len(list_oho)
 
-        if (len_carbonyl != 1) or (len_hydroxyl != 2):
-            return len_carbonyl, len_hydroxyl, None, None
+        if len_carbonyl != 1:
+            return len_carbonyl, len_oho, None, None
 
         dihedrals = calc_dihedrals(
             self.carbonic_o[ list_carbonyl*2 ],
@@ -198,7 +201,7 @@ class CarbonicCutoff(AnalysisBase):
             self.atomg_h[list_hydroxyl_h],
             box=box
         )
-        return len_carbonyl, len_hydroxyl, dihedrals[0], dihedrals[1]
+        return len_carbonyl, len_oho, dihedrals[0], dihedrals[1]
 
 class HbondLength(AnalysisBase):
 
