@@ -9,119 +9,7 @@ from MDAnalysis.analysis.base import AnalysisBase
 import pandas as pd
 from MDAnalysis.lib.distances import capped_distance, calc_angles, calc_dihedrals
 
-class CarbonicVoronoi(AnalysisBase):
-
-    def __init__(
-        self,
-        carbonic_c,
-        carbonic_o,
-        atomg_h,
-        water_o,
-        cutoff = 1.3):
-
-        trajectory = carbonic_c.universe.trajectory
-        super(CarbonicVoronoi, self).__init__(trajectory)
-
-        self.carbonic_c = carbonic_c
-        self.carbonic_o = carbonic_o
-        self.atomg_h = atomg_h
-        self.water_o = water_o
-        self.cutoff = cutoff
-
-    def _prepare(self):
-
-        self.results = np.zeros((self.n_frames, 5))
-
-    def _single_frame(self):
-
-        self.results[self._frame_index, 2:] = self._carbonic()
-        self.results[self._frame_index, 0] = self._ts.frame
-        self.results[self._frame_index, 1] = self._trajectory.time
-
-    def _conclude(self):
-
-        columns = ['Frame', 'Time(ps)',
-                   'Carbonic', 'alpha(rad)', 'beta(rad)']
-        self.df = pd.DataFrame(self.results, columns=columns)
-    
-    def _carbonic(self):
-    
-        box = self._ts.dimensions
-
-        list_carbonyl = []
-        list_hydroxyl_o = []
-        list_hydroxyl_h = []
-        for o_id,_ in enumerate(self.carbonic_o):
-            np_id, np_distances = capped_distance(
-                reference = self.carbonic_o[[o_id]],
-                configuration = self.atomg_h,
-                max_cutoff = self.cutoff,
-                #min_cutoff = 1.0,
-                box = box,
-                return_distances = True,
-            )
-            if np.size(np_distances) == 0:
-                list_carbonyl.append(o_id)
-                continue
-            h_id = np_id[np.argmin(np_distances), 1]
-            distance = min(np_distances)
-
-            np_id, np_distances = capped_distance(
-                reference = self.atomg_h[[h_id]],
-                configuration = self.water_o,
-                max_cutoff = self.cutoff,
-                #min_cutoff = 1.0,
-                box = box,
-                return_distances = True,
-            )
-            if np.size(np_distances) == 0 or np.all(distance < np_distances):
-                list_hydroxyl_o.append(o_id)
-                list_hydroxyl_h.append(h_id)
-            else:
-                list_carbonyl.append(o_id)
-
-        if len(list_hydroxyl_o) == 0:
-            # CO32-
-            return 4, None, None
-        elif len(list_hydroxyl_o) == 1:
-            # HCO3-
-            return 3, None, None
-        elif len(list_hydroxyl_o) == 2:
-            pass
-        elif len(list_hydroxyl_o) == 3:
-            # H3CO3+
-            return -1, None, None
-        else:
-            raise RuntimeError(f'{list_hydroxyl_o}')
-    
-        carbonyl_o2 = self.carbonic_o[ list_carbonyl*2 ]
-        carbonic_c2 = self.carbonic_c[[0,0]]
-        hydroxyl_o = self.carbonic_o[list_hydroxyl_o]
-        hydroxyl_h = self.atomg_h[list_hydroxyl_h]
-        dihedrals = calc_dihedrals(
-            carbonyl_o2,
-            carbonic_c2,
-            hydroxyl_o,
-            hydroxyl_h,
-            box=box
-        )
-
-        bool_TC = ((dihedrals > -np.pi/2) & (dihedrals < np.pi/2))
-
-        if bool_TC[0]:
-            if bool_TC[1]:
-                int_TC = 0
-            else:
-                int_TC = 1
-        else:
-            if bool_TC[1]:
-                int_TC = 1
-            else:
-                int_TC = 2
-
-        return int_TC, dihedrals[0], dihedrals[1]
-
-class CarbonicCutoff(AnalysisBase):
+class Carbonic(AnalysisBase):
 
     def __init__(
         self,
@@ -188,7 +76,6 @@ class CarbonicCutoff(AnalysisBase):
                 list_oho.append(o_id)
 
         len_carbonyl = len(list_carbonyl)
-        len_hydroxyl = len(list_hydroxyl_o)
         len_oho = len(list_oho)
 
         if len_carbonyl != 1:
