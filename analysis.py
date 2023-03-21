@@ -20,7 +20,7 @@ class Carbonic(AnalysisBase):
         cutoff = 1.3):
 
         trajectory = carbonic_c.universe.trajectory
-        super(CarbonicCutoff, self).__init__(trajectory)
+        super(Carbonic, self).__init__(trajectory)
 
         self.carbonic_c = carbonic_c
         self.carbonic_o = carbonic_o
