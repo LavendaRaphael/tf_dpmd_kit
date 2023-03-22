@@ -11,7 +11,7 @@ def run(
         df_data = pd.read_csv(str_file)
         df_sum = df_data.sum().to_frame().drop('frame', axis=0)
         df_sum.columns = ['nframe']
-        float_sum = df_sum.sum()[0]
+        float_sum = len(df_data)
         df_sum.loc['sum'] = [float_sum]
         df_sum['proportion'] = df_sum['nframe']/float_sum
         print(df_sum)
@@ -28,9 +28,9 @@ def run(
 
 run(
     list_data = [
-        'carbonic_state.csv',
-        '../../../H2CO3_CT_H2O_126/330K/carbonic/carbonic_state.csv',
-        '../../../H2CO3_CC_H2O_126/330K/carbonic/carbonic_state.csv',
+        'carbonic_state.product.csv',
+        '../../../H2CO3_CT_H2O_126/330K/carbonic/carbonic_state.product.csv',
+        '../../../H2CO3_CC_H2O_126/330K/carbonic/carbonic_state.product.csv',
     ],
-    str_save = 'carbonic_status.all.csv'
+    str_save = 'carbonic_status.csv'
 )

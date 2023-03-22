@@ -16,12 +16,11 @@ def run(
 #'''
 run(
     int_window = 200,
-    str_save = 'carbonic_rolling.200.csv'
 )
 #'''
 '''
 run(
-    int_window = 80,
+    int_window = 100,
 )
 #'''
 '''

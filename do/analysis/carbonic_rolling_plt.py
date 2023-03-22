@@ -15,23 +15,24 @@ def plt_state(
     df_data = pd.read_csv(str_file)
     print(df_data)
     
-    list_ticks = [0, 0.5, 1, 1.5, 1.8, 2, 2.2, 2.5, 3]
+    list_header = ['HCO3', 'TT', 'CT', 'CC']
+    list_pos = [1, 2, 3, 4]
     
     fig, ax = plt.subplots()
     
     df_new = df_data.where(df_data.isnull(), 1)
     df_new['frame'] = df_data['frame']
     
-    for idx, header in enumerate(df_data.columns[1:]):
+    for idx, header in enumerate(list_header):
         df_data_tmp = df_data[df_data[header].notnull()]
         df_new_tmp = df_new[df_new[header].notnull()]
         if len(df_data_tmp)==0:
             continue
-        ax.scatter( df_new_tmp['frame']*float_xscale, df_new_tmp[header]*list_ticks[idx], s=2, edgecolors='none', c='tab:blue', alpha=df_data_tmp[header])
+        ax.scatter( df_new_tmp['frame']*float_xscale, df_new_tmp[header]*list_pos[idx], s=2, edgecolors='none', c='tab:blue', alpha=df_data_tmp[header])
 
     ax.set_xlabel(str_xlabel)
-    ax.set_yticks([ 1, 1.5, 1.8, 2, 2.2])
-    ax.set_yticklabels(['HCO$_3^-$', '', 'TT','CT','CC'])
+    ax.set_yticks(list_pos)
+    ax.set_yticklabels(['HCO$_3^-$', 'TT','CT','CC'])
     ax.set_ylim(tup_ylim)
 
     return fig, ax
@@ -40,7 +41,7 @@ def plt_state(
 fig, ax = plt_state(
     float_xscale = 0.0004837769,
     str_xlabel = 'Time (ps)',
-    tup_ylim = (0.7, 2.5),
+    tup_ylim = (0.5, 4.5),
 )
 plot.add_text(
     ax,
@@ -56,7 +57,7 @@ plot.save(
 
 #'''
 fig, ax = plt_state(
-    str_file = 'carbonic_rolling.200.csv',
+    str_file = 'carbonic_rolling.csv',
 )
 
 plot.save(
@@ -69,7 +70,7 @@ plot.save(
 fig, ax = plt_state(
     float_xscale = 0.000005,
     str_xlabel = 'Time (ns)',
-    tup_ylim = (0.7, 2.5),
+    tup_ylim = (0.5, 4.5),
 )
 plot.add_text(
     ax,

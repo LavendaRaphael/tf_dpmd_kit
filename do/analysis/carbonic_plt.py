@@ -18,6 +18,8 @@ def plt_state(
     
     fig, ax = plt.subplots()
     for idx, header in enumerate(df.columns[1:]):
+        if header == '1.5':
+            continue
         ax.scatter( df['frame']*float_xscale, df[header]*list_ticks[idx], s=2, edgecolors='none', color='tab:blue')
     
     ax.set_xlabel(str_xlabel)
@@ -27,13 +29,21 @@ def plt_state(
 
     return fig, ax
 
-'''
-fig, ax = plt_state(
-    float_xscale = 0.0004837769,
-    str_xlabel = 'Time (ps)',
-)
-'''
+def plt_dihedral(
+    float_xscale: float = 1,
+    str_xlabel: str = None,
+):
+    df = pd.read_csv('carbonic.csv')
+    print(df)
 
+    fig, ax = plt.subplots()
+    ax.scatter( df['frame']*float_xscale, df['dihedral0(rad)'], s=0.5, edgecolors='none')
+    ax.scatter( df['frame']*float_xscale, df['dihedral1(rad)'], s=0.5, edgecolors='none')
+    ax.set_xlabel(str_xlabel)
+
+    return fig, ax
+
+'''
 fig, ax = plt_state(
 )
 
@@ -41,17 +51,29 @@ plot.save(
     fig,
     tup_size = (8.6*cm, 3.5*cm),
 )
+#'''
 
-'''
-df = pd.read_csv('carbonic.csv')
-print(df)
-fig, ax = plt.subplots()
-ax.scatter( df['frame']*float_xscale, df['dihedral0(rad)'], s=0.5, edgecolors='none')
-ax.scatter( df['frame']*float_xscale, df['dihedral1(rad)'], s=0.5, edgecolors='none')
-ax.set_xlabel('Time (ps)')
+#'''
+fig, ax = plt_state(
+    float_xscale = 0.0004837769,
+    str_xlabel = 'Time (ps)',
+)
 plot.save(
     fig,
-    tup_size = (8.6*cm, 3*cm),
+    str_save = 'carbonic.png',
+    tup_size = (8.6*cm, 3.5*cm),
+)
+
+#'''
+#'''
+fig, ax = plt_dihedral(
+    float_xscale = 0.0004837769,
+    str_xlabel = 'Time (ps)',
+)
+
+plot.save(
+    fig,
+    tup_size = (8.6*cm, 3.5*cm),
     str_save = 'dihedral',
     list_type = ['png'],
 )

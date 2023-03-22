@@ -20,13 +20,9 @@ def prob2energy(
     KbT = plm.T2KbT(temperature)
     return -KbT*np.log(prob)
 
-def run():
-
-    list_file = [
-        'carbonic.csv',
-        '../../../H2CO3_CT_H2O_126/330K/carbonic/carbonic.csv',
-        '../../../H2CO3_CC_H2O_126/330K/carbonic/carbonic.csv',
-    ]
+def run(
+    list_file: list,
+):
 
     plot.set_rcparam()
     cm = 1/2.54
@@ -79,4 +75,10 @@ def run():
 
     plt.show()
 
-run()
+run(
+    list_file = [
+        'carbonic.product.csv',
+        '../../../H2CO3_CT_H2O_126/330K/carbonic/carbonic.product.csv',
+        '../../../H2CO3_CC_H2O_126/330K/carbonic/carbonic.product.csv',
+    ]
+)
