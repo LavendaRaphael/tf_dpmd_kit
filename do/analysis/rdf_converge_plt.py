@@ -5,34 +5,65 @@ plot.set_rcparam()
 cm = 1/2.54
 
 def run(
+    dict_data,
+    str_pair,
+    str_text,
 ) -> None:
 
     fig, ax = plot.plt_compare(
-        dict_data = {
-            '5-10ns': 'rdf.o_0_1_2.h.1000000_2000000.csv',
-            '10-15ns': 'rdf.o_0_1_2.h.2000000_3000000.csv',
-            '15-20ns': 'rdf.o_0_1_2.h.3000000_4000000.csv',
-            '20-25ns': 'rdf.o_0_1_2.h.4000000_5000000.csv',
-        },
+        dict_data = dict_data, 
         str_xlabel = 'r (Å)',
         str_ylabel = 'g(r)',
         float_lw = 1,
-    )
-    plot.add_text(
-        ax,
-        dict_text = { 
-            r'O$_{CA}$-H': (0.1, 0.9)
-        }
+        legend_title = str_text,
+        tup_xlim = (1,6),
     )
     plot.save(
         fig,
-        tup_size = (8.6*cm, 4*cm),
-        str_save = 'rdf.o_0_1_2.h.converge',
+        tup_size = (4.3*cm, 3.7*cm),
+        str_save = f'rdf.{str_pair}.converge',
         list_type = ['pdf', 'svg']
     )
 
-    plt.show()
+str_pair = 'tt_h_oh.o_w'
+run(
+    dict_data = {
+        '4-6ns':  f'rdf.{str_pair}.0800000_1200000.csv',
+        '6-8ns':  f'rdf.{str_pair}.1200000_1600000.csv',
+        '8-10ns': f'rdf.{str_pair}.1600000_2000000.csv',
+    },
+    str_text = r'H$_{OH}$-O$_W$',
+    str_pair = str_pair,
+)
+str_pair = 'tt_o_oh.h_w'
+run(
+    dict_data = {
+        '4-6ns':  f'rdf.{str_pair}.0800000_1200000.csv',
+        '6-8ns':  f'rdf.{str_pair}.1200000_1600000.csv',
+        '8-10ns': f'rdf.{str_pair}.1600000_2000000.csv',
+    },
+    str_text = r'O$_{OH}$-H$_W$',
+    str_pair = str_pair,
+)
+str_pair = 'tt_o_c.h_w'
+run(
+    dict_data = {
+        '4-6ns':  f'rdf.{str_pair}.0800000_1200000.csv',
+        '6-8ns':  f'rdf.{str_pair}.1200000_1600000.csv',
+        '8-10ns': f'rdf.{str_pair}.1600000_2000000.csv',
+    },
+    str_text = r'$^=$O-H$_W$',
+    str_pair = str_pair,
+)
+str_pair = 'o_w.o_w'
+run(
+    dict_data = {
+        '4-6ns':  f'rdf.{str_pair}.0800000_1200000.csv',
+        '6-8ns':  f'rdf.{str_pair}.1200000_1600000.csv',
+        '8-10ns': f'rdf.{str_pair}.1600000_2000000.csv',
+    },
+    str_text = r'O$_W$-O$_W$',
+    str_pair = str_pair,
+)
 
-run()
-
-
+plt.show()

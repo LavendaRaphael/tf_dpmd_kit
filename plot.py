@@ -415,6 +415,7 @@ def plt_compare(
     dict_color: dict = None,
     bool_error: bool = False,
     float_lw: float = None,
+    legend_title: str = None,
 ) -> None:
 
     fig, ax = plt.subplots()
@@ -455,6 +456,7 @@ def plt_compare(
 
     if bool_legend:
         ax.legend(
+            title = legend_title,
             frameon = False,
             handlelength = 1.0,
             labelspacing = 0.1,

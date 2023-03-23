@@ -9,7 +9,9 @@ def run(
     for str_file in list_data:
         print(str_file)
         df_data = pd.read_csv(str_file)
-        df_sum = df_data.sum().to_frame().drop('frame', axis=0)
+        df_sum = df_data.sum().to_frame()
+        if 'frame' in df_data.columns:
+            df_sum = df_sum.drop('frame', axis=0)
         df_sum.columns = ['nframe']
         float_sum = len(df_data)
         df_sum.loc['sum'] = [float_sum]
