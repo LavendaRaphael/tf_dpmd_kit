@@ -48,14 +48,16 @@ def carbonic_state(
 ):
     start = time.time()
 
+    print(str_file)
     df_data = pd.read_csv(str_file)
     print(df_data)
 
     df_new = df_data.apply(lambda x: carbonic_evalstate(x['ncarbonyl'], x['noho'], x['dihedral0(rad)'], x['dihedral1(rad)']), axis=1, result_type='expand')
-    df_new.columns = ['CO3','0.5','HCO3','1.5','TT','CT','CC','2.5','H3CO3']
+    df_new.columns = ['CO3','0.5','HCO3','1.5','H2CO3','TT','CT','CC','2.5','H3CO3']
     df_new.insert(0, 'frame', df_data['frame'])
+    
+    print(str_save)
     print(df_new)
-
     df_new.to_csv(str_save, index=False)
 
     end = time.time()
@@ -67,33 +69,27 @@ def carbonic_evalstate(
     alpha,
     beta,
 ):
-    list_re = [None]*9
+    list_re = [None]*10
 
     if ncarbonyl == 3:
         # 300 CO3
-        int_state = 0
+        list_re[0] = 1
     elif ncarbonyl == 2:
         if noho != 0:
             # 201
-            int_state = 1
-        else:
-            # 210 HCO3
-            int_state = 2
+            list_re[1] = 1
+        list_re[2] = 1
     elif ncarbonyl == 1:
-        int_state = carbonic_conformer(alpha, beta)
-        list_re[int_state] = 1
         if noho != 0:
             # 102 111
-            int_state = 3
+            list_re[3] = 1
+        list_re[4] = 1
+        list_re[carbonic_conformer(alpha, beta)] = 1
     elif ncarbonyl == 0:
         if noho != 0:
             # 003 012 021
-            int_state = 7
-        else:
-            # 003 H3CO3
-            int_state = 8
-
-    list_re[int_state] = 1
+            list_re[8] = 1
+        list_re[9] = 1
     return list_re
 
 def carbonic_conformer(
@@ -107,19 +103,17 @@ def carbonic_conformer(
     if bool_alpha:
         if bool_beta:
             # TT
-            int_state = 4
+            return 5
         else:
             # TC
-            int_state = 5
+            return 6
     else:
         if bool_beta:
             # CT
-            int_state = 5
+            return 6
         else:
             # CC
-            int_state = 6
-
-    return int_state
+            return 7
 
 class Carbonic(AnalysisBase):
 

@@ -20,3 +20,8 @@ run(
     tup_select = (200000, 5000000),
     str_save = 'carbonic.product.csv',
 )
+run(
+    str_file = 'carbonic_state.csv',
+    tup_select = (200000, 5000000),
+    str_save = 'carbonic_state.product.csv',
+)

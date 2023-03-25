@@ -43,7 +43,7 @@ def plt_dihedral(
 
     return fig, ax
 
-'''
+#'''
 fig, ax = plt_state(
 )
 
@@ -53,7 +53,7 @@ plot.save(
 )
 #'''
 
-#'''
+'''
 fig, ax = plt_state(
     float_xscale = 0.0004837769,
     str_xlabel = 'Time (ps)',
@@ -65,7 +65,7 @@ plot.save(
 )
 
 #'''
-#'''
+'''
 fig, ax = plt_dihedral(
     float_xscale = 0.0004837769,
     str_xlabel = 'Time (ps)',
