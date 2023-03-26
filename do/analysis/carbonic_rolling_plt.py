@@ -5,9 +5,10 @@ import matplotlib.pyplot as plt
 plot.set_rcparam()
 cm = 1/2.54
 
+fig, ax = plt.subplots(figsize=(8.6*cm, 3.5*cm))
 
 '''
-fig, ax = plt_state(
+analysis.carbonic_rolling_plt(
     float_xscale = 0.0004837769,
     str_xlabel = 'Time (ps)',
     tup_ylim = (0.5, 4.5),
@@ -21,20 +22,19 @@ plot.add_text(
 )
 plot.save(
     fig,
-    tup_size = (8.6*cm, 3.5*cm),
     str_save = 'carbonic_rolling',
-    list_type = ['png'],
+    list_size = ['pdf', 'svg']
 )
 #'''
 
-#'''
+'''
 fig, ax = analysis.carbonic_rolling_plt(
     float_xscale = 0.000005,
     str_xlabel = 'Time (ns)',
     str_file = 'carbonic_rolling.csv',
-    list_header = ['CO3', '0.5','HCO3','1.5','TT','CT','CC','2.5','H3CO3'],
-    list_ypos = [0, 0.5, 1, 1.5, 1.8, 2, 2.2, 2.5, 3],
-    list_yticklabels = [r'CO$_3^{2-}$', '', 'HCO$_3^-$', '', 'TT','CT','CC', '', r'H$_3$CO$_3$'],
+    list_header = ['CO3','HCO3','TT','CT','CC','H3CO3'],
+    list_ypos = [0, 1, 2, 3, 4, 5],
+    list_yticklabels = [r'CO$_3^{2-}$', 'HCO$_3^-$', 'TT','CT','CC', r'H$_3$CO$_3$'],
 )
 
 plot.save(
@@ -45,7 +45,8 @@ plot.save(
 #'''
 
 '''
-fig, ax = plt_state(
+analysis.carbonic_rolling_plt(
+    ax,
     float_xscale = 0.000005,
     str_xlabel = 'Time (ns)',
     tup_ylim = (0.5, 4.5),

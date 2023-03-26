@@ -12,14 +12,6 @@ def angle_sft(x):
     else:
         return x
 
-def prob2energy(
-    prob: float,
-    temperature: float, # kelvin
-):
-
-    KbT = plm.T2KbT(temperature)
-    return -KbT*np.log(prob)
-
 def run(
     list_file: list,
 ):
@@ -44,7 +36,7 @@ def run(
     beta = df_new['dihedral1(rad)'].apply(angle_sft)
 
     h, xedges, yedges = np.histogram2d(alpha, beta, bins=100, density=True)
-    energy = prob2energy(h, temperature=330)
+    energy = plm.prob_to_deltag(h, temperature=330)
     energy -= np.amin(energy)
     extent = [xedges[0], xedges[-1], yedges[0], yedges[-1]]
     cmap_new = plt.get_cmap('coolwarm', 10)

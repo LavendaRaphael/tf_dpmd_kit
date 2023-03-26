@@ -249,7 +249,11 @@ def save(
 def add_text(
     ax,
     dict_text: dict,
+    transform  = None,
 ) -> None:
+
+    if transform is None:
+        transform = ax.transData
 
     for str_text, tup_xy in dict_text.items():
         ax.text(
@@ -257,6 +261,7 @@ def add_text(
             y = tup_xy[1],
             s = str_text,
             horizontalalignment = 'center',
+            transform = transform,
         )
 
 def inset_img(
@@ -320,6 +325,7 @@ def add_arrow(
         )
     
 def plt_subplots(
+    axs,
     dict_title: dict,
     dict2d_data: dict[dict],
     str_xlabel: str,
@@ -334,7 +340,6 @@ def plt_subplots(
 ) -> None:
     
     int_nplot = len(dict_title)
-    fig, axs = plt.subplots(int_nplot, 1, sharex='all')
 
     if int_nplot==1:
         axs = [axs]
@@ -375,21 +380,6 @@ def plt_subplots(
     axs[-1].set_xlabel(str_xlabel)
     axs[0].set_xlim(tup_xlim)
     
-    return fig, ax
-
-def add_text(
-    ax,
-    dict_text: dict,
-):
-
-    for str_text, tup_pos in dict_text.items():
-        ax.text(
-            x = tup_pos[0],
-            y = tup_pos[1],
-            s = str_text,
-            transform=ax.transAxes
-        )
-
 def dict_color_temperature(
     tup_colormap: tuple,
     dict_temperature: dict,

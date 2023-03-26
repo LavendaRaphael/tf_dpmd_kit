@@ -49,7 +49,7 @@ def run(
     np_energy -= np.amin(np_energy)
     bin_center = bin_edges[:-1] + (bin_edges[1]-bin_edges[0])/2
 
-    plt.plot(bin_center, np_energy, color='tab:grey')
+    ax.plot(bin_center, np_energy, color='tab:grey')
  
     ax.set_xlabel(r'$\alpha+\beta$ (rad)')
     ax.set_ylabel('Free energy (kJ/mol)')

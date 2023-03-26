@@ -4,6 +4,26 @@ import numpy
 import os
 import json
 
+def qecp_to_ase(
+    file_name: str,
+):
+
+    '''
+    Parameters
+    ----------
+    file_name : str
+        Quantum Espresso CP trajectory files. should have: file_name+'.in' and file_name+'.pos', optional file_name+'.cel'
+    '''
+
+    dp_sys = dpdata.System(
+        file_name = 'cp/cp',
+        fmt = 'qe/cp/traj',
+    )
+
+    print(dp_sys)
+    print(dp_sys['cells'][0])
+    return dp_sys.to('ase/structure')
+
 def poscar2perturb(
     str_poscar: str = "POSCAR",
     str_dir: str = "perturb"

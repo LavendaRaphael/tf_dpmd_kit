@@ -11,6 +11,7 @@ from MDAnalysis.lib.distances import capped_distance, calc_angles, calc_dihedral
 import time
 
 def carbonic_rolling_plt(
+    ax,
     float_xscale: float = 1,
     str_xlabel: str = None,
     tup_ylim: tuple = None,
@@ -23,8 +24,6 @@ def carbonic_rolling_plt(
     df_data = pd.read_csv(str_file)
     print(df_data)
     
-    fig, ax = plt.subplots()
-    
     df_new = df_data.where(df_data.isnull(), 1)
     df_new['frame'] = df_data['frame']
     
@@ -33,14 +32,12 @@ def carbonic_rolling_plt(
         df_new_tmp = df_new[df_new[header].notnull()]
         if len(df_data_tmp)==0:
             continue
-        ax.scatter( df_new_tmp['frame']*float_xscale, df_new_tmp[header]*list_ypos[idx], s=2, edgecolors='none', c='tab:blue', alpha=df_data_tmp[header])
+        ax.scatter( df_new_tmp['frame']*float_xscale, df_new_tmp[header]*list_ypos[idx], s=2, edgecolors='none', c='tab:blue', alpha=df_data_tmp[header], rasterized=True)
 
     ax.set_xlabel(str_xlabel)
     ax.set_yticks(list_ypos)
     ax.set_yticklabels(list_yticklabels)
     ax.set_ylim(tup_ylim)
-
-    return fig, ax
 
 def carbonic_state(
     str_file: str = 'carbonic.csv',

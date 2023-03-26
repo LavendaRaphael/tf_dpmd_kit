@@ -18,16 +18,6 @@ plot.save(
     tup_size = (4.3*cm, 3.7*cm),
     str_save = 'dptest.e.dft_dnn.pdf',
 )
-plot.save(
-    fig,
-    tup_size = (4.3*cm, 3.7*cm),
-    str_save = 'dptest.e.dft_dnn.svg',
-)
-plot.save(
-    fig,
-    tup_size = (4.3*cm, 3.7*cm),
-    str_save = 'dptest.e.dft_dnn.png',
-)
 
 fig = train.dptest_plt(
     str_file = 'dptest.e.out',
@@ -40,11 +30,6 @@ plot.save(
     fig,
     tup_size = (4.3*cm, 3.7*cm),
     str_save = 'dptest.e.hist.pdf',
-)
-plot.save(
-    fig,
-    tup_size = (4.3*cm, 3.7*cm),
-    str_save = 'dptest.e.hist.svg',
 )
 #'''
 '''
@@ -69,11 +54,6 @@ plot.save(
     fig,
     tup_size = (4.3*cm, 3.7*cm),
     str_save = 'dptest.f.hist.pdf',
-)
-plot.save(
-    fig,
-    tup_size = (4.3*cm, 3.7*cm),
-    str_save = 'dptest.f.hist.svg',
 )
 #'''
 

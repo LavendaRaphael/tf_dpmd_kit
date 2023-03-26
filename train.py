@@ -56,10 +56,72 @@ def datastatus_from_dptest():
                 else:
                     int_tmp += 1
 
-def dptest_plt(
+def dptest_parity_plt(
+    ax,
     str_file: str,
     int_natoms: int = None,
-    str_plt_type: str = 'dft_dnn',
+    float_lw: float = None,
+    list_ticks: list = None,
+) -> None:
+
+    with open(str_file, 'r') as file_open:
+        list_line = file_open.readline().split()
+        if list_line[-1] == 'pred_e':
+            str_mode = 'e'
+        elif list_line[-1] == 'pred_fz':
+            str_mode = 'f'
+        else:
+            print(list_line)
+            raise
+
+    np_data = np.loadtxt(str_file)
+
+    if (str_mode=='e'):
+        # per atom
+        np_data_new = np_data / int_natoms
+        # eV to meV
+        np_data_new *= 1000
+        np_data_new -= np.average( np_data_new[:,0] )
+        str_xlabel = 'DFT energy (meV/atom)'
+        str_ylabel =  'DNN energy (meV/atom)'
+        str_title = 'Energy'
+
+    elif (str_mode=='f'):
+        np_data_new = np_data.reshape((np_data.shape[0]*3, 2), order='F')
+        str_xlabel = 'DFT force (eV/Å)'
+        str_ylabel = 'DNN force (eV/Å)'
+        str_title = 'Force'
+
+    ax.axline([0, 0], [1, 1], color='black', linestyle='--', lw=float_lw)
+    ax.scatter(
+        np_data_new[:,0],
+        np_data_new[:,1],
+        edgecolors='none', 
+        s=1.5,
+        rasterized=True,
+    )
+    ax.set_xlabel(str_xlabel)
+    ax.set_ylabel(str_ylabel)
+    tup_lim = (np.min(np_data_new)*1.1, np.max(np_data_new)*1.1)
+    ax.set_ylim(tup_lim)
+    ax.set_xlim(tup_lim)
+    ax.set_aspect(1)
+    if not (list_ticks is None):
+        ax.set_xticks(list_ticks)
+        ax.set_yticks(list_ticks)
+
+    plot.set_lw(ax, float_lw)
+
+    ax.legend(
+        title = str_title,
+        frameon = False,
+        loc = 'upper left'
+    )
+
+def dptest_hist_plt(
+    ax,
+    str_file: str,
+    int_natoms: int = None,
     tup_xlim: tuple = None,
     float_lw: float = None,
 ) -> None:
@@ -76,60 +138,28 @@ def dptest_plt(
 
     np_data = np.loadtxt(str_file)
 
-    fig, ax = plt.subplots()
-
-    float_rmse_e, float_rmse_f, float_rmse_v = get_rmse()
-
     if (str_mode=='e'):
         # per atom
         np_data_new = np_data / int_natoms
         # eV to meV
-        float_rmse_e *= 1000
         np_data_new *= 1000
         np_data_new -= np.average( np_data_new[:,0] )
-        if str_plt_type == 'dft_dnn':
-            str_xlabel = 'DFT energy (meV/atom)'
-            str_ylabel =  'DNN energy (meV/atom)'
-        elif str_plt_type == 'hist':
-            str_xlabel = r'E$_{DP}$-E$_{DFT}$ (meV/atom)'
-        str_label = f'Energy RMSE = {float_rmse_e:.3f} meV/atom'
+        str_xlabel = r'E$_{DP}$-E$_{DFT}$ (meV/atom)'
         str_title = 'Energy'
 
     elif (str_mode=='f'):
         np_data_new = np_data.reshape((np_data.shape[0]*3, 2), order='F')
-        if str_plt_type == 'dft_dnn':
-            str_xlabel = 'DFT force (eV/Å)'
-            str_ylabel = 'DNN force (eV/Å)'
-        elif str_plt_type == 'hist':
-            str_xlabel = r'F$_{DP}$-F$_{DFT}$ (eV/Å)'
-        str_label = f'Force RMSE = {float_rmse_f:.3f} eV/Å'
+        str_xlabel = r'F$_{DP}$-F$_{DFT}$ (eV/Å)'
         str_title = 'Force'
 
     del_data = np_data_new[:,1] - np_data_new[:,0]
-    if (str_plt_type == 'dft_dnn'):
-        ax.axline([0, 0], [1, 1], color='black', linestyle='--', lw=float_lw)
-        ax.scatter(
-            np_data_new[:,0],
-            np_data_new[:,1],
-            #label =str_label,
-            edgecolors='none', 
-            s=1.5,
-        )
-        ax.set_xlabel(str_xlabel)
-        ax.set_ylabel(str_ylabel)
-        ax.set_ylim(tup_xlim)
-
-    elif (str_plt_type == 'hist'):
-        ax.hist(
-            del_data,
-            #label = str_label,
-            bins = 'auto',
-            density = True
-        )
-        ax.set_xlabel(str_xlabel)
-        ax.set_ylabel('Probability Density')
-    else:
-        raise
+    ax.hist(
+        del_data,
+        bins = 'auto',
+        density = True
+    )
+    ax.set_xlabel(str_xlabel)
+    ax.set_ylabel('Probability Density')
 
     ax.set_xlim(tup_xlim)
 
@@ -141,10 +171,10 @@ def dptest_plt(
         loc = 'upper left'
     )
 
-    return fig
-
-def get_rmse():
-    with open('log', 'r') as fp:
+def get_rmse(
+    file_log: str = 'log',
+):
+    with open(file_log, 'r') as fp:
         for str_line in fp:
             if 'Energy RMSE/Natoms' in str_line:
                 float_rmse_e = float(str_line.split()[-2])

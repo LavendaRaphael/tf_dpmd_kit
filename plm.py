@@ -52,7 +52,7 @@ def colvar_hist_plt(
 def fes_integral(
     str_file: str,
     tup_xrange: tuple = None,
-    float_T: float = None,
+    temperature: float = None,
     str_in: str = None,
     str_log: str = None
 ) -> float:
@@ -60,10 +60,10 @@ def fes_integral(
     np_data = np.loadtxt(str_file)    
     np_data[:,1] -= min(np_data[:,1])
 
-    if not float_T:
-        float_T, float_KbT = get_temperature( str_in, str_log )
+    if not temperature:
+        temperature, float_KbT = get_temperature( str_in, str_log )
     else:
-        float_KbT = T2KbT(float_T)
+        float_KbT = T2KbT(temperature)
     
     np_data[:,1] = np.exp(-np_data[:,1]/float_KbT)
 
@@ -91,7 +91,7 @@ def fes_integral(
 
 def fes_1M_correct(
     float_volume: float, # angstrom**3
-    float_T: float  # kelvin
+    temperature: float  # kelvin
 ) -> float:
 
     if float_volume == '1M':
@@ -99,7 +99,7 @@ def fes_1M_correct(
 
     float_Avogadro = 6.02214076e23
     float_volume_1M = 1e27/float_Avogadro
-    float_KbT = T2KbT(float_T)
+    float_KbT = T2KbT(temperature)
     #print(float_volume_1M/float_volume,'mol/L')
     float_correct = -float_KbT*math.log(float_volume_1M/float_volume)
 
@@ -110,7 +110,7 @@ def get_pka(
     dict_coef: dict,
     tup_srange_tot: tuple,
     float_volume: float = None,
-    float_T: float = None,
+    temperature: float = None,
     str_in: str = None,
     str_log: str = None
 ) -> (float, float):
@@ -128,7 +128,7 @@ def get_pka(
             V
         tup_srange_tot:
             (sl, sr)
-        float_T: temperature
+        temperature: temperature
             T
 
     Returns:
@@ -140,13 +140,13 @@ def get_pka(
 
     '''
 
-    if not float_T:
-        float_T, float_KbT = get_temperature( str_in, str_log )
+    if not temperature:
+        temperature, float_KbT = get_temperature( str_in, str_log )
 
     float_h_tot = fes_integral(
         str_file = str_file,
         tup_xrange = tup_srange_tot,
-        float_T = float_T,
+        temperature = temperature,
     )
  
     float_deltag = 0
@@ -154,47 +154,69 @@ def get_pka(
         float_h = fes_integral(
             str_file = str_file,
             tup_xrange = tup_srange,
-            float_T = float_T,
+            temperature = temperature,
         )
         float_deltag += float_coef*(float_h-float_h_tot)
 
     if not (float_volume is None):
         float_correct = fes_1M_correct(
             float_volume = float_volume,
-            float_T = float_T
+            temperature = temperature
         )
         float_deltag += float_correct
 
     float_pka = deltag_to_pka(
         float_deltag = float_deltag,
-        float_T = float_T,
+        temperature = temperature,
     )
 
     return float_deltag, float_pka
 
+def prob_to_deltag(
+    prob: float,
+    temperature: float, # kelvin
+):
+
+    KbT = T2KbT(temperature)
+    return -KbT*np.log(prob)
+
+def deltag_to_pka(
+    float_deltag: float,
+    temperature: float,
+) -> float:
+
+    return float_deltag/(float_KbT*math.log(10))
+
+def pka_to_deltag(
+    float_pka: float,
+    temperature: float,
+) -> float:
+
+    return float_pka*(float_KbT*math.log(10))
+
 def prob_to_pka(
     float_prob: float,
-    float_T: float, # kelvin
+    temperature: float, # kelvin
     float_volume: float # angstrom**2
 ):
-    float_KbT = T2KbT(float_T)
+    float_KbT = T2KbT(temperature)
 
     float_deltag = -np.log(float_prob) * float_KbT
     float_correct = fes_1M_correct(
         float_volume = float_volume,
-        float_T = float_T
+        temperature = temperature
     )
     print('energy correct = ', float_correct)
     pka_correct = deltag_to_pka(
         float_deltag = float_correct,
-        float_T = float_T,
+        temperature = temperature,
     )
     print('pka correct = ', pka_correct)
     float_deltag += float_correct
 
     float_pka = deltag_to_pka(
         float_deltag = float_deltag,
-        float_T = float_T,
+        temperature = temperature,
     )
 
     return float_deltag, float_pka
@@ -205,7 +227,7 @@ def get_pka_time(
     float_volume: float = None,
     tup_srange_tot: tuple = None,
     str_save: str = None,
-    float_T: float = None,
+    temperature: float = None,
     str_in: str = None,
     str_log: str = None
 ):
@@ -213,9 +235,9 @@ def get_pka_time(
     int_nfile = len(dict_file)
     np_pka = np.zeros(shape=(int_nfile), dtype=[('time', 'f4'), ('pka', 'f4')])
     np_deltag = np.zeros(shape=(int_nfile), dtype=[('time', 'f4'), ('deltag', 'f4')])
-    if not float_T:
-        float_T, float_KbT = get_temperature( str_in, str_log )
-    print(float_T)
+    if not temperature:
+        temperature, float_KbT = get_temperature( str_in, str_log )
+    print(temperature)
     for int_i,int_key in enumerate(dict_file):
         if not os.path.isfile(dict_file[int_key]):
             continue
@@ -223,7 +245,7 @@ def get_pka_time(
             str_file = dict_file[int_key],
             dict_coef = dict_coef,
             tup_srange_tot = tup_srange_tot,
-            float_T = float_T,
+            temperature = temperature,
             float_volume = float_volume
         )
         np_pka[int_i] = (int_key, float_pka)
@@ -393,7 +415,7 @@ def hills_sum(
     str_hills: str = 'HILLS'
 ):
 
-    float_T, float_KbT = get_temperature(str_in, str_log)
+    temperature, float_KbT = get_temperature(str_in, str_log)
 
     if not str_outfile:
         str_outfile = str_cv+'_fes.'
@@ -409,7 +431,7 @@ def hills_sum(
     print(subprocess_results.stdout)
 
 def T2KbT(
-    float_T: float, # kelvin
+    temperature: float, # kelvin
 ) -> float:
 
     float_Avogadro = 6.02214076e23
@@ -418,7 +440,7 @@ def T2KbT(
     float_Kb = 1.380649e-23
 
     # KJ*mol^-1
-    float_KbT = float_Kb*float_Avogadro*float_T/1000.0
+    float_KbT = float_Kb*float_Avogadro*temperature/1000.0
     return float_KbT
 
 def get_temperature(
@@ -434,11 +456,11 @@ def get_temperature(
                     break
             for str_key in list_line:
                 if 'TEMP=' == str_key[:5]:
-                    float_T = int(str_key[5:])
+                    temperature = int(str_key[5:])
                     break
-        if not float_T:
+        if not temperature:
             raise
-        float_T2KbT = T2KbT(float_T)
+        KbT = T2KbT(temperature)
 
     if str_log:
         with open(str_log, 'r') as fp:
@@ -451,39 +473,11 @@ def get_temperature(
             raise
 
     if str_in and str_log:
-        if float_T2KbT-float_KbT > 1e4:
+        if KbT-float_KbT > 1e4:
             raise
 
     if not (str_in or str_log):
         raise
 
-    return float_T, float_T2KbT
-
-def deltag_to_pka(
-    float_deltag: float,
-    float_T: float = None,
-    str_in: str = '../plm.in',
-    str_log: str = '../plm.log'
-) -> float:
-
-    if float_T is None:
-        float_T, float_KbT = get_temperature(str_plmin, str_plmlog)
-    else:
-        float_KbT = T2KbT(float_T)
-
-    return float_deltag/(float_KbT*math.log(10))
-
-def pka_to_deltag(
-    float_pka: float,
-    float_T: float = None,
-    str_in: str = '../plm.in',
-    str_log: str = '../plm.log'
-) -> float:
-
-    if float_T is None:
-        float_T, float_KbT = get_temperature(str_plmin, str_plmlog)
-    else:
-        float_KbT = T2KbT(float_T)
-
-    return float_pka*(float_KbT*math.log(10))
+    return temperature, KbT
 
