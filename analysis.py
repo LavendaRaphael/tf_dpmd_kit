@@ -39,23 +39,39 @@ def carbonic_rolling_plt(
     ax.set_yticklabels(list_yticklabels)
     ax.set_ylim(tup_ylim)
 
+def data_rolling(
+    int_window: int,
+    file_data: str,
+    file_save: str,
+):
+
+    print(file_data)
+    df_data = pd.read_csv(file_data)
+    print(df_data)
+    df_data = df_data.where(df_data.notnull(), 0)
+    df_new = df_data.rolling(int_window, min_periods=1, center=True, step=int_window).mean()
+    df_new = df_new.where( df_new!=0, None)
+    print(file_save)
+    print(df_new)
+    df_new.to_csv(file_save, index=False)
+
 def carbonic_state(
-    str_file: str = 'carbonic.csv',
-    str_save: str = 'carbonic_state.csv',
+    file_data: str = 'carbonic.csv',
+    file_save: str = 'carbonic_state.csv',
 ):
     start = time.time()
 
-    print(str_file)
-    df_data = pd.read_csv(str_file)
+    print(file_data)
+    df_data = pd.read_csv(file_data)
     print(df_data)
 
     df_new = df_data.apply(lambda x: carbonic_evalstate(x['ncarbonyl'], x['noho'], x['dihedral0(rad)'], x['dihedral1(rad)']), axis=1, result_type='expand')
     df_new.columns = ['CO3','0.5','HCO3','1.5','H2CO3','TT','CT','CC','2.5','H3CO3']
     df_new.insert(0, 'frame', df_data['frame'])
     
-    print(str_save)
+    print(file_save)
     print(df_new)
-    df_new.to_csv(str_save, index=False)
+    df_new.to_csv(file_save, index=False)
 
     end = time.time()
     print(end-start)
