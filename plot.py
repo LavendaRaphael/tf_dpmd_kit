@@ -84,7 +84,7 @@ def plt_hist(
 
 def save(
     fig,
-    str_save: str = None,
+    file_save: str = None,
     tup_size: tuple = None,
     list_type: list = None,
 ) -> None:
@@ -92,12 +92,12 @@ def save(
     if not tup_size is None:
         fig.set_size_inches(tup_size)
 
-    if str_save:
+    if file_save:
         if list_type is None:
-            fig.savefig(str_save)
+            fig.savefig(file_save)
         else:
             for str_type in list_type:
-                fig.savefig(f'{str_save}.{str_type}')
+                fig.savefig(f'{file_save}.{str_type}')
 
 def add_text(
     ax,
@@ -241,6 +241,7 @@ def dict_color_temperature(
     return dict_color
 
 def plt_compare(
+    ax,
     dict_data: dict,
     str_xlabel: str,
     str_ylabel: str,
@@ -253,10 +254,7 @@ def plt_compare(
     dict_color: dict = None,
     bool_error: bool = False,
     float_lw: float = None,
-    legend_title: str = None,
 ) -> None:
-
-    fig, ax = plt.subplots()
 
     if dict_color is None:
         dict_color = {}
@@ -294,17 +292,12 @@ def plt_compare(
 
     if bool_legend:
         ax.legend(
-            title = legend_title,
             frameon = False,
-            handlelength = 1.0,
-            labelspacing = 0.1,
         )
     ax.set_xlabel(str_xlabel)
     ax.set_ylabel(str_ylabel)
     ax.set_xlim(tup_xlim)
     ax.set_ylim(tup_ylim)
-
-    return fig, ax
 
 def plt_error(
     dict_data: dict,

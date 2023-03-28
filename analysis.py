@@ -6,9 +6,121 @@ from MDAnalysis.analysis.rdf import InterRDF
 from MDAnalysis.analysis.hydrogenbonds.hbond_analysis import HydrogenBondAnalysis
 import MDAnalysis.analysis.msd
 from MDAnalysis.analysis.base import AnalysisBase
-import pandas as pd
 from MDAnalysis.lib.distances import capped_distance, calc_angles, calc_dihedrals
+import pandas as pd
 import time
+import json
+
+def carbonic_statistic(
+    time_tot: float, # ps
+    file_data: str = 'carbonic_life_time.csv',
+    file_save: str = 'carbonic_statistic.csv',
+):
+
+    print(file_data)
+    df_data = pd.read_csv(file_data)
+    print(df_data)
+
+    df_save = pd.DataFrame()
+
+    ser_prop = df_data.sum()/time_tot
+    ser_prop.name = 'prop'
+    df_save = pd.concat([df_save, ser_prop], axis=1)
+
+    ser_mean = df_data.mean()
+    ser_mean.name = 'timemean(ps)'
+    df_save = pd.concat([df_save, ser_mean], axis=1)
+
+    ser_count = df_data.count()/time_tot*1000
+    ser_count.name = 'count(ns-1)'
+    df_save = pd.concat([df_save, ser_count], axis=1)
+
+    df_save.index.name = 'state'
+
+    print(file_save)
+    print(df_save)
+    if file_save:
+        df_save.to_csv(file_save)
+
+def carbonic_life(
+    list_data: list,
+    timestep: float,
+    list_header: list = None,
+    intermit_frame: int = 0,
+    file_save: str = 'carbonic_life_time.csv',
+):
+
+    if list_header is None:
+        list_header = pd.read_csv(list_data[0]).columns[1:]
+
+    df_life = pd.DataFrame()
+    timelong_tot = 0
+    dict_timelong = {}
+    for str_file in list_data:
+        print(str_file)
+        df_data = pd.read_csv(str_file)
+        timelong = len(df_data)*timestep
+        timelong_tot += timelong
+        dict_timelong[str_file] = timelong
+
+        df_tmp = pd.DataFrame()
+        for header in list_header:
+            ser_data = df_data[header]
+            list_life = []
+            life = 0
+            intermit = 0
+            for val in ser_data:
+                if val == 1.0:
+                    if intermit > intermit_frame:
+                        if life > 0:
+                            list_life.append(life)
+                            life = 0
+                    intermit = 0
+                    life += 1
+                else:
+                    intermit += 1
+                    if life != 0 and life < intermit_frame:
+                        life = 0
+            if life != 0:
+                list_life.append(life)
+
+            ser_life = pd.Series(list_life, name=header, dtype='int64')
+            df_tmp = pd.concat([df_tmp, ser_life], axis=1)
+
+        print(df_tmp)
+        df_life = pd.concat([df_life, df_tmp], ignore_index=True)
+
+    #file_lifeframe = f'{file_save}_frame.csv'
+    #print(file_lifeframe)
+    #print(df_life)
+    #df_life.to_csv(file_lifeframe, index=False)
+
+    df_life = df_life*timestep
+    print(file_save)
+    print(df_life)
+    df_life.to_csv(file_save, index=False)
+
+    dict_timelong['timelong(ps)'] = timelong_tot
+    timelong_save = 'timelong.json'
+    print(timelong_save)
+    print(dict_timelong)
+    with open(timelong_save, 'w') as fp:
+        json.dump(dict_timelong, fp)
+
+def gen_product(
+    file_data: str,
+    tup_select: tuple,
+    file_save: str,
+):
+
+    print(file_data)
+    df_data = pd.read_csv(file_data)
+    print(df_data)
+
+    df_data = df_data.iloc[tup_select[0]:tup_select[1]]
+    print(file_save)
+    print(df_data)
+    df_data.to_csv(file_save, index=False)
 
 def carbonic_rolling_plt(
     ax,

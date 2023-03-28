@@ -1,9 +1,5 @@
 import pandas as pd
-import matplotlib.pyplot as plt
-from matplotlib.colors import LogNorm
 import numpy as np
-from tf_dpmd_kit import plm
-from tf_dpmd_kit import plot
 
 def angle_sft(x):
 
