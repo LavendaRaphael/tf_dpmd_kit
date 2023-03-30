@@ -105,7 +105,7 @@ def dptest_parity_plt(
     tup_lim = (np.min(np_data_new)*1.1, np.max(np_data_new)*1.1)
     ax.set_ylim(tup_lim)
     ax.set_xlim(tup_lim)
-    ax.set_aspect(1)
+    #ax.set_aspect(1)
     if not (list_ticks is None):
         ax.set_xticks(list_ticks)
         ax.set_yticks(list_ticks)
