@@ -4,6 +4,35 @@ import numpy
 import os
 import json
 
+def lmptrj_sparse(
+    file_old: str,
+    file_new: str,
+    interval: int,
+):
+
+    with open(file_old, 'r') as fp:
+        line0 = fp.readline()
+        nline = 1
+        for line in fp:
+            if line == line0:
+                break
+            nline += 1
+    nline = nline-2
+    natoms = nline - 7
+    print(natoms)
+
+    with open(file_old, 'r') as fp:
+        with open(file_new, 'w') as fp_new:
+            for line in fp:
+                line = fp.readline()
+                if (int(line)%interval == 0):
+                    fp_new.write('ITEM: TIMESTEP\n' + line)
+                    for i in range(nline):
+                        fp_new.write(fp.readline())
+                else:
+                    for i in range(nline):
+                        fp.readline()
+
 def qecp_to_ase(
     file_name: str,
 ):
