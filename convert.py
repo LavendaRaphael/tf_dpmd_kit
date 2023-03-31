@@ -139,20 +139,18 @@ def list_ase2poscar(
 
 def list_ase2pwscf(
     list_ase,
-    np_snap
 ):
-    print(np_snap)
-    
-    if (not os.path.exists('snap')):
-        os.mkdir('snap')
-    os.chdir('snap')
-    for int_snap in np_snap:
+    nframe = len(list_ase)
+    print(list_ase[0])
+    print(nframe)
+
+    for int_snap, ase_atoms in enumerate(list_ase):
         str_dir = f'snap_{int_snap:0>6d}'
         if (not os.path.exists(str_dir)):
             os.mkdir(str_dir)
         os.chdir(str_dir)
         
-        ase2pwscf(list_ase[int_snap])
+        ase2pwscf(ase_atoms)
         
         os.chdir('..')
 

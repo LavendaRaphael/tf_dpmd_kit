@@ -1,5 +1,4 @@
 import pandas as pd
-import os
 import numpy as np
 
 def main():
@@ -10,6 +9,8 @@ def main():
         '../CC/carbonic/carbonic_statistic.csv',
     ]
 
+    file_mean = 'carbonic_statistic.mean.csv'
+    file_sem = 'carbonic_statistic.sem.csv'
 
     list_df = []
     list_key = []
@@ -20,8 +21,15 @@ def main():
     df_data = pd.concat(list_df, keys=list_key)
     df_data = df_data.fillna(0)
     print(df_data)
+
     df_mean = df_data.groupby(level=1).mean()
+    print(file_mean)
     print(df_mean)
-    df_std = df_data.groupby(level=1).std()
-    print(df_std)
+    df_mean.to_csv(file_mean)
+
+    df_sem = df_data.groupby(level=1).sem()
+    print(df_sem)
+    print(file_sem)
+    df_sem.to_csv(file_sem)
+    
 main()

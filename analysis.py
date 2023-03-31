@@ -11,6 +11,32 @@ import pandas as pd
 import time
 import json
 
+def carbonic_statistic_mean(
+    list_file: list,
+    file_mean = 'carbonic_statistic.mean.csv',
+    file_sem = 'carbonic_statistic.sem.csv',
+):
+
+    list_df = []
+    list_key = []
+    for file in list_file:
+        df_tmp = pd.read_csv(file, index_col=0)
+        list_df.append(df_tmp)
+        list_key.append(file)
+    df_data = pd.concat(list_df, keys=list_key)
+    df_data = df_data.fillna(0)
+    print(df_data)
+
+    df_mean = df_data.groupby(level=1).mean()
+    print(file_mean)
+    print(df_mean)
+    df_mean.to_csv(file_mean)
+
+    df_sem = df_data.groupby(level=1).sem()
+    print(df_sem)
+    print(file_sem)
+    df_sem.to_csv(file_sem)
+
 def carbonic_statistic(
     time_tot: float, # ps
     file_data: str = 'carbonic_lifetime.csv',
@@ -67,10 +93,9 @@ def carbonic_lifetime(
         intermit = 0
         for val in ser_data:
             if val == 1.0:
-                if intermit > intermit_frame:
-                    if life > 0:
-                        list_life.append(life)
-                        life = 0
+                if (intermit > intermit_frame) and (life > 0):
+                    list_life.append(life)
+                    life = 0
                 intermit = 0
                 life += 1
             else:
