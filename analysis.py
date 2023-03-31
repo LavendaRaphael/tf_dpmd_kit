@@ -71,10 +71,14 @@ def carbonic_statistic(
 def carbonic_lifetime(
     timestep: float,
     list_header: list = None,
-    intermit_frame: int = 0,
+    intermit_time: float = 0,
     file_data: str = 'carbonic_state.product.csv',
     file_save: str = 'carbonic_lifetime.csv',
+    file_death: str = 'carbonic_death.csv',
 ):
+
+    intermit_frame = intermit_time/timestep
+    print(intermit_frame)
 
     df_life = pd.DataFrame()
     timelong_tot = 0
@@ -84,34 +88,46 @@ def carbonic_lifetime(
     df_data = pd.read_csv(file_data)
     list_header = df_data.columns[1:]
     dict_timelong['timelong(ps)'] = len(df_data)*timestep
+    print(df_data)
 
     df_life = pd.DataFrame()
+    df_death = pd.DataFrame()
     for header in list_header:
         ser_data = df_data[header]
         list_life = []
+        list_death = []
         life = 0
         intermit = 0
         for val in ser_data:
-            if val == 1.0:
-                if (intermit > intermit_frame) and (life > 0):
-                    list_life.append(life)
-                    life = 0
+            if pd.notnull(val):
                 intermit = 0
                 life += 1
             else:
                 intermit += 1
-                if life != 0 and life < intermit_frame:
+                if life < intermit_frame:
                     life = 0
-        if life != 0:
+                elif intermit > intermit_frame:
+                    list_life.append(life)
+                    list_death.append(1)
+                    life = 0
+        if life > 0:
             list_life.append(life)
+            list_death.append(0)
 
         ser_life = pd.Series(list_life, name=header, dtype='int64')
         df_life = pd.concat([df_life, ser_life], axis=1)
+
+        ser_death = pd.Series(list_death, name=header, dtype='int64')
+        df_death = pd.concat([df_death, ser_death], axis=1)
 
     df_life = df_life*timestep
     print(file_save)
     print(df_life)
     df_life.to_csv(file_save, index=False)
+
+    print(file_death)
+    print(df_death)
+    df_death.to_csv(file_death, index=False)
 
     timelong_save = 'timelong.json'
     print(timelong_save)
