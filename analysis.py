@@ -10,6 +10,7 @@ from MDAnalysis.lib.distances import capped_distance, calc_angles, calc_dihedral
 import pandas as pd
 import time
 import json
+from lifelines import KaplanMeierFitter
 
 def carbonic_statistic_mean(
     list_file: list,
@@ -33,11 +34,35 @@ def carbonic_statistic_mean(
     df_mean.to_csv(file_mean)
 
     df_sem = df_data.groupby(level=1).sem()
-    print(df_sem)
     print(file_sem)
+    print(df_sem)
     df_sem.to_csv(file_sem)
 
 def carbonic_statistic(
+    time_tot: float, # ps
+    file_data: str = 'carbonic_lifetime.csv',
+    file_save: str = 'carbonic_statistic.csv',
+):
+
+    print(file_data)
+    df_data = pd.read_csv(file_data).drop('event', axis=1)
+    print(df_data)
+    gpby = df_data.groupby('state')
+
+    df_prop = gpby.sum()/time_tot
+    df_prop = df_prop.rename(columns={'time(ps)': 'prop'})
+    df_save = df_prop
+
+    df_count = gpby.count()/time_tot*1000
+    df_count = df_count.rename(columns = {'time(ps)': 'count(ns-1)'})
+    df_save = pd.concat([df_save, df_count], axis=1)
+
+    print(file_save)
+    print(df_save)
+    if file_save:
+        df_save.to_csv(file_save)
+
+def carbonic_statistic_(
     time_tot: float, # ps
     file_data: str = 'carbonic_lifetime.csv',
     file_save: str = 'carbonic_statistic.csv',
@@ -68,17 +93,30 @@ def carbonic_statistic(
     if file_save:
         df_save.to_csv(file_save)
 
+def carbonic_survival(
+    file_data: str = 'carbonic_lifetime.csv',
+):
+
+    print(file_data)
+    df_life = pd.read_csv(file_data)
+    print(df_data)
+
+    kmf = KaplanMeierFitter()
+    kmf.fit()
+    timeline = kmf.timeline
+    survival = kmf.survival_function_
+    confidence = kmf.confidence_interval_
+    
+
 def carbonic_lifetime(
     timestep: float,
     list_header: list = None,
     intermit_time: float = 0,
     file_data: str = 'carbonic_state.product.csv',
     file_save: str = 'carbonic_lifetime.csv',
-    file_death: str = 'carbonic_death.csv',
 ):
 
     intermit_frame = intermit_time/timestep
-    print(intermit_frame)
 
     df_life = pd.DataFrame()
     timelong_tot = 0
@@ -88,7 +126,59 @@ def carbonic_lifetime(
     df_data = pd.read_csv(file_data)
     list_header = df_data.columns[1:]
     dict_timelong['timelong(ps)'] = len(df_data)*timestep
-    print(df_data)
+
+    list_life = []
+    for header in list_header:
+        ser_data = df_data[header]
+        life = 0
+        intermit = 0
+        list_life.append([np.nan,np.nan,header])
+        for val in ser_data:
+            if pd.notnull(val):
+                intermit = 0
+                life += 1
+            else:
+                intermit += 1
+                if life < intermit_frame:
+                    life = 0
+                elif intermit > intermit_frame:
+                    list_life.append((life, 1, header))
+                    life = 0
+        if life > 0:
+            list_life.append((life, 0, header))
+
+    df_life = pd.DataFrame(list_life, columns=['time(ps)', 'event', 'state'])
+    df_life['time(ps)'] = df_life['time(ps)']*timestep
+    print(file_save)
+    print(df_life)
+    df_life.to_csv(file_save, index=False)
+
+    timelong_save = 'timelong.json'
+    print(timelong_save)
+    print(dict_timelong)
+    with open(timelong_save, 'w') as fp:
+        json.dump(dict_timelong, fp)
+
+
+def carbonic_lifetime_(
+    timestep: float,
+    list_header: list = None,
+    intermit_time: float = 0,
+    file_data: str = 'carbonic_state.product.csv',
+    file_save: str = 'carbonic_lifetime.csv',
+    file_death: str = 'carbonic_death.csv',
+):
+
+    intermit_frame = intermit_time/timestep
+
+    df_life = pd.DataFrame()
+    timelong_tot = 0
+    dict_timelong = {}
+
+    print(file_data)
+    df_data = pd.read_csv(file_data)
+    list_header = df_data.columns[1:]
+    dict_timelong['timelong(ps)'] = len(df_data)*timestep
 
     df_life = pd.DataFrame()
     df_death = pd.DataFrame()
@@ -122,11 +212,11 @@ def carbonic_lifetime(
 
     df_life = df_life*timestep
     print(file_save)
-    print(df_life)
+    #print(df_life)
     df_life.to_csv(file_save, index=False)
 
     print(file_death)
-    print(df_death)
+    #print(df_death)
     df_death.to_csv(file_death, index=False)
 
     timelong_save = 'timelong.json'

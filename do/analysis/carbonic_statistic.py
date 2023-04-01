@@ -1,10 +1,14 @@
-import pandas as pd
 import json
+from tf_dpmd_kit import analysis
 
-with open('timelong.json', 'r') as fp:
-    dict_timelong = json.load(fp)
-    print(dict_timelong)
+def main():
+    with open('timelong.json', 'r') as fp:
+        dict_timelong = json.load(fp)
+        print(dict_timelong)
 
-run(
-    time_tot = dict_timelong['timelong(ps)'],
-)
+    analysis.carbonic_statistic(
+        time_tot = dict_timelong['timelong(ps)'],
+        file_save = 'carbonic_statistic.csv',
+    )
+
+main()
