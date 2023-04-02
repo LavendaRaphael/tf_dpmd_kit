@@ -1,48 +1,30 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.colors import LogNorm
 import numpy as np
 from tf_dpmd_kit import plm
 from tf_dpmd_kit import plot
+import matplotlib as mpl
 
-def angle_sft(x):
-
-    if x < -np.pi/2:
-        return x + 2*np.pi
-    else:
-        return x
+plot.set_rcparam()
+cm = 1/2.54
+mpl.rcParams['figure.dpi'] = 300
 
 def run(
-    list_file: list,
+    fig,
+    ax,
 ):
 
-    plot.set_rcparam()
-    cm = 1/2.54
+    df_data = pd.read_csv('carbonic_dihedrals.csv')
 
-    fig, ax = plt.subplots()
+    h, xedges, yedges = np.histogram2d(df_data['dihedral0(rad)'], df_data['dihedral1(rad)'], bins=100, density=True)
 
-    df_new = None
-    for str_file in list_file:
-        print(str_file)
-        df_tmp = pd.read_csv(str_file)
-        if df_new is None:
-            df_new = df_tmp
-        else:
-            df_new = pd.concat([df_new, df_tmp], ignore_index=True)
-    print(df_new)
-
-    df_new = df_new[df_new['dihedral0(rad)'].notnull()]
-    alpha = df_new['dihedral0(rad)'].apply(angle_sft)
-    beta = df_new['dihedral1(rad)'].apply(angle_sft)
-
-    h, xedges, yedges = np.histogram2d(alpha, beta, bins=100, density=True)
     energy = plm.prob_to_deltag(h, temperature=330)
     energy -= np.amin(energy)
     extent = [xedges[0], xedges[-1], yedges[0], yedges[-1]]
     cmap_new = plt.get_cmap('coolwarm', 10)
     #cmap_new = 'coolwarm'
     image = ax.imshow(
-        energy.T, 
+        energy.T,
         origin = 'lower',
         extent = extent,
         cmap = cmap_new,
@@ -50,6 +32,7 @@ def run(
     )
     fig.colorbar( mappable=image )
 
+    #ax.set_aspect(1)
     ax.set_xlabel(r'$\alpha$ (rad)')
     ax.set_ylabel(r'$\beta$ (rad)')
 
@@ -58,19 +41,21 @@ def run(
     ax.set_xticklabels([0, r'$\pi$/2', r'$\pi$'])
     ax.set_yticklabels([0, r'$\pi$/2', r'$\pi$'])
 
+def main():
+
+    fig, ax = plt.subplots(figsize = (8.6*cm, 7*cm))
+
+    run(fig, ax)
+
     plot.save(
         fig,
-        str_save = 'carbonic_dihedrals_2d',
-        tup_size = (8.6*cm, 6.8*cm),
-        list_type = ['svg', 'pdf'],
+        file_save = 'carbonic_dihedrals_2d',
+        list_type = ['pdf', 'svg']
     )
 
     plt.show()
 
-run(
-    list_file = [
-        'carbonic.product.csv',
-        '../../../H2CO3_CT_H2O_126/330K/carbonic/carbonic.product.csv',
-        '../../../H2CO3_CC_H2O_126/330K/carbonic/carbonic.product.csv',
-    ]
-)
+main()
+
+
+

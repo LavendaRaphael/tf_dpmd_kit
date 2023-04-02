@@ -2,38 +2,26 @@ import pandas as pd
 
 def run():
 
-    dict_data = {
-        290: '../290K/carbonic/carbonic_statistic.csv',
-        310: '../310K/carbonic/carbonic_statistic.csv',
-        330: '../330K/carbonic/carbonic_statistic.csv',
-        350: '../350K/carbonic/carbonic_statistic.csv',
+    dict_dir = {
+        290: '../290K/carbonic/',
+        310: '../310K/carbonic/',
+        330: '../330K/carbonic/',
+        350: '../350K/carbonic/',
     }
 
-    list_header = pd.read_csv(list(dict_data.values())[0], index_col=0).columns
-    print(list_header)
+    list_key = []
+    list_df = []
+    for temperature, dir_x in dict_dir.items():
+        df_data = pd.read_csv(dir_x+'carbonic_statistic.csv', index_col=0)
+        df_life = pd.read_csv(dir_x+'carbonic_lifetime.csv', index_col=0)
+        df_data = pd.concat([df_data, df_life], axis=1)
 
-    dict_header = {
-        'timemean(ps)': 'timemean',
-        'count(ns-1)': 'count'
-    }
-
-    for header in list_header:
-        print(header)
-
-        df_save = pd.DataFrame()
-        for temperature, file_data in dict_data.items():
-            df_data = pd.read_csv(file_data, index_col=0)
-            df_x = df_data[header].rename(temperature).to_frame().T
-            df_save = pd.concat([df_save, df_x])
-
-        df_save.index.name = 'temperature(K)'
-        if header in dict_header:
-            name = dict_header[header]
-        else:
-            name = header
-        file_save = f'carbonic_statistic.temperature_{name}.csv'
-        print(file_save)
-        print(df_save)
-        df_save.to_csv(file_save)
+        list_key.append(temperature)
+        list_df.append(df_data)
+    df_save = pd.concat(list_df, keys=list_key, names=['temperature(K)'])
+    file_save = f'carbonic_statistic.temperature.csv'
+    print(file_save)
+    print(df_save)
+    df_save.to_csv(file_save)
 
 run()

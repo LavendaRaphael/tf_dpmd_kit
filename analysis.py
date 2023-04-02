@@ -12,10 +12,113 @@ import time
 import json
 from lifelines import KaplanMeierFitter
 
+def carbonic_survival(
+    ax = None,
+    file_data: str = 'carbonic_lifedata.csv',
+    list_state: list = None,
+    dict_color: dict = None,
+    dict_label: dict = None,
+    file_lifetime: str = 'carbonic_lifetime.csv',
+):
+
+    print(file_data)
+    df_data = pd.read_csv(file_data).dropna()
+    print(df_data)
+
+    kmf = KaplanMeierFitter()
+    gpby = df_data.groupby('state')
+    df_lifetime = pd.DataFrame()
+    for state in list_state:
+        gp = gpby.get_group(state)
+        t_max = max(gp['time(ps)'])
+        kmf.fit(gp['time(ps)'], gp['event'], timeline=np.linspace(0, t_max, num=int(t_max/0.5)))
+
+        timeline = kmf.timeline
+        survival = kmf.survival_function_['KM_estimate'].to_numpy()
+        conf_lower = kmf.confidence_interval_['KM_estimate_lower_0.95'].to_numpy()
+        conf_upper = kmf.confidence_interval_['KM_estimate_upper_0.95'].to_numpy()
+        
+        if file_lifetime:
+            lifetime = np.trapz(y=survival*timeline, x=timeline) / np.trapz(y=survival, x=timeline)
+            error_lower = lifetime - np.trapz(y=conf_lower*timeline, x=timeline) / np.trapz(y=conf_lower, x=timeline)
+            error_upper = np.trapz(y=conf_upper*timeline, x=timeline) / np.trapz(y=conf_upper, x=timeline) - lifetime
+            df_tmp = pd.DataFrame(data={'lifetime(ps)': lifetime, 'lower': error_lower, 'upper': error_upper}, index=[state])
+            df_tmp.index.name = 'state'
+            df_lifetime = pd.concat([df_lifetime, df_tmp])
+
+        if not(ax is None):
+            color = dict_color[state]
+            label = state
+            if state in dict_label:
+                label = dict_label[state]
+            ax.plot(timeline, survival, label=label, color=color, lw=1)
+            ax.fill_between(timeline, conf_lower, conf_upper, alpha=0.5, color=color)
+
+    if not(ax is None):
+        ax.legend(frameon=False, labelspacing=0.3, handlelength=1)
+        ax.set_xscale('log')
+        ax.set_xlabel('Time (ps)')
+        ax.set_ylabel('Survial Probability')
+
+    if not(file_lifetime is None):
+        print(file_lifetime)
+        print(df_lifetime)
+        df_lifetime.to_csv(file_lifetime)
+
+def carbonic_survival_(
+    ax = None,
+    file_data: str = 'carbonic_lifetime.csv',
+    list_state: list = None,
+    dict_color: dict = None,
+    dict_label: dict = None,
+    file_median: str = 'carbonic_mediantime.csv',
+):
+
+    print(file_data)
+    df_data = pd.read_csv(file_data).dropna()
+    print(df_data)
+
+    kmf = KaplanMeierFitter()
+    gpby = df_data.groupby('state')
+    df_median = pd.DataFrame()
+    for state in list_state:
+        gp = gpby.get_group(state)
+        kmf.fit(gp['time(ps)'], gp['event'])
+        #kmf.plot_survival_function(ax=ax)
+        
+        timeline = kmf.timeline
+        survival = kmf.survival_function_
+        confidence = kmf.confidence_interval_
+
+        median = kmf.median_survival_time_
+        df_tmp = median_survival_times(confidence) - median
+        df_tmp = df_tmp.rename(columns={'KM_estimate_lower_0.95': 'lower', 'KM_estimate_upper_0.95': 'upper'}, index={0.5: state}, errors='raise')
+        df_tmp.index.name = 'state'
+        df_tmp['median(ps)'] = median
+        df_median = pd.concat([df_median, df_tmp])
+
+        if not(ax is None):
+            color = dict_color[state]
+            label = state
+            if state in dict_label:
+                label = dict_label[state]
+            ax.step(timeline, survival, label=label, where='post', color=color, lw=1)
+            ax.fill_between(timeline, confidence['KM_estimate_lower_0.95'], confidence['KM_estimate_upper_0.95'], alpha=0.5, step='post', color=color)
+
+    if not(ax is None):
+        ax.legend(frameon=False)
+        ax.set_xscale('log')
+        ax.set_xlabel('Time (ps)')
+        ax.set_ylabel('Survial Probability (Kaplan-Meier)')
+
+    if not(file_median is None):
+        print(file_median)
+        print(df_median)
+        df_median.to_csv(file_median)
+
 def carbonic_statistic_mean(
     list_file: list,
-    file_mean = 'carbonic_statistic.mean.csv',
-    file_sem = 'carbonic_statistic.sem.csv',
+    file_save = 'carbonic_statistic.csv',
 ):
 
     list_df = []
@@ -28,19 +131,22 @@ def carbonic_statistic_mean(
     df_data = df_data.fillna(0)
     print(df_data)
 
-    df_mean = df_data.groupby(level=1).mean()
-    print(file_mean)
-    print(df_mean)
-    df_mean.to_csv(file_mean)
+    df_save = df_data.groupby(level=1).mean()
 
     df_sem = df_data.groupby(level=1).sem()
-    print(file_sem)
-    print(df_sem)
-    df_sem.to_csv(file_sem)
+    dict_column = {}
+    for column in df_sem.columns:
+        dict_column[column] = column+'_sem'
+    df_sem.rename(columns=dict_column, inplace=True)
+
+    df_save = pd.concat([df_save, df_sem], axis=1)
+    print(file_save)
+    print(df_save)
+    df_save.to_csv(file_save)
 
 def carbonic_statistic(
     time_tot: float, # ps
-    file_data: str = 'carbonic_lifetime.csv',
+    file_data: str = 'carbonic_lifedata.csv',
     file_save: str = 'carbonic_statistic.csv',
 ):
 
@@ -93,27 +199,12 @@ def carbonic_statistic_(
     if file_save:
         df_save.to_csv(file_save)
 
-def carbonic_survival(
-    file_data: str = 'carbonic_lifetime.csv',
-):
-
-    print(file_data)
-    df_life = pd.read_csv(file_data)
-    print(df_data)
-
-    kmf = KaplanMeierFitter()
-    kmf.fit()
-    timeline = kmf.timeline
-    survival = kmf.survival_function_
-    confidence = kmf.confidence_interval_
-    
-
-def carbonic_lifetime(
+def carbonic_lifedata(
     timestep: float,
     list_header: list = None,
     intermit_time: float = 0,
     file_data: str = 'carbonic_state.product.csv',
-    file_save: str = 'carbonic_lifetime.csv',
+    file_save: str = 'carbonic_lifedata.csv',
 ):
 
     intermit_frame = intermit_time/timestep
