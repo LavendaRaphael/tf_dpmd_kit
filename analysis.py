@@ -205,6 +205,7 @@ def carbonic_lifedata(
     intermit_time: float = 0,
     file_data: str = 'carbonic_state.product.csv',
     file_save: str = 'carbonic_lifedata.csv',
+    timelong_save: str = 'timelong.json',
 ):
 
     intermit_frame = intermit_time/timestep
@@ -223,33 +224,37 @@ def carbonic_lifedata(
         ser_data = df_data[header]
         life = 0
         intermit = 0
-        list_life.append([np.nan,np.nan,header])
-        for val in ser_data:
+        list_life.append([np.nan, header, np.nan, np.nan])
+        for idx, val in enumerate(ser_data):
             if pd.notnull(val):
                 intermit = 0
                 life += 1
+                if life == 1:
+                    start = idx
             else:
                 intermit += 1
                 if life < intermit_frame:
                     life = 0
                 elif intermit > intermit_frame:
-                    list_life.append((life, 1, header))
+                    list_life.append((start, header, life, 1))
                     life = 0
         if life > 0:
-            list_life.append((life, 0, header))
+            list_life.append((start, header, life, 0))
 
-    df_life = pd.DataFrame(list_life, columns=['time(ps)', 'event', 'state'])
+    df_life = pd.DataFrame(list_life, columns=['start', 'state', 'time(ps)', 'event'])
     df_life['time(ps)'] = df_life['time(ps)']*timestep
+    df_life['start'] = df_life['start']*timestep
+    df_life.loc[df_life['state']=='H2CO3', 'start'] = np.nan
+    df_life.sort_values(by=['start'], inplace=True)
     print(file_save)
     print(df_life)
-    df_life.to_csv(file_save, index=False)
+    if file_save:
+        df_life.to_csv(file_save, index=False)
 
-    timelong_save = 'timelong.json'
     print(timelong_save)
     print(dict_timelong)
     with open(timelong_save, 'w') as fp:
         json.dump(dict_timelong, fp)
-
 
 def carbonic_lifetime_(
     timestep: float,
@@ -340,6 +345,7 @@ def carbonic_rolling_plt(
     list_header: list = None,
     list_ypos: list = None,
     list_yticklabels: list = None,
+    dict_color: dict = None,
 ):
 
     df_data = pd.read_csv(str_file)
@@ -348,12 +354,18 @@ def carbonic_rolling_plt(
     df_new = df_data.where(df_data.isnull(), 1)
     df_new['frame'] = df_data['frame']
     
+    if dict_color is None:  
+        dict_color = {}
+
     for idx, header in enumerate(list_header):
         df_data_tmp = df_data[df_data[header].notnull()]
         df_new_tmp = df_new[df_new[header].notnull()]
         if len(df_data_tmp)==0:
             continue
-        ax.scatter( df_new_tmp['frame']*float_xscale, df_new_tmp[header]*list_ypos[idx], s=2, edgecolors='none', c='tab:blue', alpha=df_data_tmp[header], rasterized=True)
+        color = None
+        if header in dict_color:
+            color = dict_color[header]
+        ax.scatter( df_new_tmp['frame']*float_xscale, df_new_tmp[header]*list_ypos[idx], s=2, edgecolors='none', alpha=df_data_tmp[header], rasterized=True, color=color)
 
     ax.set_xlabel(str_xlabel)
     ax.set_yticks(list_ypos)

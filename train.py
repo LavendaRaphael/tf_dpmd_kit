@@ -92,13 +92,14 @@ def dptest_parity_plt(
         str_ylabel = 'DNN force (eV/Å)'
         str_title = 'Force'
 
-    ax.axline([0, 0], [1, 1], color='black', linestyle='--', lw=float_lw)
+    ax.axline([0, 0], [1, 1], linestyle='--', lw=float_lw, color='tab:orange')
     ax.scatter(
         np_data_new[:,0],
         np_data_new[:,1],
         edgecolors='none', 
         s=1.5,
         rasterized=True,
+        color = 'tab:blue',
     )
     ax.set_xlabel(str_xlabel)
     ax.set_ylabel(str_ylabel)
