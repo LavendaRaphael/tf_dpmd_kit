@@ -121,6 +121,7 @@ def inset_img(
     float_lw: float = None,
     bool_rot90: bool = False,
     bool_axis: bool = True,
+    **kw
 ) -> None:
 
     if dict_spinecolor is None:
@@ -128,8 +129,10 @@ def inset_img(
     if dict_spinels is None:
         dict_spinels = {}
 
+    axs = []
     for str_img, tup_pos in dict_img.items():
-        axin = ax.inset_axes(tup_pos)
+        axin = ax.inset_axes(tup_pos, **kw)
+        axs.append(axin)
         image = plt.imread(str_img)
         if bool_rot90:
             image = np.rot90(np.array(image), k=3)
@@ -144,6 +147,7 @@ def inset_img(
                 spine.set_edgecolor(dict_spinecolor[str_img])
             if str_img in dict_spinels:
                 spine.set_linestyle(dict_spinels[str_img])
+    return axs
 
 def add_line(
     ax,
@@ -160,11 +164,11 @@ def add_line(
     
 def add_arrow(
     ax,
-    dict_arrow: dict = None,
+    list_arrow: list = None,
     **kwargs,
 ):
 
-    for key, list_pos in dict_arrow.items():
+    for list_pos in list_arrow:
         arrow = patches.FancyArrowPatch(
             list_pos[0],
             list_pos[1],

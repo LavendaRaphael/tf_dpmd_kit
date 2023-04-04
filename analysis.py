@@ -12,6 +12,17 @@ import time
 import json
 from lifelines import KaplanMeierFitter
 
+def data_merge(
+    list_file: list,
+):
+
+    df = pd.DataFrame()
+    for file in list_file:
+        df_tmp = pd.read_csv(file)
+        df = pd.concat([df, df_tmp])
+
+    return df
+
 def carbonic_survival(
     ax = None,
     file_data: str = 'carbonic_lifedata.csv',
@@ -233,7 +244,7 @@ def carbonic_lifedata(
                     start = idx
             else:
                 intermit += 1
-                if life < intermit_frame:
+                if life <= intermit_frame:
                     life = 0
                 elif intermit > intermit_frame:
                     list_life.append((start, header, life, 1))
@@ -341,14 +352,18 @@ def carbonic_rolling_plt(
     float_xscale: float = 1,
     str_xlabel: str = None,
     tup_ylim: tuple = None,
-    str_file: str = 'carbonic_rolling.csv',
+    file_data: str = 'carbonic_state.csv',
+    int_window: int = 1,
     list_header: list = None,
     list_ypos: list = None,
     list_yticklabels: list = None,
     dict_color: dict = None,
 ):
 
-    df_data = pd.read_csv(str_file)
+    df_data = data_rolling(
+        int_window = int_window,
+        file_data = file_data,
+    )
     print(df_data)
     
     df_new = df_data.where(df_data.isnull(), 1)
@@ -375,18 +390,21 @@ def carbonic_rolling_plt(
 def data_rolling(
     int_window: int,
     file_data: str,
-    file_save: str,
+    file_save: str = None,
 ):
 
     print(file_data)
     df_data = pd.read_csv(file_data)
-    print(df_data)
+    #print(df_data)
     df_data = df_data.where(df_data.notnull(), 0)
     df_new = df_data.rolling(int_window, min_periods=1, center=True, step=int_window).mean()
     df_new = df_new.where( df_new!=0, None)
     print(file_save)
-    print(df_new)
-    df_new.to_csv(file_save, index=False)
+    #print(df_new)
+    if file_save:
+        df_new.to_csv(file_save, index=False)
+
+    return df_new
 
 def carbonic_state(
     file_data: str = 'carbonic.csv',

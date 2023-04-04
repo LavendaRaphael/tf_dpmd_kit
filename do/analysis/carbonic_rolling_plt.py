@@ -28,20 +28,17 @@ plot.save(
 #'''
 
 #'''
-fig, ax = analysis.carbonic_rolling_plt(
-    float_xscale = 0.000005,
+analysis.carbonic_rolling_plt(
+    ax,
+    float_xscale = 0.00001,
     str_xlabel = 'Time (ns)',
-    str_file = 'carbonic_rolling.csv',
+    file_data = 'carbonic_state.csv',
+    int_window = 10,
     list_header = ['CO3','HCO3','TT','CT','CC','H3CO3'],
     list_ypos = [0, 1, 2, 3, 4, 5],
     list_yticklabels = [r'CO$_3^{2-}$', 'HCO$_3^-$', 'TT','CT','CC', r'H$_3$CO$_3$'],
 )
 
-plot.save(
-    fig,
-    tup_size = (8.6*cm, 3.5*cm),
-    str_save = 'carbonic_rolling.png'
-)
 #'''
 
 '''
