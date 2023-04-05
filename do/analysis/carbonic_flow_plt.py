@@ -62,12 +62,12 @@ def run(ax):
         }
     )
 
-    # arrow
+    # TT
     plot.add_arrow(
         ax,
         list_arrow = [
             [p_tt-t-sx, p_ct+t-sx],
-            [p_tt+r +sy,   p_xx+t1],
+            [p_tt+r+sy, p_xx+t1],
         ],
         arrowstyle = 'simple, head_length=2, head_width=2, tail_width=0.2',
         color = 'tab:blue',
@@ -81,6 +81,48 @@ def run(ax):
         connectionstyle = 'arc3, rad=0.5',
         color = 'tab:blue',
     )
+    plot.add_arrow(
+        ax,
+        list_arrow = [
+            [p_tt-r+sy, p_tt-r+sy-4*sx],
+        ],
+        arrowstyle = '<|-|>, head_length=2, head_width=1',
+        color = 'tab:blue',
+    )
+    plot.add_text(
+        axin0,
+        dict_text = {
+            (0.02, 0.95): '0.46',
+        },
+        transform = axin0.transAxes,
+        va = 'top',
+        ha = 'left',
+        color = 'white',
+        fontweight = 'bold',
+        bbox = dict(boxstyle='round', fc='tab:blue', lw=0)
+    )
+    plot.add_text(
+        ax,
+        dict_text = {
+            tuple(p_ct_tt-sx): '0.093',
+            tuple(p_xx_tt+sy): '0.333',
+            tuple(p_ct-r-3*sx): '0.008',
+            tuple(p_tt-r-2*sx+sy): '0.023'
+        },
+        va = 'center',
+        ha = 'center',
+        bbox = dict(boxstyle='round', ec='tab:blue', fc='white')
+    )
+    plot.add_text(
+        ax,
+        dict_text = {
+            tuple(p_tt-r-2*sx+2*sy): 'Censored',
+        },
+        va = 'center',
+        ha = 'center',
+    )
+
+    # CT
     plot.add_arrow(
         ax,
         list_arrow = [
@@ -100,39 +142,6 @@ def run(ax):
         connectionstyle = 'arc3, rad=0.4',
         color = 'tab:orange',
     )
-    plot.add_arrow(
-        ax,
-        list_arrow = [
-            [p_cc+t+sx, p_ct-t+sx],
-            [p_cc+r+sy, p_xx-r1-sy*3],
-        ],
-        arrowstyle = 'simple, head_length=2, head_width=2, tail_width=0.2',
-        color = 'tab:green',
-    )
-    plot.add_arrow(
-        ax,
-        list_arrow = [
-            [p_xx-r1+sy*3, p_tt+r-sy],
-            [p_xx-r1-sy,   p_ct+r-sy],
-            [p_xx-t1, p_cc+r-sy],
-        ],
-        arrowstyle = 'simple, head_length=2, head_width=2, tail_width=0.2',
-        color = 'tab:grey',
-    )
-
-    # text in img
-    plot.add_text(
-        axin0,
-        dict_text = {
-            (0.02, 0.95): '0.46',
-        },
-        transform = axin0.transAxes,
-        va = 'top',
-        ha = 'left',
-        color = 'white',
-        fontweight = 'bold',
-        bbox = dict(boxstyle='round', fc='tab:blue', lw=0)
-    )
     plot.add_text(
         axin1,
         dict_text = {
@@ -144,6 +153,37 @@ def run(ax):
         color = 'white',
         fontweight = 'bold',
         bbox = dict(boxstyle='round', fc='tab:orange', lw=0)
+    )
+    plot.add_text(
+        ax,
+        dict_text = {
+            tuple(p_cc_ct-sx): '0.023',
+            tuple(p_ct_tt+sx): '0.101',
+            tuple(p_xx_ct+sy): '0.690',
+            tuple(p_ct-r-sx): '0.008',
+        },
+        va = 'center',
+        ha = 'center',
+        bbox = dict(boxstyle='round', ec='tab:orange', fc='white')
+    )
+    plot.add_text(
+        ax,
+        dict_text = {
+            tuple(p_ct-r-sx+sy): 'TS',
+        },
+        va = 'center',
+        ha = 'center',
+    )
+
+    # CC
+    plot.add_arrow(
+        ax,
+        list_arrow = [
+            [p_cc+t+sx, p_ct-t+sx],
+            [p_cc+r+sy, p_xx-r1-sy*3],
+        ],
+        arrowstyle = 'simple, head_length=2, head_width=2, tail_width=0.2',
+        color = 'tab:green',
     )
     plot.add_text(
         axin2,
@@ -158,9 +198,31 @@ def run(ax):
         bbox = dict(boxstyle='round', fc='tab:green', lw=0)
     )
     plot.add_text(
+        ax,
+        dict_text = {
+            tuple(p_cc_ct+sx): '0.023',
+            tuple(p_xx_cc+sy): '0.093',
+        },
+        va = 'center',
+        ha = 'center',
+        bbox = dict(boxstyle='round', ec='tab:green', fc='white')
+    )
+
+    # HCO3
+    plot.add_arrow(
+        ax,
+        list_arrow = [
+            [p_xx-r1+sy*3, p_tt+r-sy],
+            [p_xx-r1-sy,   p_ct+r-sy],
+            [p_xx-t1, p_cc+r-sy],
+        ],
+        arrowstyle = 'simple, head_length=2, head_width=2, tail_width=0.2',
+        color = 'tab:grey',
+    )
+    plot.add_text(
         axin3,
         dict_text = {
-            (0.95, 0.5): '1.13',
+            (0.95, 0.5): '1.12',
         },
         transform = axin3.transAxes,
         va = 'center',
@@ -168,41 +230,6 @@ def run(ax):
         color = 'white',
         fontweight = 'bold',
         bbox = dict(boxstyle='round', fc='tab:grey', lw=0)
-    )
-
-    # text in arrow
-    plot.add_text(
-        ax,
-        dict_text = {
-            tuple(p_ct_tt-sx): '0.101',
-            tuple(p_xx_tt+sy): '0.333',
-            tuple(p_ct-r-3*sx): '0.008',
-        },
-        va = 'center',
-        ha = 'center',
-        bbox = dict(boxstyle='round', ec='tab:blue', fc='white')
-    )
-    plot.add_text(
-        ax,
-        dict_text = {
-            tuple(p_cc_ct-sx): '0.023',
-            tuple(p_ct_tt+sx): '0.093',
-            tuple(p_xx_ct+sy): '0.690',
-            tuple(p_ct-r-sx): '0.008',
-        },
-        va = 'center',
-        ha = 'center',
-        bbox = dict(boxstyle='round', ec='tab:orange', fc='white')
-    )
-    plot.add_text(
-        ax,
-        dict_text = {
-            tuple(p_cc_ct+sx): '0.023',
-            tuple(p_xx_cc+sy): '0.085',
-        },
-        va = 'center',
-        ha = 'center',
-        bbox = dict(boxstyle='round', ec='tab:green', fc='white')
     )
     plot.add_text(
         ax,
@@ -214,6 +241,15 @@ def run(ax):
         va = 'center',
         ha = 'center',
         bbox = dict(boxstyle='round', ec='tab:grey', fc='white')
+    )
+
+    plot.add_text(
+        ax,
+        dict_text = {
+            (1, 1): r'Frequency: ns$^{-1}$',
+        },
+        va = 'top',
+        ha = 'right',
     )
 
 def main():

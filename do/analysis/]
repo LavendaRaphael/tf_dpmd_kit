@@ -23,38 +23,10 @@ def read_multidata(
 
     return df
 
-def carbonic_lifetime(
-    df,
-    file_lifetime: str = 'carbonic_lifetime.csv',
-):
-    '''
-    Lifetime = integral[s(t)*t]/integral[s(t)]
-    '''
-
-    dfgb = df.groupby(level='state')
-    df_lifetime = pd.DataFrame()
-    for state, gp in dfgb:
-
-        timeline = gp.index.get_level_values('timeline(ps)')
-        survival = gp['survival']
-        lower = gp['lower']
-        upper = gp['upper']
-
-        lifetime = np.trapz(y=survival*timeline, x=timeline) / np.trapz(y=survival, x=timeline)
-        error_lower = lifetime - np.trapz(y=lower*timeline, x=timeline) / np.trapz(y=lower, x=timeline)
-        error_upper = np.trapz(y=upper*timeline, x=timeline) / np.trapz(y=upper, x=timeline) - lifetime
-        df_tmp = pd.DataFrame(data={'lifetime(ps)': lifetime, 'lower': error_lower, 'upper': error_upper}, index=[state])
-        df_tmp.index.name = 'state'
-        df_lifetime = pd.concat([df_lifetime, df_tmp])
-
-    print(file_lifetime)
-    print(df_lifetime)
-    df_lifetime.to_csv(file_lifetime)
-
 def carbonic_survival_plt(
     ax,
     df,
-    list_state: list,
+    list_state: list = None,
     dict_color: dict = None,
     dict_label: dict = None,
 ):
@@ -66,9 +38,7 @@ def carbonic_survival_plt(
         label = state
         if state in dict_label:
             label = dict_label[state]
-
         gp = dfgb.get_group(state)
-        timeline = gp.index.get_level_values('timeline(ps)')
         survival = gp['survival']
         lower = gp['lower']
         upper = gp['upper']
@@ -88,6 +58,7 @@ def carbonic_survival(
 
     '''
     From the life data to calculate survival probability using Kaplan-Meier estimitor.
+    Lifetime = integral[s(t)*t]/integral[s(t)]
     '''
 
     print(list_file)
@@ -103,16 +74,15 @@ def carbonic_survival(
         df_tmp = pd.concat([kmf.survival_function_, kmf.confidence_interval_], axis=1)
         df_tmp.rename(
             columns = {
-                'KM_estimate': 'survival',
+                'KM_estimate': 'survial',
                 'KM_estimate_lower_0.95': 'lower',
                 'KM_estimate_upper_0.95': 'upper',
             }, 
             inplace=True
         )
-        df_tmp.index.name = 'timeline(ps)'
         list_df.append( df_tmp )
         list_state.append(state)
-    df = pd.concat(list_df, keys=list_state, names=['state'])
+    df = pd.concat(list_df, keys=list_state)
     print(df)
 
     return df
@@ -223,19 +193,13 @@ def carbonic_statistic(
     print(df_data)
     gpby = df_data.groupby('state')
 
-    df_tmp = gpby.sum()/time_tot
-    df_tmp.rename(columns={'time(ps)': 'prop'}, inplace=True)
-    df_save = df_tmp
+    df_prop = gpby.sum()/time_tot
+    df_prop = df_prop.rename(columns={'time(ps)': 'prop'})
+    df_save = df_prop
 
-    df_tmp = gpby.count()/time_tot*1000
-    df_tmp.rename(columns = {'time(ps)': 'frequency(ns-1)'}, inplace=True)
-    df_save = pd.concat([df_save, df_tmp], axis=1)
-
-    count_tot = df_data[df_data['state']!='H2CO3']['time(ps)'].count()
-    print(count_tot)
-    df_tmp = gpby.count()/count_tot
-    df_tmp.rename(columns = {'time(ps)': 'freqprop'}, inplace=True)
-    df_save = pd.concat([df_save, df_tmp], axis=1)
+    df_count = gpby.count()/time_tot*1000
+    df_count = df_count.rename(columns = {'time(ps)': 'frequency(ns-1)'})
+    df_save = pd.concat([df_save, df_count], axis=1)
 
     print(file_save)
     print(df_save)

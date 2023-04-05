@@ -37,11 +37,11 @@ def colvar_hist_plt(
         density = True
     )
 
-    float_std = np.std(np_data_new)
-    float_mean = np.mean(np_data_new)
+    std = np.std(np_data_new)
+    mean = np.mean(np_data_new)
 
     ax.legend(
-        title = f'MEAN = {float_mean:.3f}\nSTD = {float_std:.3f}'
+        title = f'MEAN = {mean:.3f}\nSTD = {std:.3f}'
     )
     ax.set_xlim(tup_xlim)
     ax.set_xlabel(str_label)
@@ -61,55 +61,55 @@ def fes_integral(
     np_data[:,1] -= min(np_data[:,1])
 
     if not temperature:
-        temperature, float_KbT = get_temperature( str_in, str_log )
+        temperature, kBT = get_temperature( str_in, str_log )
     else:
-        float_KbT = T2KbT(temperature)
+        kBT = T2kBT(temperature)
     
-    np_data[:,1] = np.exp(-np_data[:,1]/float_KbT)
+    np_data[:,1] = np.exp(-np_data[:,1]/kBT)
 
     if tup_xrange is None:
         np_data_trapz = np_data
     else:
-        float_xlow = tup_xrange[0]
-        float_xup = tup_xrange[1]
-        if float_xup == '1M':
-            float_Avogadro = 6.02214076e23
-            float_xup = 1e27/float_Avogadro
-            float_xup = (float_xup/(4/3*math.pi))**(1.0/3.0)
+        xlow = tup_xrange[0]
+        xup = tup_xrange[1]
+        if xup == '1M':
+            Avogadro = 6.02214076e23
+            xup = 1e27/Avogadro
+            xup = (xup/(4/3*math.pi))**(1.0/3.0)
 
-        np_indices = np.searchsorted(np_data[:,0], [float_xlow, float_xup])
+        np_indices = np.searchsorted(np_data[:,0], [xlow, xup])
         slice_range = slice(np_indices[0], np_indices[1])
         np_data_trapz = np_data[slice_range, :]
 
-    float_integral = np.trapz(
+    integral = np.trapz(
         np_data_trapz[:, 1],
         x = np_data_trapz[:, 0]
     )
 
-    float_integral = -np.log(float_integral) * float_KbT
-    return float_integral
+    integral = -np.log(integral) * kBT
+    return integral
 
 def fes_1M_correct(
-    float_volume: float, # angstrom**3
+    volume: float, # angstrom**3
     temperature: float  # kelvin
 ) -> float:
 
-    if float_volume == '1M':
+    if volume == '1M':
         return 0
 
-    float_Avogadro = 6.02214076e23
-    float_volume_1M = 1e27/float_Avogadro
-    float_KbT = T2KbT(temperature)
-    #print(float_volume_1M/float_volume,'mol/L')
-    float_correct = -float_KbT*math.log(float_volume_1M/float_volume)
+    Avogadro = 6.02214076e23
+    volume_1M = 1e27/Avogadro
+    kBT = T2kBT(temperature)
+    #print(volume_1M/volume,'mol/L')
+    correct = -kBT*math.log(volume_1M/volume)
 
-    return float_correct
+    return correct
 
 def get_pka(
     str_file: str,
     dict_coef: dict,
     tup_srange_tot: tuple,
-    float_volume: float = None,
+    volume: float = None,
     temperature: float = None,
     str_in: str = None,
     str_log: str = None
@@ -124,7 +124,7 @@ def get_pka(
                 (s1, s2): c1,
                 ...
             }
-        float_volume: volume
+        volume: volume
             V
         tup_srange_tot:
             (sl, sr)
@@ -141,90 +141,94 @@ def get_pka(
     '''
 
     if not temperature:
-        temperature, float_KbT = get_temperature( str_in, str_log )
+        temperature, kBT = get_temperature( str_in, str_log )
 
-    float_h_tot = fes_integral(
+    h_tot = fes_integral(
         str_file = str_file,
         tup_xrange = tup_srange_tot,
         temperature = temperature,
     )
  
-    float_deltag = 0
-    for tup_srange, float_coef in dict_coef.items():
-        float_h = fes_integral(
+    deltag = 0
+    for tup_srange, coef in dict_coef.items():
+        h = fes_integral(
             str_file = str_file,
             tup_xrange = tup_srange,
             temperature = temperature,
         )
-        float_deltag += float_coef*(float_h-float_h_tot)
+        deltag += coef*(h-h_tot)
 
-    if not (float_volume is None):
-        float_correct = fes_1M_correct(
-            float_volume = float_volume,
+    if not (volume is None):
+        correct = fes_1M_correct(
+            volume = volume,
             temperature = temperature
         )
-        float_deltag += float_correct
+        deltag += correct
 
-    float_pka = deltag_to_pka(
-        float_deltag = float_deltag,
+    pka = deltag_to_pka(
+        deltag = deltag,
         temperature = temperature,
     )
 
-    return float_deltag, float_pka
+    return deltag, pka
 
 def prob_to_deltag(
     prob: float,
     temperature: float, # kelvin
 ):
 
-    KbT = T2KbT(temperature)
-    return -KbT*np.log(prob)
+    kBT = T2kBT(temperature)
+    return -kBT*np.log(prob)
 
 def deltag_to_pka(
-    float_deltag: float,
+    deltag: float,
     temperature: float,
 ) -> float:
 
-    return float_deltag/(float_KbT*math.log(10))
+    kBT = T2kBT(temperature)
+    return deltag/(kBT*math.log(10))
 
 def pka_to_deltag(
-    float_pka: float,
+    pka: float,
     temperature: float,
 ) -> float:
 
-    return float_pka*(float_KbT*math.log(10))
+    kBT = T2kBT(temperature)
+    return pka*(kBT*math.log(10))
 
 def prob_to_pka(
-    float_prob: float,
+    prob: float,
     temperature: float, # kelvin
-    float_volume: float # angstrom**2
+    volume: float # angstrom**2
 ):
-    float_KbT = T2KbT(temperature)
-
-    float_deltag = -np.log(float_prob) * float_KbT
-    float_correct = fes_1M_correct(
-        float_volume = float_volume,
+    deltag = prob_to_deltag(
+        prob = prob,
         temperature = temperature
     )
-    print('energy correct = ', float_correct)
+
+    correct = fes_1M_correct(
+        volume = volume,
+        temperature = temperature
+    )
+    print('energy correct = ', correct)
     pka_correct = deltag_to_pka(
-        float_deltag = float_correct,
+        deltag = correct,
         temperature = temperature,
     )
     print('pka correct = ', pka_correct)
-    float_deltag += float_correct
+    deltag += correct
 
-    float_pka = deltag_to_pka(
-        float_deltag = float_deltag,
+    pka = deltag_to_pka(
+        deltag = deltag,
         temperature = temperature,
     )
 
-    return float_deltag, float_pka
+    return deltag, pka
 
 def get_pka_time(
     dict_file: dict,
     dict_coef: dict,
-    float_volume: float = None,
+    volume: float = None,
     tup_srange_tot: tuple = None,
     str_save: str = None,
     temperature: float = None,
@@ -236,20 +240,20 @@ def get_pka_time(
     np_pka = np.zeros(shape=(int_nfile), dtype=[('time', 'f4'), ('pka', 'f4')])
     np_deltag = np.zeros(shape=(int_nfile), dtype=[('time', 'f4'), ('deltag', 'f4')])
     if not temperature:
-        temperature, float_KbT = get_temperature( str_in, str_log )
+        temperature, kBT = get_temperature( str_in, str_log )
     print(temperature)
     for int_i,int_key in enumerate(dict_file):
         if not os.path.isfile(dict_file[int_key]):
             continue
-        float_deltag, float_pka = get_pka(
+        deltag, pka = get_pka(
             str_file = dict_file[int_key],
             dict_coef = dict_coef,
             tup_srange_tot = tup_srange_tot,
             temperature = temperature,
-            float_volume = float_volume
+            volume = volume
         )
-        np_pka[int_i] = (int_key, float_pka)
-        np_deltag[int_i] = (int_key, float_deltag)
+        np_pka[int_i] = (int_key, pka)
+        np_deltag[int_i] = (int_key, deltag)
 
     if str_save:
         str_save_pka = f'{str_save}.pka.csv'
@@ -278,7 +282,7 @@ def colvar_plt(
     dict_header: dict,
     list_data: list = None,
     str_xlabel: str = 'Time (ps)',
-    float_timescale: float = 1.0,
+    timescale: float = 1.0,
     tup_xlim: tuple = None,
     tup_ylim: tuple = None,
     str_color: str = 'black',
@@ -287,8 +291,8 @@ def colvar_plt(
     legend_loc: str = None,
     dict_label: dict = None,
     bool_scatter: bool = True,
-    float_lw: float = None,
-    float_scatters: float = None,
+    lw: float = None,
+    scatters: float = None,
 ) -> None:
 
     if list_data is None:
@@ -306,20 +310,20 @@ def colvar_plt(
 
     for int_i,str_header in enumerate(dict_header):
         if bool_scatter:
-            axs[int_i].scatter(df_data['time']*float_timescale, df_data[str_header], s=float_scatters, color=str_color, edgecolors='none')
+            axs[int_i].scatter(df_data['time']*timescale, df_data[str_header], s=scatters, color=str_color, edgecolors='none')
             if not(dict_color is None):
                 for tup_range, str_color_i in dict_color.items():
                     df_tmp = df_data.iloc[tup_range[0]:tup_range[1]]
                     if not(tup_range in dict_label):
                         dict_label[tup_range] = None
-                    axs[int_i].scatter(df_tmp['time']*float_timescale, df_tmp[str_header], s=float_scatters, color=str_color_i, edgecolors='none', label=dict_label[tup_range])
+                    axs[int_i].scatter(df_tmp['time']*timescale, df_tmp[str_header], s=scatters, color=str_color_i, edgecolors='none', label=dict_label[tup_range])
         else:
-            axs[int_i].plot(df_data['time']*float_timescale, df_data[str_header], color=str_color, linewidth=float_lw)
+            axs[int_i].plot(df_data['time']*timescale, df_data[str_header], color=str_color, linewidth=lw)
 
         str_ylabel = dict_header[str_header]
         axs[int_i].set_ylabel(str_ylabel)
 
-        plot.set_lw( axs[int_i], float_lw )
+        plot.set_lw( axs[int_i], lw )
 
         axs[int_i].legend(
             loc = legend_loc,
@@ -338,14 +342,14 @@ def colvar_plt_old(
     dict_header: dict,
     list_data: list = None,
     str_xlabel: str = 'Time (ps)',
-    float_timescale: float = 1.0,
+    timescale: float = 1.0,
     tup_xlim: tuple = None,
     tup_ylim: tuple = None,
     str_color: str = None,
     str_title: str = None,
     str_legeng_loc: str = None,
     bool_scatter: bool = True,
-    float_lw: float = None,
+    lw: float = None,
 ) -> None:
 
     if list_data is None:
@@ -377,9 +381,9 @@ def colvar_plt_old(
                         continue
                     #for tup_
                     if bool_scatter:
-                        axs[int_i].scatter(data['time']*float_timescale, data[str_header], s=1, color=str_color, edgecolors='none')
+                        axs[int_i].scatter(data['time']*timescale, data[str_header], s=1, color=str_color, edgecolors='none')
                     else:
-                        axs[int_i].plot(data['time']*float_timescale, data[str_header], color=str_color, linewidth=float_lw)
+                        axs[int_i].plot(data['time']*timescale, data[str_header], color=str_color, linewidth=lw)
 
                 if str_line[0] != '#':
                     break
@@ -389,7 +393,7 @@ def colvar_plt_old(
     for int_i,str_header in enumerate(dict_header):
         str_ylabel = dict_header[str_header]
         axs[int_i].set_ylabel(str_ylabel)
-        plot.set_lw( axs[int_i], float_lw )
+        plot.set_lw( axs[int_i], lw )
 
     if str_title:
         axs[0].legend(
@@ -415,14 +419,14 @@ def hills_sum(
     str_hills: str = 'HILLS'
 ):
 
-    temperature, float_KbT = get_temperature(str_in, str_log)
+    temperature, kBT = get_temperature(str_in, str_log)
 
     if not str_outfile:
         str_outfile = str_cv+'_fes.'
 
     str_cmd = f'source {os.environ["HOME"]}/.config/.tianff &&'
     str_cmd += 'source ${homedir}/.local/bin/bashrc_plm.sh ;'
-    str_cmd += f'plumed sum_hills --hills {str_hills} --stride 20000 --outfile {str_outfile} --min {str_min} --max {str_max} --bin {str_bin} --negbias --kt {float_KbT}'
+    str_cmd += f'plumed sum_hills --hills {str_hills} --stride 20000 --outfile {str_outfile} --min {str_min} --max {str_max} --bin {str_bin} --negbias --kt {kBT}'
     if str_cv:
         str_cmd += f' --idw {str_cv}'
 
@@ -430,18 +434,18 @@ def hills_sum(
 
     print(subprocess_results.stdout)
 
-def T2KbT(
+def T2kBT(
     temperature: float, # kelvin
 ) -> float:
 
-    float_Avogadro = 6.02214076e23
+    Avogadro = 6.02214076e23
 
     # J*K^-1
-    float_Kb = 1.380649e-23
+    Kb = 1.380649e-23
 
     # KJ*mol^-1
-    float_KbT = float_Kb*float_Avogadro*temperature/1000.0
-    return float_KbT
+    kBT = Kb*Avogadro*temperature/1000.0
+    return kBT
 
 def get_temperature(
     str_in: str = '../plm.in',
@@ -460,24 +464,24 @@ def get_temperature(
                     break
         if not temperature:
             raise
-        KbT = T2KbT(temperature)
+        kBT = T2kBT(temperature)
 
     if str_log:
         with open(str_log, 'r') as fp:
             for str_line in fp:
-                if 'KbT' in str_line:
+                if 'kBT' in str_line:
                     list_line = str_line.split()
-                    float_KbT = float(list_line[2])
+                    kBT_log = float(list_line[2])
                     break
-        if not float_KbT:
+        if not kBT_log:
             raise
 
     if str_in and str_log:
-        if KbT-float_KbT > 1e4:
+        if kBT-kBT_log > 1e4:
             raise
 
     if not (str_in or str_log):
         raise
 
-    return temperature, KbT
+    return temperature, kBT
 

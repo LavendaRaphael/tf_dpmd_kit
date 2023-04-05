@@ -4,6 +4,7 @@ import json
 
 def main():
     
+    file_save = 'carbonic_flow.csv'
     list_timelong = [
         '../TT/carbonic/timelong.json',
         '../CT/carbonic/timelong.json',
@@ -15,7 +16,7 @@ def main():
             dict_timelong = json.load(fp)
             time_tot += dict_timelong['timelong(ps)']
 
-    df = analysis.data_merge(
+    df = analysis.read_multidata(
         list_file = [
             '../TT/carbonic/carbonic_lifedata.csv',
             '../CT/carbonic/carbonic_lifedata.csv',
@@ -39,6 +40,9 @@ def main():
         col_0 = col
     df_flow = pd.DataFrame(list_flow, columns=['from', 'to', 'count'])
     dfgb = df_flow.groupby(['from','to'])
-    ser_count = dfgb.count()/time_tot*1000
-    print(ser_count)
+    df_count = dfgb.count()/time_tot*1000
+    print(file_save)
+    print(df_count)
+    df_count.to_csv(file_save)
+
 main()
