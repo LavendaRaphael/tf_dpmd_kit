@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import numpy as np
 
@@ -8,33 +9,19 @@ def angle_sft(x):
     else:
         return x
 
-def run(
-    list_file: list,
-    file_save: str,
-):
+def run():
 
-    df_new = None
-    for str_file in list_file:
-        print(str_file)
-        df_tmp = pd.read_csv(str_file)
-        if df_new is None:
-            df_new = df_tmp
-        else:
-            df_new = pd.concat([df_new, df_tmp], ignore_index=True)
-    print(df_new)
-
-    df_new = df_new[df_new['dihedral0(rad)'].notnull()]
-    df_new = df_new.loc[:, ['dihedral0(rad)', 'dihedral1(rad)']]
-    df_new = df_new.applymap(angle_sft)
-    print(df_new)
-
-    df_new.to_csv(file_save, index=False)
-
-run(
-    list_file = [
-        '../TT/carbonic/carbonic.product.csv',
-        '../CT/carbonic/carbonic.product.csv',
-        '../CC/carbonic/carbonic.product.csv',
-    ],
+    file_data = 'carbonic.product.csv'
     file_save = 'carbonic_dihedrals.csv'
-)
+
+    print(file_data)
+    df = pd.read_csv(file_data)
+
+    df = df[df['dihedral0(rad)'].notnull()]
+    df = df.loc[:, ['dihedral0(rad)', 'dihedral1(rad)']]
+    df = df.applymap(angle_sft)
+
+    print(file_save)
+    print(df)
+    df.to_csv(file_save, index=False)
+

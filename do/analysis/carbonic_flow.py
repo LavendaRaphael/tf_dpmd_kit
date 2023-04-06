@@ -5,6 +5,7 @@ import json
 def main():
     
     file_save = 'carbonic_flow.csv'
+
     list_timelong = [
         '../TT/carbonic/timelong.json',
         '../CT/carbonic/timelong.json',
@@ -32,13 +33,13 @@ def main():
         if col_0['event'] == 1.0:
             list_flow.append([col_0['state'], col['state'], 1])
         elif col_0['event'] == 0.0:
-            list_flow.append([col['state'], 'X', 1])
+            list_flow.append(['X', col['state'], 1])
         else:
             raise
         if col['event'] == 0.0:
-            list_flow.append(['X', col['state'], 1])
+            list_flow.append([col['state'], 'X', 1])
         col_0 = col
-    df_flow = pd.DataFrame(list_flow, columns=['from', 'to', 'count'])
+    df_flow = pd.DataFrame(list_flow, columns=['from', 'to', 'frequency(ns-1)'])
     dfgb = df_flow.groupby(['from','to'])
     df_count = dfgb.count()/time_tot*1000
     print(file_save)
