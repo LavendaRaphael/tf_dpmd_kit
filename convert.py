@@ -17,6 +17,83 @@ def lmgtrj_to_mda(
 
     return mda_u
 
+def dpdata_to_ase(
+    dpsys
+):
+
+    return dpsys.to('ase/structrue')
+
+def lmptrj_to_ase(
+    list_traj: list,
+):
+
+    aselist = []
+    for traj in list_traj:
+        aselist.extend(ase.io.read(
+            filename = traj,
+            format = 'lammps-dump-text',
+            index = ':',
+            specorder = ['O','H','C']
+        ))
+
+    print(len(aselist))
+    print(aselist[0])
+    return aselist   
+  
+def aselist_to_snap(
+    aselist,
+    list_snap: list,
+):
+
+    print(list_snap)
+
+    if not os.path.exists('snap'):
+        os.mkdir('snap')
+    os.chdir('snap')
+
+    for idx, ase_atoms in zip(list_snap, aselist):
+        dirx = f'snap_{idx:0>6d}'
+        if not os.path.exists(dirx):
+            os.mkdir(dirx)
+        os.chdir(dirx)
+
+        ase_to_qepw(ase_atoms)
+        
+        os.chdir('..')
+
+def aselist_select(
+    aselist,
+    list_snap: list,
+):
+
+    print(list_snap)
+    ase_out = []
+    for idx in list_snap:
+        print(idx)
+        ase_out.append(aselist[int(idx)])
+
+    return ase_out
+
+def dpdata_select(
+    dpsys,
+    list_snap: list,
+):
+
+    ase_atoms = dpdata_to_ase(dp_sys.sub_system(list_snap))
+
+    return ase_atoms
+
+def lmptrj_to_dpdata(
+    list_traj: list,
+):
+
+    dp_sys=System()
+    for traj in list_traj:
+        dp_tmp = dpdata.System(traj, fmt='lammps/dump', type_map=['O','H','C'])
+        dp_sys.append(dp_tmp)
+
+    return dy_sys
+
 def lmptrj_sparse(
     file_old: str,
     file_new: str,
@@ -97,7 +174,7 @@ def poscar_perturb(
     for int_i in range(int_perturb):
         dp_sys_perturb.to( 'vasp/poscar', os.path.join(str_dir, f'{int_i:02d}.POSCAR'), frame_idx=int_i )
 
-def ase_to_pwscf(
+def ase_to_qepw(
     ase_atoms
 ) -> None:
     
@@ -125,47 +202,6 @@ def ase_to_pwscf(
         input_data = dict_pwscfin,
         pseudopotentials = dict_pwpseudop 
     )
-
-def list_ase_to_poscar(
-    list_ase,
-    np_snap
-):
-    print(np_snap)
-    
-    if (not os.path.exists('snap')):
-        os.mkdir('snap')
-    os.chdir('snap')
-    for int_snap in np_snap:
-        str_dir = f'snap_{int_snap:0>6d}'
-        if (not os.path.exists(str_dir)):
-            os.mkdir(str_dir)
-        os.chdir(str_dir)
-        
-        ase.io.write(
-            filename = 'POSCAR',
-            images = list_ase[int_snap],
-            format = 'vasp'
-        )
-        
-        os.chdir('..')
-
-
-def list_ase_to_pwscf(
-    list_ase,
-):
-    nframe = len(list_ase)
-    print(list_ase[0])
-    print(nframe)
-
-    for int_snap, ase_atoms in enumerate(list_ase):
-        str_dir = f'snap_{int_snap:0>6d}'
-        if (not os.path.exists(str_dir)):
-            os.mkdir(str_dir)
-        os.chdir(str_dir)
-        
-        ase2pwscf(ase_atoms)
-        
-        os.chdir('..')
 
 def dpgen_to_ase(
         array_id,
