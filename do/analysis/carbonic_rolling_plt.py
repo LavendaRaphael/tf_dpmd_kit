@@ -33,7 +33,7 @@ analysis.carbonic_rolling_plt(
     float_xscale = 0.00001,
     str_xlabel = 'Time (ns)',
     file_data = 'carbonic_state.csv',
-    int_window = 10,
+    int_window = 100,
     list_header = ['CO3','HCO3','TT','CT','CC','H3CO3'],
     list_ypos = [0, 1, 2, 3, 4, 5],
     list_yticklabels = [r'CO$_3^{2-}$', 'HCO$_3^-$', 'TT','CT','CC', r'H$_3$CO$_3$'],

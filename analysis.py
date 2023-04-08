@@ -117,65 +117,6 @@ def carbonic_survival(
 
     return df
 
-def carbonic_survival_(
-    list_file: list,
-    ax = None,
-    list_state: list = None,
-    dict_color: dict = None,
-    dict_label: dict = None,
-    file_lifetime: str = 'carbonic_lifetime.csv',
-    func_step: float = 0.5,
-):
-
-    '''
-    From the life data to calculate survival probability using Kaplan-Meier estimitor.
-    Lifetime = integral[s(t)*t]/integral[s(t)]
-    '''
-
-    print(list_file)
-    df_data = read_multidata(list_file).loc[:, ['state','time(ps)','event']].dropna()
-    print(df_data)
-
-    kmf = KaplanMeierFitter()
-    gpby = df_data.groupby('state')
-    df_lifetime = pd.DataFrame()
-    for state in list_state:
-        gp = gpby.get_group(state)
-        t_max = max(gp['time(ps)'])
-        kmf.fit(gp['time(ps)'], gp['event'], timeline=np.linspace(0, t_max, num=int(t_max/func_step)))
-
-        timeline = kmf.timeline
-        survival = kmf.survival_function_['KM_estimate'].to_numpy()
-        conf_lower = kmf.confidence_interval_['KM_estimate_lower_0.95'].to_numpy()
-        conf_upper = kmf.confidence_interval_['KM_estimate_upper_0.95'].to_numpy()
-        
-        if file_lifetime:
-            lifetime = np.trapz(y=survival*timeline, x=timeline) / np.trapz(y=survival, x=timeline)
-            error_lower = lifetime - np.trapz(y=conf_lower*timeline, x=timeline) / np.trapz(y=conf_lower, x=timeline)
-            error_upper = np.trapz(y=conf_upper*timeline, x=timeline) / np.trapz(y=conf_upper, x=timeline) - lifetime
-            df_tmp = pd.DataFrame(data={'lifetime(ps)': lifetime, 'lower': error_lower, 'upper': error_upper}, index=[state])
-            df_tmp.index.name = 'state'
-            df_lifetime = pd.concat([df_lifetime, df_tmp])
-
-        if not(ax is None):
-            color = dict_color[state]
-            label = state
-            if state in dict_label:
-                label = dict_label[state]
-            ax.plot(timeline, survival, label=label, color=color, lw=1)
-            ax.fill_between(timeline, conf_lower, conf_upper, alpha=0.5, color=color)
-
-    if not(ax is None):
-        ax.legend(frameon=False, labelspacing=0.3, handlelength=1)
-        ax.set_xscale('log')
-        ax.set_xlabel('Time (ps)')
-        ax.set_ylabel('Survial Probability')
-
-    if not(file_lifetime is None):
-        print(file_lifetime)
-        print(df_lifetime)
-        df_lifetime.to_csv(file_lifetime)
-
 def carbonic_statistic_mean(
     list_file: list,
     file_save = 'carbonic_statistic.csv',
@@ -451,6 +392,103 @@ def carbonic_conformer(
             return 7
 
 class Carbonic(AnalysisBase):
+
+    def __init__(
+        self,
+        carbonic_c,
+        carbonic_o,
+        atomg_h,
+        water_o,
+        cutoff = 1.3,
+        ):
+
+        trajectory = carbonic_c.universe.trajectory
+        super(Carbonic, self).__init__(trajectory)
+
+        self.carbonic_c = carbonic_c
+        self.carbonic_o = carbonic_o
+        self.atomg_h = atomg_h
+        self.water_o = water_o
+        self.cutoff = cutoff
+        self.roh_cutoff = cutoff
+
+    def _prepare(self):
+
+        self.results = np.zeros((self.n_frames, 8))
+        self.carbonic_c2 = self.carbonic_c[[0,0]]
+
+    def _single_frame(self):
+
+        self.results[self._frame_index, 1:] = self._carbonic()
+        self.results[self._frame_index, 0] = self._ts.frame
+
+    def _conclude(self):
+
+        columns = ['frame',
+                   'ncarbonyl', 'noho', 'dihedral0(rad)', 'dihedral1(rad)','roh0(ang)','roh1(ang)', 'roh2(ang)']
+        self.df = pd.DataFrame(self.results, columns=columns)
+    
+    def _carbonic(self):
+    
+        box = self._ts.dimensions
+
+        list_carbonyl = []
+        list_hydroxyl_o = []
+        list_hydroxyl_h = []
+        list_oho = []
+        list_dist = []
+        for o_id in range(3):
+            np_id, np_distances = capped_distance(
+                reference = self.carbonic_o[[o_id]],
+                configuration = self.atomg_h,
+                max_cutoff = self.roh_cutoff,
+                box = box,
+            )
+            if np.size(np_distances) == 0:
+                np_id, np_distances = capped_distance(
+                    reference = self.carbonic_o[[o_id]],
+                    configuration = self.atomg_h,
+                    max_cutoff = box[0]/2,
+                    box = box,
+                )
+                self.roh_cutoff = min(np_distances)
+                print(self.roh_cutoff)
+            list_dist.append(min(np_distances))
+
+            if np.any(np_distances < self.cutoff):
+                list_carbonyl.append(o_id)
+                continue
+            h_id = np_id[np.argmin(np_distances), 1]
+            list_hydroxyl_o.append(o_id)
+            list_hydroxyl_h.append(h_id)
+
+            np_id, _ = capped_distance(
+                reference = self.atomg_h[[h_id]],
+                configuration = self.water_o,
+                max_cutoff = self.cutoff,
+                box = box,
+            )
+            if np.size(np_id) != 0:
+                list_oho.append(o_id)
+
+        len_carbonyl = len(list_carbonyl)
+        len_oho = len(list_oho)
+        list_dist.sort()
+
+        if len_carbonyl != 1:
+            dihedrals = [None, None]
+        else:
+            dihedrals = calc_dihedrals(
+                self.carbonic_o[ list_carbonyl*2 ],
+                self.carbonic_c2,
+                self.carbonic_o[list_hydroxyl_o],
+                self.atomg_h[list_hydroxyl_h],
+                box=box
+            )
+        return len_carbonyl, len_oho, dihedrals[0], dihedrals[1], list_dist[0], list_dist[1], list_dist[2]
+
+
+class Carbonic_(AnalysisBase):
 
     def __init__(
         self,
