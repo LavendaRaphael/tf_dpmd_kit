@@ -52,6 +52,7 @@ def aselist_to_snap(
     os.chdir('snap')
 
     for idx, ase_atoms in zip(list_snap, aselist):
+        idx = int(idx)
         dirx = f'snap_{idx:0>6d}'
         if not os.path.exists(dirx):
             os.mkdir(dirx)
