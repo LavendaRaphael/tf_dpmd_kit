@@ -40,10 +40,10 @@ def run(
         label = header
         if header in dict_label:
             label = dict_label[header]
-        ax.errorbar(ser_temperature, df['count(ns-1)'], yerr = df['count(ns-1)_sem'], ls=':', marker=marker, markersize=2, lw=1, color=color, capsize=2, label=label)
+        ax.errorbar(ser_temperature, df['frequency(ns-1)'], yerr = df['frequency(ns-1)_sem'], ls=':', marker=marker, markersize=2, lw=1, color=color, capsize=2, label=label)
 
     ax.set_xlabel('Temperature (K)')
-    ax.set_ylabel(r'Count (ns$^{-1}$)')
+    ax.set_ylabel(r'Frequency (ns$^{-1}$)')
     ax.legend(frameon=False)
 
 def main():
@@ -58,7 +58,7 @@ def main():
 
     plot.save(
         fig,
-        file_save = 'carbonic_statistic.temperature_count',
+        file_save = 'carbonic_statistic.temperature_frequency',
         list_type = ['pdf', 'svg']
     )
 

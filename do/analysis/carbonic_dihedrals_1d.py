@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from tf_dpmd_kit import plot
 from tf_dpmd_kit import plm
+from tf_dpmd_kit import analysis
 import pandas as pd
 import numpy as np
 import matplotlib as mpl
@@ -9,10 +10,14 @@ def run(
     ax,
 ):
 
-    df_data = pd.read_csv('carbonic_dihedrals.csv')
+    df_data = analysis.read_multidata([
+        '../TT/carbonic/carbonic_dihedrals.csv',
+        '../CT/carbonic/carbonic_dihedrals.csv',
+        '../CC/carbonic/carbonic_dihedrals.csv',
+    ])
     ser_sum = df_data['dihedral0(rad)'] + df_data['dihedral1(rad)']
 
-    np_hist, bin_edges = np.histogram(ser_sum, bins=100, density=True)
+    np_hist, bin_edges = np.histogram(ser_sum, bins=165, density=True, range=(-0.6*np.pi,2.7*np.pi))
     np_energy = plm.prob_to_deltag(np_hist, temperature=330)
     np_energy -= np.amin(np_energy)
     bin_center = bin_edges[:-1] + (bin_edges[1]-bin_edges[0])/2
@@ -24,6 +29,9 @@ def run(
     ax.set_xticks([0, np.pi/2, np.pi, np.pi*1.5, np.pi*2])
     ax.set_xticklabels([0, r'$\pi$/2', r'$\pi$', r'3$\pi$/2', r'2$\pi$'])
     ax.set_ylim(None, None)
+
+    df = pd.DataFrame(data={'dihedral(rad/pi)': bin_center/np.pi, 'energy(kJ/mol)': np_energy})
+    df.to_csv('carbonic_dihedrals_1d.csv', index=False)
 
 def main():
 

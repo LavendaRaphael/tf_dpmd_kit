@@ -52,7 +52,7 @@ def run(
         }
     )
     ax.set_yscale('log')
-    ax.set_xlim(None, 380)
+    ax.set_xlim(None, 375)
 
 def main():
 
