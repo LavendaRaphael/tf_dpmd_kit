@@ -455,7 +455,7 @@ class Carbonic(AnalysisBase):
                 print(self.roh_cutoff)
             list_dist.append(min(np_distances))
 
-            if np.any(np_distances < self.cutoff):
+            if min(np_distances) > self.cutoff:
                 list_carbonyl.append(o_id)
                 continue
             h_id = np_id[np.argmin(np_distances), 1]
