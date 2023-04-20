@@ -8,19 +8,19 @@ def sub(
 
     df = analysis.carbonic_survival(
         list_file = [
-            '../TT/carbonic/carbonic_lifedata.csv',
-            '../CT/carbonic/carbonic_lifedata.csv',
             '../CC/carbonic/carbonic_lifedata.csv',
+            '../CT/carbonic/carbonic_lifedata.csv',
+            '../TT/carbonic/carbonic_lifedata.csv',
         ]
     )
 
     analysis.carbonic_lifetime(df)
 
-    list_state = ['TT', 'CT', 'CC','H2CO3', 'HCO3']
+    list_state = ['CC', 'CT', 'TT','H2CO3', 'HCO3']
     dict_color = {
-        'TT': 'tab:blue',
+        'CC': 'tab:blue',
         'CT': 'tab:orange',
-        'CC': 'tab:green',
+        'TT': 'tab:green',
         'H2CO3': 'tab:red',
         'HCO3': 'tab:purple',
     }

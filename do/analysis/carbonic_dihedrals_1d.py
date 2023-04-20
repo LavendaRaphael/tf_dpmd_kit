@@ -11,13 +11,14 @@ def run(
 ):
 
     df_data = analysis.read_multidata([
-        '../TT/carbonic/carbonic_dihedrals.csv',
-        '../CT/carbonic/carbonic_dihedrals.csv',
         '../CC/carbonic/carbonic_dihedrals.csv',
+        '../CT/carbonic/carbonic_dihedrals.csv',
+        '../TT/carbonic/carbonic_dihedrals.csv',
     ])
+    print(df_data)
     ser_sum = df_data['dihedral0(rad)'] + df_data['dihedral1(rad)']
 
-    np_hist, bin_edges = np.histogram(ser_sum, bins=165, density=True, range=(-0.6*np.pi,2.7*np.pi))
+    np_hist, bin_edges = np.histogram(ser_sum, bins=100, density=True)
     np_energy = plm.prob_to_deltag(np_hist, temperature=330)
     np_energy -= np.amin(np_energy)
     bin_center = bin_edges[:-1] + (bin_edges[1]-bin_edges[0])/2
@@ -45,7 +46,7 @@ def main():
 
     plot.save(
         fig,
-        #file_save = 'carbonic_dihedrals_1d',
+        file_save = 'carbonic_dihedrals_1d',
         list_type = ['pdf', 'svg']
     )
 

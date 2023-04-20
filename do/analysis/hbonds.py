@@ -5,7 +5,7 @@ import os
 
 # read structrue
 
-#TT
+#CC
 dict_sel = {
     'o_w': 'index 0:125',
     'o_0_2': 'index 126 128',
@@ -71,7 +71,7 @@ def run(
         analysis.hbonds(
             universe = mda_u,
             hydrogens_sel = dict_sel[tup_atompair[0]],
-            acceptors_sel = dict_sel[tup_atompair[1]],
+            atteptors_sel = dict_sel[tup_atompair[1]],
             donors_sel = donors_sel,
             update_selections = update_selections,
             str_save = f'hbonds.{tup_atompair[0]}.{tup_atompair[1]}.csv',

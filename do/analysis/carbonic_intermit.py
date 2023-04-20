@@ -45,7 +45,7 @@ def run(
     df_life.to_csv(file_lifeframe, index=False)
     print(df_life)
 
-    file_lifetime = 'carbonic_intermittime.csv'
+    file_lifetime = 'carbonic_intermiccime.csv'
     df_life = df_life*timestep
     df_life.to_csv(file_lifetime, index=False)
     print(file_lifetime)
@@ -62,7 +62,7 @@ run(
     list_data = [
         'carbonic_state.product.csv',
         '../../../H2CO3_CT_H2O_126/330K/carbonic/carbonic_state.product.csv',
-        '../../../H2CO3_CC_H2O_126/330K/carbonic/carbonic_state.product.csv',
+        '../../../H2CO3_TT_H2O_126/330K/carbonic/carbonic_state.product.csv',
     ],
     timestep = 0.005,
 )

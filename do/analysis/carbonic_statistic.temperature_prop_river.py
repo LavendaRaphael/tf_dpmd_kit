@@ -16,15 +16,15 @@ def run(
 ):
 
     dict_color = {
-        'TT': 'tab:blue',
+        'CC': 'tab:blue',
         'CT': 'tab:orange',
-        'CC': 'tab:green',
+        'TT': 'tab:green',
         'H2CO3': 'tab:red',
         'HCO3': 'tab:purple',
     }
 
     file_data = 'carbonic_statistic.temperature.csv'
-    list_header = ['TT', 'CT', 'CC', 'HCO3']
+    list_header = ['CC', 'CT', 'TT', 'HCO3']
 
     dfgb = pd.read_csv(file_data, index_col=['state']).groupby(level='state')
     ser_temperature = dfgb.get_group(list_header[0])['temperature(K)']
@@ -40,9 +40,9 @@ def run(
     plot.add_text(
         ax,
         dict_text = {
-            (330, 0.65): 'TT',
+            (330, 0.65): 'CC',
             (330, 0.87): 'CT',
-            (340, 0.87): 'CC',
+            (340, 0.87): 'TT',
             (330, 0.97): r'HCO$_3^-$',
         },
         va = 'center',
@@ -53,9 +53,9 @@ def run(
     ),
     plot.add_arrow(
         ax,
-        dict_arrow = {
-            'x': [(342, 0.87), (348, 0.92)]
-        },
+        list_arrow = [
+            [(342, 0.87), (348, 0.92)]
+        ],
         arrowstyle = 'simple, head_length=2, head_width=2, tail_width=0.1',
         color = 'white'
     )

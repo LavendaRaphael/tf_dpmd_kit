@@ -16,19 +16,19 @@ def run(
         'HCO3': r'HCO$_3^-$',
     }
     dict_color = {
-        'TT': 'tab:blue',
+        'CC': 'tab:blue',
         'CT': 'tab:orange',
-        'CC': 'tab:green',
+        'TT': 'tab:green',
         'HCO3': 'tab:purple',
     }
     dict_marker = {
-        'TT': 'o',
+        'CC': 'o',
         'CT': 'v',
-        'CC': '^',
+        'TT': '^',
         'HCO3': '>',
     }
 
-    list_header = ['TT', 'CT', 'CC','HCO3']
+    list_header = ['CC', 'CT', 'TT','HCO3']
 
     file_data = 'carbonic_statistic.temperature.csv'
     dfgb = pd.read_csv(file_data, index_col=['state']).groupby(level='state')

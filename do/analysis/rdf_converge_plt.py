@@ -25,7 +25,7 @@ def run(
         list_type = ['pdf', 'svg']
     )
 
-str_pair = 'tt_h_oh.o_w'
+str_pair = 'cc_h_oh.o_w'
 run(
     dict_data = {
         '4-6ns':  f'rdf.{str_pair}.0800000_1200000.csv',
@@ -35,7 +35,7 @@ run(
     str_text = r'H$_{OH}$-O$_W$',
     str_pair = str_pair,
 )
-str_pair = 'tt_o_oh.h_w'
+str_pair = 'cc_o_oh.h_w'
 run(
     dict_data = {
         '4-6ns':  f'rdf.{str_pair}.0800000_1200000.csv',
@@ -45,7 +45,7 @@ run(
     str_text = r'O$_{OH}$-H$_W$',
     str_pair = str_pair,
 )
-str_pair = 'tt_o_c.h_w'
+str_pair = 'cc_o_c.h_w'
 run(
     dict_data = {
         '4-6ns':  f'rdf.{str_pair}.0800000_1200000.csv',

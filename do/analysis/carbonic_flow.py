@@ -7,9 +7,9 @@ def main():
     file_save = 'carbonic_flow.csv'
 
     list_timelong = [
-        '../TT/carbonic/timelong.json',
-        '../CT/carbonic/timelong.json',
         '../CC/carbonic/timelong.json',
+        '../CT/carbonic/timelong.json',
+        '../TT/carbonic/timelong.json',
     ]
     time_tot = 0
     for file in list_timelong:
@@ -19,9 +19,9 @@ def main():
 
     df = analysis.read_multidata(
         list_file = [
-            '../TT/carbonic/carbonic_lifedata.csv',
-            '../CT/carbonic/carbonic_lifedata.csv',
             '../CC/carbonic/carbonic_lifedata.csv',
+            '../CT/carbonic/carbonic_lifedata.csv',
+            '../TT/carbonic/carbonic_lifedata.csv',
         ]
     )
     df.dropna(inplace=True)

@@ -3,7 +3,7 @@ import numpy as np
 from tf_dpmd_kit import analysis
 import os
 
-#TT
+#CC
 dict_sel = {
     'o_w': 'index 0:125',
     'o_0_2': 'index 126 128',

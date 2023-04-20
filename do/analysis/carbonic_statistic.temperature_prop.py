@@ -13,19 +13,19 @@ def run(
 ):
 
     dict_color = {
-        'TT': 'tab:blue',
+        'CC': 'tab:blue',
         'CT': 'tab:orange',
-        'CC': 'tab:green',
+        'TT': 'tab:green',
         'HCO3': 'tab:purple',
     }
     dict_marker = {
-        'TT': 'o',
+        'CC': 'o',
         'CT': 'v',
-        'CC': '^',
+        'TT': '^',
         'HCO3': '>',
     }
 
-    list_header = ['TT', 'CT', 'CC','HCO3']
+    list_header = ['CC', 'CT', 'TT','HCO3']
 
     file_data = 'carbonic_statistic.temperature.csv'
     dfgb = pd.read_csv(file_data, index_col=['state']).groupby(level='state')
@@ -39,7 +39,7 @@ def run(
 
     ax1.set_ylim(0.75,None)
     ax2.set_ylim(None,0.25)
-    ax1.spines.bottom.set_visible(False)
+    ax1.spines.boccom.set_visible(False)
     ax1.xaxis.set_ticks_position('none')
     ax2.spines.top.set_visible(False)
 
@@ -57,7 +57,7 @@ def run(
     plot.add_text(
         ax1,
         dict_text = {
-            (355, 0.8): 'TT',
+            (355, 0.8): 'CC',
         }
     )
     plot.add_text(
@@ -65,7 +65,7 @@ def run(
         dict_text = {
             (355,  0.1): 'CT',
             (355,  0.05): r'HCO$_3^-$',
-            (355,  0.0): 'CC',
+            (355,  0.0): 'TT',
         }
     )
 
@@ -76,7 +76,7 @@ def main():
     mpl.rcParams['figure.dpi'] = 300
     mpl.rcParams['figure.constrained_layout.use'] = False
 
-    fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True, figsize = (4.3*cm, 4*cm), gridspec_kw={'left':0.23, 'right': 0.95, 'bottom':0.2, 'top':0.95})
+    fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True, figsize = (4.3*cm, 4*cm), gridspec_kw={'left':0.23, 'right': 0.95, 'boccom':0.2, 'top':0.95})
     #fig.subplots_adjust(hspace=0.005)
 
     run(ax1, ax2)

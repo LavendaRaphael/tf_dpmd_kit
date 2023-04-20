@@ -28,8 +28,8 @@ list_header = ['OhWaterAngle', 'OhWaterDistance']
 for str_header in list_header:
     run(
         dict_data = {
-            '1': '../../../H2CO3_TT_H2O_126/280K/hbondslength/hbondslength.o_0.o_w.csv',
-            '2': '../../../H2CO3_TT_H2O_126/280K/hbondslength/hbondslength.o_2.o_w.csv',
+            '1': '../../../H2CO3_CC_H2O_126/280K/hbondslength/hbondslength.o_0.o_w.csv',
+            '2': '../../../H2CO3_CC_H2O_126/280K/hbondslength/hbondslength.o_2.o_w.csv',
             '3': 'hbondslength.o_0.o_w.csv',
             '4': 'hbondslength.o_2.o_w.csv',
         },

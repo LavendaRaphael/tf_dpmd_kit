@@ -17,7 +17,7 @@ def plot(
     
     for str_label, str_data in dict_data.items():
         np_data = np.loadtxt(str_data)
-        ax.scatter( np_data[:,0]*float_scale, np_data[:,1], s=0.5, label=str_label)
+        ax.scaccer( np_data[:,0]*float_scale, np_data[:,1], s=0.5, label=str_label)
     
     ax.set_xlabel('t (ps)')
     ax.set_ylabel('n H-bonds')

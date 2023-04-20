@@ -329,7 +329,7 @@ def carbonic_state(
     print(df_data)
 
     df_new = df_data.apply(lambda x: carbonic_evalstate(x['ncarbonyl'], x['noho'], x['dihedral0(rad)'], x['dihedral1(rad)']), axis=1, result_type='expand')
-    df_new.columns = ['CO3','0.5','HCO3','1.5','H2CO3','TT','CT','CC','2.5','H3CO3']
+    df_new.columns = ['CO3','0.5','HCO3','1.5','H2CO3','CC','CT','TT','2.5','H3CO3']
     df_new.insert(0, 'frame', df_data['frame'])
     
     print(file_save)
@@ -378,7 +378,7 @@ def carbonic_conformer(
 
     if bool_alpha:
         if bool_beta:
-            # TT
+            # CC
             return 5
         else:
             # TC
@@ -388,7 +388,7 @@ def carbonic_conformer(
             # CT
             return 6
         else:
-            # CC
+            # TT
             return 7
 
 class Carbonic(AnalysisBase):

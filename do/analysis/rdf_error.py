@@ -1,9 +1,9 @@
 from tf_dpmd_kit import analysis
 
 list_pair = [
-    'tt_h_oh.o_w',
-    'tt_o_oh.h_w',
-    'tt_o_c.h_w',
+    'cc_h_oh.o_w',
+    'cc_o_oh.h_w',
+    'cc_o_c.h_w',
     'o_w.o_w',
 ]
 

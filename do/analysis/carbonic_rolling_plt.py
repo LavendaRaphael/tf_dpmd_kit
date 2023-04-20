@@ -12,9 +12,9 @@ analysis.carbonic_rolling_plt(
     float_xscale = 0.0004837769,
     str_xlabel = 'Time (ps)',
     tup_ylim = (0.5, 4.5),
-    list_header = ['HCO3', 'TT', 'CT', 'CC'],
+    list_header = ['HCO3', 'CC', 'CT', 'TT'],
     list_ypos = [1, 2, 3, 4],
-    list_yticklabels = ['HCO$_3^-$', 'TT','CT','CC'],
+    list_yticklabels = ['HCO$_3^-$', 'CC','CT','TT'],
 )
 plot.add_text(
     ax,
@@ -34,9 +34,9 @@ analysis.carbonic_rolling_plt(
     str_xlabel = 'Time (ns)',
     file_data = 'carbonic_state.csv',
     int_window = 100,
-    list_header = ['CO3','HCO3','TT','CT','CC','H3CO3'],
+    list_header = ['CO3','HCO3','CC','CT','TT','H3CO3'],
     list_ypos = [0, 1, 2, 3, 4, 5],
-    list_yticklabels = [r'CO$_3^{2-}$', 'HCO$_3^-$', 'TT','CT','CC', r'H$_3$CO$_3$'],
+    list_yticklabels = [r'CO$_3^{2-}$', 'HCO$_3^-$', 'CC','CT','TT', r'H$_3$CO$_3$'],
 )
 
 #'''
