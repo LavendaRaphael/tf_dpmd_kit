@@ -485,6 +485,9 @@ class Carbonic(AnalysisBase):
                 self.atomg_h[list_hydroxyl_h],
                 box=box
             )
+            # =O(1): -O-H(0,2) to -O-H(2,0)
+            if list_carbonyl[0] == 1:
+                dihedrals = np.flip(dihedrals)
         return len_carbonyl, len_oho, dihedrals[0], dihedrals[1], list_dist[0], list_dist[1], list_dist[2]
 
 
