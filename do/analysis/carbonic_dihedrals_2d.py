@@ -12,11 +12,14 @@ def run(
     ax,
 ):
 
-    df_data = df_data = analysis.read_multidata([
+    df_data = analysis.read_multidata([
         '../CC/carbonic/carbonic_dihedrals.csv',
         '../CT/carbonic/carbonic_dihedrals.csv',
         '../TT/carbonic/carbonic_dihedrals.csv',
     ])
+
+    df_sym = df_data.rename(columns={'dihedral1(rad)': 'dihedral0(rad)', 'dihedral0(rad)': 'dihedral1(rad)'})
+    df_data = pd.concat([df_data, df_sym], ignore_index=True)
 
     h, xedges, yedges = np.histogram2d(df_data['dihedral0(rad)'], df_data['dihedral1(rad)'], bins=200, density=True)
 
@@ -27,16 +30,11 @@ def run(
         energy.T,
         origin = 'lower',
         extent = extent,
-        cmap = 'Blues_r',
-        #cmap = 'coolwarm',
+        #cmap = 'Blues_r',
+        cmap = 'coolwarm',
         aspect = 'auto',
         norm =colors.BoundaryNorm(boundaries=np.linspace(0, 30, 11), ncolors=256, extend='max') ,
     )
-    #cs = ax.contour(
-    #    energy.T,
-    #    origin = 'lower',
-    #    extent = extent,
-    #)
     colorbar =  fig.colorbar( mappable=image, ax=ax, extend='max')
     colorbar.ax.set_ylabel('Free energy (kJ/mol)')
 

@@ -40,30 +40,21 @@ def run(
         print(df_tmp)
         df_life = pd.concat([df_life, df_tmp], ignore_index=True)
 
-    file_lifeframe = 'carbonic_intermitframe.csv'
-    print(file_lifeframe)
-    df_life.to_csv(file_lifeframe, index=False)
-    print(df_life)
-
-    file_lifetime = 'carbonic_intermiccime.csv'
+    file_lifetime = 'carbonic_intermit.csv'
     df_life = df_life*timestep
     df_life.to_csv(file_lifetime, index=False)
     print(file_lifetime)
     print(df_life)
 
-run(
-    list_data = [
-        'carbonic_state.csv',
-    ],
-    timestep = 0.0004837769,
-)
-'''
-run(
-    list_data = [
-        'carbonic_state.product.csv',
-        '../../../H2CO3_CT_H2O_126/330K/carbonic/carbonic_state.product.csv',
-        '../../../H2CO3_TT_H2O_126/330K/carbonic/carbonic_state.product.csv',
-    ],
-    timestep = 0.005,
-)
-'''
+def main():
+    run(
+        list_data = [
+            'carbonic_state.product.csv',
+            '../../../H2CO3_CT_H2O_126/330K/carbonic/carbonic_state.product.csv',
+            '../../../H2CO3_TT_H2O_126/330K/carbonic/carbonic_state.product.csv',
+        ],
+        timestep = 0.005,
+    )
+
+main()
+

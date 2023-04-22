@@ -53,7 +53,7 @@ def aselist_to_snap(
 
     for idx, ase_atoms in zip(list_snap, aselist):
         idx = int(idx)
-        dirx = f'snap_{idx:0>6d}'
+        dirx = f'snap_{idx:0>7d}'
         if not os.path.exists(dirx):
             os.mkdir(dirx)
         os.chdir(dirx)

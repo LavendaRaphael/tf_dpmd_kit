@@ -15,7 +15,7 @@ def run():
     file_save = 'carbonic_dihedrals.csv'
 
     print(file_data)
-    df = pd.read_csv(file_data)
+    df = pd.read_csv(file_data, index_col=0)
 
     df = df[df['dihedral0(rad)'].notnull()]
     df = df.loc[:, ['dihedral0(rad)', 'dihedral1(rad)']]
@@ -23,5 +23,5 @@ def run():
 
     print(file_save)
     print(df)
-    df.to_csv(file_save, index=False)
+    df.to_csv(file_save)
 
