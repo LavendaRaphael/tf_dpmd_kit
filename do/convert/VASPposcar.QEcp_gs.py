@@ -1,3 +1,3 @@
 import tf_dpmd_kit.convert
 
-tf_dpmd_kit.convert.poscar2cp_gs()
+tf_dpmd_kit.convert.poscar_to_cp_gs()

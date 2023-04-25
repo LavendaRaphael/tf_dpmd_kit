@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 import matplotlib as mpl
 
-def run_a_b(
+def run(
     ax,
 ):
 

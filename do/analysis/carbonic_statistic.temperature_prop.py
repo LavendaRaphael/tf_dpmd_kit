@@ -39,7 +39,7 @@ def run(
 
     ax1.set_ylim(0.75,None)
     ax2.set_ylim(None,0.25)
-    ax1.spines.boccom.set_visible(False)
+    ax1.spines.bottom.set_visible(False)
     ax1.xaxis.set_ticks_position('none')
     ax2.spines.top.set_visible(False)
 
@@ -76,7 +76,7 @@ def main():
     mpl.rcParams['figure.dpi'] = 300
     mpl.rcParams['figure.constrained_layout.use'] = False
 
-    fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True, figsize = (4.3*cm, 4*cm), gridspec_kw={'left':0.23, 'right': 0.95, 'boccom':0.2, 'top':0.95})
+    fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True, figsize = (4.3*cm, 4*cm), gridspec_kw={'left':0.23, 'right': 0.95, 'bottom':0.2, 'top':0.95})
     #fig.subplots_adjust(hspace=0.005)
 
     run(ax1, ax2)

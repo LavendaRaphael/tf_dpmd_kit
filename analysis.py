@@ -74,7 +74,7 @@ def carbonic_survival_plt(
         upper = gp['upper']
 
         ax.plot(timeline, survival, label=label, color=color, lw=1)
-        ax.fill_between(timeline, lower, upper, alpha=0.5, color=color)
+        ax.fill_between(timeline, lower, upper, alpha=0.5, color=color, lw=0)
 
     ax.legend(frameon=False, labelspacing=0.3, handlelength=1)
     ax.set_xscale('log')
@@ -167,6 +167,10 @@ def carbonic_statistic(
     df_tmp = gpby.sum()/time_tot
     df_tmp.rename(columns={'time(ps)': 'prop'}, inplace=True)
     df_save = df_tmp
+
+    df_tmp = gpby.mean()
+    df_tmp.rename(columns={'time(ps)': 'lifeave(ps)'}, inplace=True)
+    df_save = pd.concat([df_save, df_tmp], axis=1)
 
     df_tmp = gpby.count()/time_tot*1000
     df_tmp.rename(columns = {'time(ps)': 'frequency(ns-1)'}, inplace=True)

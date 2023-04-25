@@ -83,13 +83,13 @@ def dptest_parity_plt(
         np_data_new *= 1000
         np_data_new -= np.average( np_data_new[:,0] )
         str_xlabel = 'DFT energy (meV/atom)'
-        str_ylabel =  'DNN energy (meV/atom)'
+        str_ylabel =  'DP energy (meV/atom)'
         str_title = 'Energy'
 
     elif (str_mode=='f'):
         np_data_new = np_data.reshape((np_data.shape[0]*3, 2), order='F')
         str_xlabel = 'DFT force (eV/Å)'
-        str_ylabel = 'DNN force (eV/Å)'
+        str_ylabel = 'DP force (eV/Å)'
         str_title = 'Force'
 
     ax.axline([0, 0], [1, 1], linestyle='--', lw=float_lw, color='tab:orange')

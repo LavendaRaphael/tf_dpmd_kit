@@ -6,24 +6,22 @@ import numpy as np
 
 def run(ax):
 
-    f_cc = 0.46
-    f_ct = 0.71
-    f_tt = 0.12
-    f_xx = 1.05
-    f_tt_ct = 0.02
-    f_tt_xx = '0.10'
-    f_ct_tt = 0.03
-    f_ct_ct = 0.01
-    f_ct_xx = '0.60'
-    f_ct_cc = 0.08
-    f_xx_tt = 0.09
-    f_xx_ct = 0.59
-    f_xx_cc = 0.37
-    f_cc_tt = 0.01
-    f_cc_ct = 0.09
-    f_cc_xx = 0.35
-    f_cc_cen = 0.02
-    f_cen_cc = 0.02
+    f_cc = 0.451
+    f_ct = 0.747
+    f_tt = 0.131
+    f_xx = 1.063
+    f_cc_ct = 0.114
+    f_cc_xx = 0.329
+    f_cc_tt = 0.004
+    f_ct_cc = 0.076
+    f_ct_ct = 0.008
+    f_ct_xx = 0.629
+    f_ct_tt = 0.025
+    f_xx_cc = 0.363
+    f_xx_ct = 0.599
+    f_xx_tt = 0.101
+    f_tt_ct = 0.025
+    f_tt_xx = 0.105
 
     ax.axis('off')
 
@@ -103,25 +101,6 @@ def run(ax):
         connectionstyle = 'arc3, rad=0.5',
         color = 'tab:blue',
     )
-    plot.add_arrow(
-        ax,
-        list_arrow = [
-            [p_cc-r+sy, p_cc-2.2*r+sy],
-        ],
-        arrowstyle = f'-',
-        color = 'tab:blue',
-        shrinkA=5, shrinkB=5,
-        linestyle = ':'
-    ),
-    plot.add_arrow(
-        ax,
-        list_arrow = [
-            [p_cc-r+sy, p_cc-2.2*r+sy],
-        ],
-        arrowstyle = f'<|-|>, head_length=4, head_width=2',
-        color = 'tab:blue',
-        linewidth = 0,
-    )
     plot.add_text(
         axin0,
         dict_text = {
@@ -140,19 +119,10 @@ def run(ax):
             tuple(p_ct_cc-sx+0.3*sy): f_cc_ct,
             tuple(p_xx_cc+sy): f_cc_xx,
             tuple(p_ct_cc-1.7*r): f_cc_tt,
-            tuple(p_cc-1.6*r+sy): f_cc_cen
         },
         va = 'center',
         ha = 'center',
         bbox = dict(boxstyle='round', ec='tab:blue', fc='white')
-    )
-    plot.add_text(
-        ax,
-        dict_text = {
-            tuple(p_cc-1.6*r+2*sy): 'Censored',
-        },
-        va = 'center',
-        ha = 'center',
     )
     # CT
     plot.add_arrow(
@@ -197,14 +167,6 @@ def run(ax):
         va = 'center',
         ha = 'center',
         bbox = dict(boxstyle='round', ec='tab:orange', fc='white')
-    )
-    plot.add_text(
-        ax,
-        dict_text = {
-            tuple(p_ct-r-sx+sy): 'TS',
-        },
-        va = 'center',
-        ha = 'center',
     )
 
     # TT

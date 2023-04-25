@@ -19,7 +19,7 @@ def run():
         list_key.append(temperature)
         list_df.append(df_data)
     df_save = pd.concat(list_df, keys=list_key, names=['temperature(K)'])
-    df_save = df_save[['prop', 'prop_sem', 'frequency(ns-1)', 'frequency(ns-1)_sem', 'freqprop', 'freqprop_sem', 'lifetime(ps)', 'lower', 'upper']]
+    df_save = df_save[['prop', 'prop_sem', 'lifeave(ps)', 'lifeave(ps)_sem', 'frequency(ns-1)', 'frequency(ns-1)_sem', 'freqprop', 'freqprop_sem', 'lifetime(ps)', 'lower', 'upper']]
     file_save = f'carbonic_statistic.temperature.csv'
     print(file_save)
     print(df_save)

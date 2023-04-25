@@ -34,7 +34,7 @@ def run(
         if header in dict_color:
             color = dict_color[header]
         ser_1 = ser_0 + ser_1
-        ax.fill_between(ser_temperature, ser_0, ser_1, lw=1, color=color, alpha=0.5)
+        ax.fill_between(ser_temperature, ser_0, ser_1, color=color, alpha=0.5, lw=0)
         ser_0 = ser_1
 
     plot.add_text(
