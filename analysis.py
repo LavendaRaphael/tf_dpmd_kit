@@ -480,17 +480,16 @@ class Carbonic(AnalysisBase):
         elif ncarbonyl == 2:
             for o_id in list_carbonyl:
                 h_id = list_h[o_id]
+                print(self.carbonic_o[o_id], self.atomg_h[h_id], list_dist[o_id])
                 np_id, np_distances = capped_distance(
                     reference = self.atomg_h[[h_id]],
                     configuration = self.water_o,
                     max_cutoff = self.cutoff,
                     box = box,
                 )
+                # case of -C-OH --- O=C-
                 if np.size(np_distances) == 0:
-                    print(self._ts.frame, list_dist[o_id], 'single H')
-                    list_dh_o1.append(o_id)
-                    list_dh_h.append(h_id)
-                    list_dist_oh.append(list_dist[o_id])
+                    list_dh_o0.append(o_id)
                     continue
                 watero_id = np_id[0, 1]
                 np_id, np_distances = capped_distance(
