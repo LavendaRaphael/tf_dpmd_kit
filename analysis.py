@@ -486,6 +486,12 @@ class Carbonic(AnalysisBase):
                     max_cutoff = self.cutoff,
                     box = box,
                 )
+                if np.size(np_distances) == 0:
+                    print(self._ts.frame, list_dist[o_id], 'single H')
+                    list_dh_o1.append(o_id)
+                    list_dh_h.append(h_id)
+                    list_dist_oh.append(list_dist[o_id])
+                    continue
                 watero_id = np_id[0, 1]
                 np_id, np_distances = capped_distance(
                     reference = self.water_o[[watero_id]],
