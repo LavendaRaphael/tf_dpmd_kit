@@ -6,22 +6,22 @@ import numpy as np
 
 def run(ax):
 
-    f_cc = 0.451
-    f_ct = 0.747
-    f_tt = 0.131
-    f_xx = 1.063
-    f_cc_ct = 0.114
-    f_cc_xx = 0.329
-    f_cc_tt = 0.004
-    f_ct_cc = 0.076
-    f_ct_ct = 0.008
-    f_ct_xx = 0.629
-    f_ct_tt = 0.025
-    f_xx_cc = 0.363
-    f_xx_ct = 0.599
-    f_xx_tt = 0.101
-    f_tt_ct = 0.025
-    f_tt_xx = 0.105
+    f_cc = 0.468
+    f_ct = 0.835
+    f_tt = 0.168
+    f_xx = 1.172
+    f_cc_ct = 0.108
+    f_cc_xx = 0.350
+    f_cc_tt = 0.003
+    f_ct_cc = 0.091
+    f_ct_ct = 0.007
+    f_ct_xx = 0.694
+    f_ct_tt = 0.040
+    f_xx_cc = 0.367
+    f_xx_ct = 0.680
+    f_xx_tt = 0.125
+    f_tt_ct = 0.040
+    f_tt_xx = 0.128
 
     ax.axis('off')
 

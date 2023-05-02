@@ -7,27 +7,27 @@ cm = 1/2.54
 
 fig, ax = plt.subplots(figsize=(8.6*cm, 3.5*cm))
 
-'''
+#'''
 analysis.carbonic_rolling_plt(
-    float_xscale = 0.0004837769,
-    str_xlabel = 'Time (ps)',
-    tup_ylim = (0.5, 4.5),
-    list_header = ['HCO3', 'CC', 'CT', 'TT'],
-    list_ypos = [1, 2, 3, 4],
-    list_yticklabels = ['HCO$_3^-$', 'CC','CT','TT'],
-)
-plot.add_text(
     ax,
-    dict_text = {'AIMD': (0.9, 0.9)}
+    float_xscale = 0.0004837769*5,
+    str_xlabel = 'Time (ps)',
+    file_data = 'carbonic_state.csv',
+    int_window = 100,
+    list_header = ['CO3','HCO3','CC','CT','TT','H3CO3'],
+    list_ypos = [0, 1, 2, 3, 4, 5],
+    list_yticklabels = [r'CO$_3^{2-}$', 'HCO$_3^-$', 'CC','CT','TT', r'H$_3$CO$_3$'],
 )
+
+
 plot.save(
     fig,
-    str_save = 'carbonic_rolling',
-    list_size = ['pdf', 'svg']
+    file_save = 'carbonic_rolling',
+    list_type = ['pdf', 'svg']
 )
 #'''
 
-#'''
+'''
 analysis.carbonic_rolling_plt(
     ax,
     float_xscale = 0.00001,
@@ -41,22 +41,4 @@ analysis.carbonic_rolling_plt(
 
 #'''
 
-'''
-analysis.carbonic_rolling_plt(
-    ax,
-    float_xscale = 0.000005,
-    str_xlabel = 'Time (ns)',
-    tup_ylim = (0.5, 4.5),
-)
-plot.add_text(
-    ax,
-    dict_text = {'DPMD': (0.9, 0.9)}
-)
-plot.save(
-    fig,
-    tup_size = (8.6*cm, 3.5*cm),
-    str_save = 'carbonic_rolling',
-    list_type = ['png'],
-)
-#'''
 plt.show()

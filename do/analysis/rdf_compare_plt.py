@@ -34,7 +34,7 @@ def run(
     )
     plot.save(
         fig,
-        file_save = f'rdf.{str_pair}.ave',
+        file_save = f'rdf.{str_pair}.compare',
         list_type = ['pdf', 'svg']
     )
 
@@ -42,10 +42,14 @@ def main():
 
     plot.set_rcparam()
 
+    dir_aimd = '/home/faye/research_d/202203_MDCarbonicAcid/server/07.md_water62/CPBO/CC/rdf/'
+    dir_dpmd = '/home/faye/research_d/202203_MDCarbonicAcid/server/07.md_water62/DPMD/330K/CC/rdf/'
+
     str_pair = 'cc_h_oh.o_w'
     run(
         dict_data = {
-            '6-30 ps': f'rdf.{str_pair}.ave.csv',
+            'AIMD': f'{dir_aimd}rdf.{str_pair}.ave.csv',
+            'DPMD': f'{dir_dpmd}rdf.{str_pair}.ave.csv',
         },
         str_text = r'H$_{OH}$-O$_W$',
         str_pair = str_pair,
@@ -54,7 +58,8 @@ def main():
     str_pair = 'cc_o_oh.h_w'
     run(
         dict_data = {
-            '6-30 ps': f'rdf.{str_pair}.ave.csv',
+            'AIMD': f'{dir_aimd}rdf.{str_pair}.ave.csv',
+            'DPMD': f'{dir_dpmd}rdf.{str_pair}.ave.csv',
         },
         str_text = r'O$_{OH}$-H$_W$',
         str_pair = str_pair,
@@ -63,7 +68,8 @@ def main():
     str_pair = 'cc_o_c.h_w'
     run(
         dict_data = {
-            '6-30 ps': f'rdf.{str_pair}.ave.csv',
+            'AIMD': f'{dir_aimd}rdf.{str_pair}.ave.csv',
+            'DPMD': f'{dir_dpmd}rdf.{str_pair}.ave.csv',
         },
         str_text = r'$^=$O-H$_W$',
         str_pair = str_pair,
@@ -72,7 +78,8 @@ def main():
     str_pair = 'o_w.o_w'
     run(
         dict_data = {
-            '6-30 ps': f'rdf.{str_pair}.ave.csv',
+            'AIMD': f'{dir_aimd}rdf.{str_pair}.ave.csv',
+            'DPMD': f'{dir_dpmd}rdf.{str_pair}.ave.csv',
         },
         str_text = r'O$_W$-O$_W$',
         str_pair = str_pair,

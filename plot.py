@@ -258,10 +258,13 @@ def plt_compare(
     dict_color: dict = None,
     bool_error: bool = False,
     float_lw: float = None,
+    legend_kw: dict = None,
 ) -> None:
 
     if dict_color is None:
         dict_color = {}
+    if legend_kw is None:
+        legend_kw = {}
 
     for str_label in dict_data:
         str_file = dict_data[str_label]
@@ -297,6 +300,7 @@ def plt_compare(
     if bool_legend:
         ax.legend(
             frameon = False,
+            **legend_kw,
         )
     ax.set_xlabel(str_xlabel)
     ax.set_ylabel(str_ylabel)
