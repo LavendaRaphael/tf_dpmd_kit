@@ -487,6 +487,9 @@ class Carbonic(AnalysisBase):
                 max_cutoff = box[0],
                 box = box,
             )
+            if np.size(np_distances) == 0:
+                print(self._ts.frame, list_h_tmp)
+                raise
             list_dist.append(min(np_distances))
             dihedrals = [None, None]
         else:
