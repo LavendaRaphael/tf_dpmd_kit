@@ -398,7 +398,104 @@ def carbonic_conformer(
             # TT
             return 7
 
+
 class Carbonic(AnalysisBase):
+
+    def __init__(
+        self,
+        carbonic_c,
+        carbonic_o,
+        atomg_h,
+        water_o,
+        cutoff = 1.3,
+        ):
+
+        trajectory = carbonic_c.universe.trajectory
+        super(Carbonic, self).__init__(trajectory)
+
+        self.carbonic_c = carbonic_c
+        self.carbonic_o = carbonic_o
+        self.atomg_h = atomg_h
+        self.water_o = water_o
+        self.cutoff = cutoff
+
+    def _prepare(self):
+
+        self.results = np.zeros((self.n_frames, 6))
+        self.carbonic_c2 = self.carbonic_c[[0,0]]
+
+    def _single_frame(self):
+
+        self.results[self._frame_index, 1:] = self._carbonic()
+        self.results[self._frame_index, 0] = self._ts.frame
+
+    def _conclude(self):
+
+        columns = ['frame',
+                   'ncarbonyl', 'dihedral0(rad)', 'dihedral1(rad)','roh0(ang)','roh1(ang)']
+        self.df = pd.DataFrame(self.results, columns=columns)
+    
+    def _carbonic(self):
+    
+        box = self._ts.dimensions
+
+        list_carbonyl = []
+        list_o = []
+        list_h = []
+        list_dist = []
+        for o_id in range(3):
+            np_id, np_distances = capped_distance(
+                reference = self.carbonic_o[[o_id]],
+                configuration = self.atomg_h,
+                max_cutoff = self.cutoff,
+                box = box,
+            )
+            if np.size(np_distances) == 0:
+                list_carbonyl.append(o_id)
+                continue
+            h_id = np_id[np.argmin(np_distances), 1]
+            list_h.append(h_id)
+            list_dist.append(min(np_distances))
+            list_o.append(o_id)
+
+        ncarbonyl = len(list_carbonyl)
+        if ncarbonyl == 1:
+            dihedrals = calc_dihedrals(
+                self.carbonic_o[ list_carbonyl*2 ],
+                self.carbonic_c2,
+                self.carbonic_o[list_o],
+                self.atomg_h[list_h],
+                box=box
+            )
+        elif ncarbonyl == 2:
+            np_id, np_distances = capped_distance(
+                reference = self.water_o,
+                configuration = self.atomg_h,
+                max_cutoff = self.cutoff,
+                box = box,
+            )
+            df = pd.DataFrame(np_id).groupby(0)
+            df_count = df.count()
+            df_count = df_count[df_count[1]==3]
+            list_h_tmp = []
+            for o_id in df_count.index:
+                list_h_tmp.extend(df.get_group(o_id)[1].tolist())
+
+            np_id, np_distances = capped_distance(
+                reference = self.carbonic_o[list_carbonyl],
+                configuration = self.atomg_h[list_h_tmp],
+                max_cutoff = box[0],
+                box = box,
+            )
+            list_dist.append(min(np_distances))
+            dihedrals = [None, None]
+        else:
+            dihedrals = [None, None]
+            list_dist = [None, None]
+
+        return ncarbonyl, dihedrals[0], dihedrals[1], list_dist[0], list_dist[1]
+
+class Carbonic_(AnalysisBase):
 
     def __init__(
         self,
@@ -518,102 +615,6 @@ class Carbonic(AnalysisBase):
             list_dist_oh = [None, None]
 
         return ncarbonyl, dihedrals[0], dihedrals[1], list_dist_oh[0], list_dist_oh[1]
-
-class Carbonic_(AnalysisBase):
-
-    def __init__(
-        self,
-        carbonic_c,
-        carbonic_o,
-        atomg_h,
-        water_o,
-        cutoff = 1.3,
-        ):
-
-        trajectory = carbonic_c.universe.trajectory
-        super(Carbonic, self).__init__(trajectory)
-
-        self.carbonic_c = carbonic_c
-        self.carbonic_o = carbonic_o
-        self.atomg_h = atomg_h
-        self.water_o = water_o
-        self.cutoff = cutoff
-        self.roh_cutoff = cutoff
-
-    def _prepare(self):
-
-        self.results = np.zeros((self.n_frames, 8))
-        self.carbonic_c2 = self.carbonic_c[[0,0]]
-
-    def _single_frame(self):
-
-        self.results[self._frame_index, 1:] = self._carbonic()
-        self.results[self._frame_index, 0] = self._ts.frame
-
-    def _conclude(self):
-
-        columns = ['frame',
-                   'ncarbonyl', 'noho', 'dihedral0(rad)', 'dihedral1(rad)','roh0(ang)','roh1(ang)', 'roh2(ang)']
-        self.df = pd.DataFrame(self.results, columns=columns)
-    
-    def _carbonic(self):
-    
-        box = self._ts.dimensions
-
-        list_carbonyl = []
-        list_hydroxyl_o = []
-        list_hydroxyl_h = []
-        list_oho = []
-        list_dist = []
-        for o_id in range(3):
-            np_id, np_distances = capped_distance(
-                reference = self.carbonic_o[[o_id]],
-                configuration = self.atomg_h,
-                max_cutoff = self.roh_cutoff,
-                box = box,
-            )
-            if np.size(np_distances) == 0:
-                np_id, np_distances = capped_distance(
-                    reference = self.carbonic_o[[o_id]],
-                    configuration = self.atomg_h,
-                    max_cutoff = box[0]/2,
-                    box = box,
-                )
-                self.roh_cutoff = min(np_distances)
-                print(self.roh_cutoff)
-            list_dist.append(min(np_distances))
-
-            if min(np_distances) > self.cutoff:
-                list_carbonyl.append(o_id)
-                continue
-            h_id = np_id[np.argmin(np_distances), 1]
-            list_hydroxyl_o.append(o_id)
-            list_hydroxyl_h.append(h_id)
-
-            np_id, _ = capped_distance(
-                reference = self.atomg_h[[h_id]],
-                configuration = self.water_o,
-                max_cutoff = self.cutoff,
-                box = box,
-            )
-            if np.size(np_id) != 0:
-                list_oho.append(o_id)
-
-        len_carbonyl = len(list_carbonyl)
-        len_oho = len(list_oho)
-        list_dist.sort()
-
-        if len_carbonyl != 1:
-            dihedrals = [None, None]
-        else:
-            dihedrals = calc_dihedrals(
-                self.carbonic_o[ list_carbonyl*2 ],
-                self.carbonic_c2,
-                self.carbonic_o[list_hydroxyl_o],
-                self.atomg_h[list_hydroxyl_h],
-                box=box
-            )
-        return len_carbonyl, len_oho, dihedrals[0], dihedrals[1], list_dist[0], list_dist[1], list_dist[2]
 
 class HbondLength(AnalysisBase):
 
