@@ -443,6 +443,7 @@ class Carbonic(AnalysisBase):
         carbonyl = self.u.atoms[[]]
         dh_o = self.u.atoms[[]]
         dh_h = self.u.atoms[[]]
+        dh_o0 = self.u.atoms[[]]
         list_dist = []
         for atom_o in self.carbonic_o:
             np_id, np_distances = capped_distance(
