@@ -12,16 +12,26 @@ def run(
     ax,
 ):
 
-    df_data = analysis.read_multidata([
-        '../CC/carbonic/carbonic_dihedrals.csv',
+    df = analysis.read_multidata([
+        '../CC/carbonic/carbonic.product.csv',
         '../CT/carbonic/carbonic_dihedrals.csv',
         '../TT/carbonic/carbonic_dihedrals.csv',
-    ])
+    ]).dropna()
+    #df = df[df['ncarbonyl'] == 1.0]
 
-    df_sym = df_data.rename(columns={'dihedral1(rad)': 'dihedral0(rad)', 'dihedral0(rad)': 'dihedral1(rad)'})
-    df_data = pd.concat([df_data, df_sym], ignore_index=True)
+    #df_sym = df.rename(columns={'dihedral1(rad)': 'dihedral0(rad)', 'dihedral0(rad)': 'dihedral1(rad)'})
+    #df = pd.concat([df, df_sym], ignore_index=True)
 
-    h, xedges, yedges = np.histogram2d(df_data['dihedral0(rad)'], df_data['dihedral1(rad)'], bins=200, density=True)
+    bool_c0 = df['dihedral0(rad)'] < np.pi/2
+    bool_t0 = df['dihedral0(rad)'] > np.pi/2
+    bool_c1 = df['dihedral1(rad)'] < np.pi/2
+    bool_t1 = df['dihedral1(rad)'] > np.pi/2
+    bool_cc = bool_c0 & bool_c1
+    bool_ct = (bool_c0 & bool_t1) | (bool_t0 & bool_c1)
+    bool_tt = bool_t0 & bool_t1
+
+    df_p = df[bool_tt]
+    h, xedges, yedges = np.histogram2d(df_p['dihedral0(rad)'], df_p['dihedral1(rad)'], bins=200, density=True)
 
     energy = plm.prob_to_deltag(h, temperature=330)
     energy -= np.amin(energy)
@@ -58,7 +68,7 @@ def main():
 
     plot.save(
         fig,
-        file_save = 'carbonic_dihedrals_2d',
+        #file_save = 'carbonic_dihedrals_2d',
         list_type = ['pdf', 'svg']
     )
 

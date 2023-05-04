@@ -247,24 +247,16 @@ def dict_color_temperature(
 def plt_compare(
     ax,
     dict_data: dict,
-    str_xlabel: str,
-    str_ylabel: str,
-    tup_xlim: tuple = None,
-    tup_ylim: tuple = None,
     bool_minzero: bool = False,
     bool_maxzero: bool = False,
     bool_minus: bool = False, 
-    bool_legend: bool = True,
     dict_color: dict = None,
     bool_error: bool = False,
     float_lw: float = None,
-    legend_kw: dict = None,
 ) -> None:
 
     if dict_color is None:
         dict_color = {}
-    if legend_kw is None:
-        legend_kw = {}
 
     for str_label in dict_data:
         str_file = dict_data[str_label]
@@ -278,9 +270,9 @@ def plt_compare(
         else:
             color = None
 
-        np_data = np.loadtxt(str_file)
+        np_data = pd.read_csv(str_file)
 
-        np_data_y = np_data[:,1]
+        np_data_y = np_data.iloc[:,1]
         if bool_minus:
             np_data_y *= -1
 
@@ -290,22 +282,12 @@ def plt_compare(
         if bool_maxzero:
             np_data_y -= max(np_data_y)
 
-        ax.plot( np_data[:,0], np_data_y, label=str_label, color=color, linewidth=float_lw)
+        ax.plot( np_data.iloc[:,0], np_data_y, label=str_label, color=color, linewidth=float_lw)
 
         if bool_error:
-            ax.fill_between( np_data[:,0], np_data_y-np_data[:,2], np_data_y+np_data[:,2], color=color, alpha=0.5)
+            ax.fill_between( np_data.iloc[:,0], np_data_y-np_data.iloc[:,2], np_data_y+np_data.iloc[:,2], color=color, alpha=0.5)
     
     set_lw(ax, float_lw)
-
-    if bool_legend:
-        ax.legend(
-            frameon = False,
-            **legend_kw,
-        )
-    ax.set_xlabel(str_xlabel)
-    ax.set_ylabel(str_ylabel)
-    ax.set_xlim(tup_xlim)
-    ax.set_ylim(tup_ylim)
 
 def plt_error(
     dict_data: dict,
