@@ -59,8 +59,8 @@ def mda_to_snap(
         if not os.path.exists(dirx):
             os.mkdir(dirx)
         
-        mda_u.atoms.write('lmp.data', frames=mda_u.trajectory[[idx]])
-        #mda_u.atoms.write(os.path.join(dirx, 'test.gro'), frames=mda_u.trajectory[[idx]])
+        mda_u.atoms.write(os.path.join(dirx, 'lmp.data'), frames=mda_u.trajectory[[idx]])
+        #mda_u.atoms.write(os.path.join(dirx, 'test.pdb'), frames=mda_u.trajectory[[idx]])
  
 def aselist_to_snap(
     aselist,

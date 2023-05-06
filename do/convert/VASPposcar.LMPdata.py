@@ -1,5 +1,5 @@
-import dpdata
+import ase.io
 
-dp_sys = dpdata.System(file_name='POSCAR', fmt='vasp/poscar')
-print(dp_sys)
-dp_sys.to('lammps/lmp', "conf.lmp")
+ase_atoms = ase.io.read(filename='POSCAR', format='vasp')
+print(ase_atoms)
+ase.io.write(filename='lmp.data', format='lammps-data', images=ase_atoms)
