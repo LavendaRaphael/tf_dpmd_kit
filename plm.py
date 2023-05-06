@@ -50,25 +50,26 @@ def colvar_hist_plt(
     return fig, ax
 
 def fes_integral(
-    str_file: str,
+    data_x,
+    data_y,
     tup_xrange: tuple = None,
     temperature: float = None,
     str_in: str = None,
     str_log: str = None
 ) -> float:
 
-    np_data = np.loadtxt(str_file)    
-    np_data[:,1] -= min(np_data[:,1])
+    data_y -= min(data_y)
 
     if not temperature:
         temperature, kBT = get_temperature( str_in, str_log )
     else:
         kBT = T2kBT(temperature)
     
-    np_data[:,1] = np.exp(-np_data[:,1]/kBT)
+    data_y = np.exp(-data_y/kBT)
 
     if tup_xrange is None:
-        np_data_trapz = np_data
+        data_trapz_x = data_x
+        data_trapz_y = data_y
     else:
         xlow = tup_xrange[0]
         xup = tup_xrange[1]
@@ -77,13 +78,14 @@ def fes_integral(
             xup = 1e27/Avogadro
             xup = (xup/(4/3*math.pi))**(1.0/3.0)
 
-        np_indices = np.searchsorted(np_data[:,0], [xlow, xup])
+        np_indices = np.searchsorted(data_x, [xlow, xup])
         slice_range = slice(np_indices[0], np_indices[1])
-        np_data_trapz = np_data[slice_range, :]
+        data_trapz_x = data_x[slice_range]
+        data_trapz_y = data_y[slice_range]
 
     integral = np.trapz(
-        np_data_trapz[:, 1],
-        x = np_data_trapz[:, 0]
+        data_trapz_y,
+        x = data_trapz_x
     )
 
     integral = -np.log(integral) * kBT
@@ -106,7 +108,8 @@ def fes_1M_correct(
     return correct
 
 def get_pka(
-    str_file: str,
+    data_x,
+    data_y,
     dict_coef: dict,
     tup_srange_tot: tuple,
     volume: float = None,
@@ -144,7 +147,7 @@ def get_pka(
         temperature, kBT = get_temperature( str_in, str_log )
 
     h_tot = fes_integral(
-        str_file = str_file,
+        data_x, data_y,
         tup_xrange = tup_srange_tot,
         temperature = temperature,
     )
@@ -152,7 +155,7 @@ def get_pka(
     deltag = 0
     for tup_srange, coef in dict_coef.items():
         h = fes_integral(
-            str_file = str_file,
+            data_x, data_y,
             tup_xrange = tup_srange,
             temperature = temperature,
         )

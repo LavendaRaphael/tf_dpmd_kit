@@ -6,13 +6,16 @@ import json
 import MDAnalysis as mda
 
 def lmgtrj_to_mda(
+    topology,
+    coordinates,
     dict_typemap: dict = None,
-    **kw
 ):
 
-    mda_u = mda.Universe(**kw, topology_format="LAMMPSDUMP", format="LAMMPSDUMP")
-    for select, typex in dict_typemap:
-        mda_u.select_atoms(select).types = typex
+    mda_u = mda.Universe(topology=topology, coordinates=coordinates, topology_format="LAMMPSDUMP", format="LAMMPSDUMP")
+    mda_u.select_atoms("type 1").types = 'O'
+    mda_u.select_atoms("type 2").types = 'H'
+    mda_u.select_atoms("type 3").types = 'C'
+
     print(mda_u.trajectory)
 
     return mda_u
@@ -39,7 +42,26 @@ def lmptrj_to_ase(
     print(len(aselist))
     print(aselist[0])
     return aselist   
-  
+
+def mda_to_snap(
+    mda_u,
+    list_snap: list,
+):
+    print(mda_u.trajectory)
+    print(list_snap)
+
+    if not os.path.exists('snap'):
+        os.mkdir('snap')
+
+    for idx in list_snap:
+        idx = int(idx)
+        dirx = f'snap/snap_{idx:0>7d}'
+        if not os.path.exists(dirx):
+            os.mkdir(dirx)
+        
+        mda_u.atoms.write('lmp.data', frames=mda_u.trajectory[[idx]])
+        #mda_u.atoms.write(os.path.join(dirx, 'test.gro'), frames=mda_u.trajectory[[idx]])
+ 
 def aselist_to_snap(
     aselist,
     list_snap: list,
@@ -88,7 +110,7 @@ def lmptrj_to_dpdata(
     list_traj: list,
 ):
 
-    dp_sys=System()
+    dp_sys=dpdata.System()
     for traj in list_traj:
         dp_tmp = dpdata.System(traj, fmt='lammps/dump', type_map=['O','H','C'])
         dp_sys.append(dp_tmp)

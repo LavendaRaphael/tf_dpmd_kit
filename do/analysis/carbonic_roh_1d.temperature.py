@@ -23,6 +23,7 @@ def run(ax):
             '350K': f'../350K/{str_tmp}',
         },
         dict_color = dict_color,
+        float_lw = 1,
     )
 
     ax.set_xlabel(r'R(OH) (Å)')
@@ -41,7 +42,7 @@ def main():
 
     plot.save(
         fig,
-        #file_save = 'carbonic_roh_1d',
+        file_save = 'carbonic_roh_1d.temperature',
         list_type = ['pdf', 'svg']
     )
 
