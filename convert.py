@@ -59,8 +59,36 @@ def mda_to_snap(
         if not os.path.exists(dirx):
             os.mkdir(dirx)
         
-        mda_u.atoms.write(os.path.join(dirx, 'lmp.data'), frames=mda_u.trajectory[[idx]])
-        #mda_u.atoms.write(os.path.join(dirx, 'test.pdb'), frames=mda_u.trajectory[[idx]])
+        mda_u.atoms.write('tmp.data', frames=mda_u.trajectory[[idx]])
+        aseatoms = lmpdata_to_ase('tmp.data')
+        ase_to_poscar(
+            images = aseatoms,
+            filename = os.path.join(dirx, 'POSCAR')
+        )
+        ase_to_qepw(
+            images = aseatoms,
+            filename = os.path.join(dirx, 'pwscf.in')
+        )
+        
+def ase_to_poscar(
+    images,
+    filename,
+):
+
+    ase.io.write(filename=filename, format='vasp', images=images)
+
+def lmpdata_to_ase(
+    filename,
+):
+    return ase.io.read(
+        filename = filename,
+        format = 'lammps-data',
+        Z_of_type = {
+            1: 8, 
+            2: 1, 
+            3: 6,
+        }
+    )
  
 def aselist_to_snap(
     aselist,
@@ -198,7 +226,8 @@ def poscar_perturb(
         dp_sys_perturb.to( 'vasp/poscar', os.path.join(str_dir, f'{int_i:02d}.POSCAR'), frame_idx=int_i )
 
 def ase_to_qepw(
-    ase_atoms
+    images,
+    filename,
 ) -> None:
     
     dict_pwscfin = {}
@@ -219,8 +248,8 @@ def ase_to_qepw(
         }
 
     ase.io.write(
-        filename = 'pwscf.in',
-        images = ase_atoms,
+        filename = filename,
+        images = images,
         format = 'espresso-in',
         input_data = dict_pwscfin,
         pseudopotentials = dict_pwpseudop 
