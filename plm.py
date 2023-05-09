@@ -54,16 +54,11 @@ def fes_integral(
     data_y,
     tup_xrange: tuple = None,
     temperature: float = None,
-    str_in: str = None,
-    str_log: str = None
 ) -> float:
 
     data_y -= min(data_y)
 
-    if not temperature:
-        temperature, kBT = get_temperature( str_in, str_log )
-    else:
-        kBT = T2kBT(temperature)
+    kBT = T2kBT(temperature)
     
     data_y = np.exp(-data_y/kBT)
 
@@ -114,8 +109,6 @@ def get_pka(
     tup_srange_tot: tuple,
     volume: float = None,
     temperature: float = None,
-    str_in: str = None,
-    str_log: str = None
 ) -> (float, float):
 
     '''Compute pka.
@@ -142,9 +135,6 @@ def get_pka(
         + [-kB*T*ln(V_x/V)]
 
     '''
-
-    if not temperature:
-        temperature, kBT = get_temperature( str_in, str_log )
 
     h_tot = fes_integral(
         data_x, data_y,
@@ -235,15 +225,11 @@ def get_pka_time(
     tup_srange_tot: tuple = None,
     str_save: str = None,
     temperature: float = None,
-    str_in: str = None,
-    str_log: str = None
 ):
 
     int_nfile = len(dict_file)
     np_pka = np.zeros(shape=(int_nfile), dtype=[('time', 'f4'), ('pka', 'f4')])
     np_deltag = np.zeros(shape=(int_nfile), dtype=[('time', 'f4'), ('deltag', 'f4')])
-    if not temperature:
-        temperature, kBT = get_temperature( str_in, str_log )
     print(temperature)
     for int_i,int_key in enumerate(dict_file):
         if not os.path.isfile(dict_file[int_key]):
@@ -417,12 +403,12 @@ def hills_sum(
     str_bin: str,
     str_cv: str = None,
     str_outfile: str = None,
-    str_in: str = None,
-    str_log: str = None,
+    plm_in: str = None,
+    plm_log: str = None,
     str_hills: str = 'HILLS'
 ):
 
-    temperature, kBT = get_temperature(str_in, str_log)
+    temperature, kBT = get_temperature(plm_in, plm_log)
 
     if not str_outfile:
         str_outfile = str_cv+'_fes.'
@@ -441,22 +427,20 @@ def T2kBT(
     temperature: float, # kelvin
 ) -> float:
 
-    Avogadro = 6.02214076e23
+    # Kcal/(mol*K)
+    kB = 1.987204259e-3
 
-    # J*K^-1
-    Kb = 1.380649e-23
-
-    # KJ*mol^-1
-    kBT = Kb*Avogadro*temperature/1000.0
+    # Kcal/mol
+    kBT = kB*temperature
     return kBT
 
 def get_temperature(
-    str_in: str = '../plm.in',
-    str_log: str = '../plm.log'
+    plm_in: str = '../plm.in',
+    plm_log: str = '../plm.log'
 ) -> float:
 
-    if str_in:
-        with open(str_in, 'r') as fp:
+    if plm_in:
+        with open(plm_in, 'r') as fp:
             for str_line in fp:
                 if 'TEMP=' in str_line:
                     list_line = str_line.split()
@@ -469,8 +453,8 @@ def get_temperature(
             raise
         kBT = T2kBT(temperature)
 
-    if str_log:
-        with open(str_log, 'r') as fp:
+    if plm_log:
+        with open(plm_log, 'r') as fp:
             for str_line in fp:
                 if 'kBT' in str_line:
                     list_line = str_line.split()
@@ -479,11 +463,11 @@ def get_temperature(
         if not kBT_log:
             raise
 
-    if str_in and str_log:
+    if plm_in and plm_log:
         if kBT-kBT_log > 1e4:
             raise
 
-    if not (str_in or str_log):
+    if not (plm_in or plm_log):
         raise
 
     return temperature, kBT

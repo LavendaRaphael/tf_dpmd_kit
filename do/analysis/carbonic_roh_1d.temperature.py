@@ -1,6 +1,7 @@
 from tf_dpmd_kit import plot
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+import pandas as pd
 
 def run(ax):
     dict_color = plot.dict_color_temperature(
@@ -13,21 +14,12 @@ def run(ax):
         }
     )
     
-    str_tmp = 'carbonic/carbonic_roh_1d.csv'
-    plot.plt_compare(
-        ax,
-        dict_data = {
-            '290K': f'../290K/{str_tmp}',
-            '310K': f'../310K/{str_tmp}',
-            '330K': f'../330K/{str_tmp}',
-            '350K': f'../350K/{str_tmp}',
-        },
-        dict_color = dict_color,
-        float_lw = 1,
-    )
+    for dir_x in ['290K', '310K', '330K', '350K']:
+        df = pd.read_csv(f'../{dir_x}/carbonic/carbonic_roh_1d.csv')
+        ax.plot(df['roh0(ang)'], df['H2CO3'], color=dict_color[dir_x], lw=1, label=dir_x)
 
     ax.set_xlabel(r'R(OH) (Å)')
-    ax.set_ylabel('Free energy (kJ/mol)')
+    ax.set_ylabel('Free energy (kcal/mol)')
     ax.legend()
     
 def main():
