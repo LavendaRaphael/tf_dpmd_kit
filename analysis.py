@@ -218,7 +218,7 @@ def carbonic_lifedata(
         ser_data = df_data[header]
         life = 0
         intermit = 0
-        list_life.append([np.nan, header, np.nan, np.nan])
+        list_life.append([np.nan, header, np.nan, np.nan, np.nan])
         for idx, val in enumerate(ser_data):
             if pd.notnull(val):
                 intermit = 0
@@ -230,17 +230,16 @@ def carbonic_lifedata(
                 if life <= intermit_frame:
                     life = 0
                 elif intermit > intermit_frame:
-                    list_life.append((start, header, life, 1))
+                    list_life.append((start, header, life, 1, idx-intermit))
                     life = 0
         if life > 0:
-            list_life.append((start, header, life, 0))
+            list_life.append((start, header, life, 0, idx))
 
-    df_life = pd.DataFrame(list_life, columns=['start', 'state', 'time(ps)', 'event'])
+    df_life = pd.DataFrame(list_life, columns=['start', 'state', 'time(ps)', 'event', 'end'])
     df_life['time(ps)'] = df_life['time(ps)']*timestep
     df_life['start'] = df_life['start']*timestep
+    df_life['end'] = df_life['end']*timestep
     df_life.loc[df_life['state']=='H2CO3', 'start'] = np.nan
-    df_life.loc[df_life['state']=='1.5', 'start'] = np.nan
-    df_life.loc[df_life['state']=='2.5', 'start'] = np.nan
     df_life.sort_values(by=['start'], inplace=True)
     print(file_save)
     print(df_life)
@@ -251,21 +250,6 @@ def carbonic_lifedata(
     print(dict_timelong)
     with open(timelong_save, 'w') as fp:
         json.dump(dict_timelong, fp)
-
-def gen_product(
-    file_data: str,
-    tup_select: tuple,
-    file_save: str,
-):
-
-    print(file_data)
-    df_data = pd.read_csv(file_data)
-    print(df_data)
-
-    df_data = df_data.iloc[tup_select[0]:tup_select[1]]
-    print(file_save)
-    print(df_data)
-    df_data.to_csv(file_save, index=False)
 
 def carbonic_rolling_plt(
     ax,
@@ -336,8 +320,8 @@ def carbonic_state(
     df_data = pd.read_csv(file_data)
     print(df_data)
 
-    df_new = df_data.apply(lambda x: carbonic_evalstate(x['ncarbonyl'], x['noho'], x['dihedral0(rad)'], x['dihedral1(rad)']), axis=1, result_type='expand')
-    df_new.columns = ['CO3','0.5','HCO3','1.5','H2CO3','CC','CT','TT','2.5','H3CO3']
+    df_new = df_data.apply(lambda x: carbonic_evalstate(x['ncarbonyl'], x['dihedral0(rad)'], x['dihedral1(rad)']), axis=1, result_type='expand')
+    df_new.columns = ['CO3','HCO3','H2CO3','CC','CT','TT','H3CO3']
     df_new.insert(0, 'frame', df_data['frame'])
     
     print(file_save)
@@ -348,32 +332,22 @@ def carbonic_state(
     print(end-start)
 
 def carbonic_evalstate(
-    ncarbonyl, 
-    noho,
+    ncarbonyl,
     alpha,
     beta,
 ):
-    list_re = [None]*10
+    list_re = [None]*7
 
     if ncarbonyl == 3:
-        # 300 CO3
+        # CO3
         list_re[0] = 1
     elif ncarbonyl == 2:
-        if noho != 0:
-            # 201
-            list_re[1] = 1
-        list_re[2] = 1
+        list_re[1] = 1
     elif ncarbonyl == 1:
-        if noho != 0:
-            # 102 111
-            list_re[3] = 1
-        list_re[4] = 1
+        list_re[2] = 1
         list_re[carbonic_conformer(alpha, beta)] = 1
     elif ncarbonyl == 0:
-        if noho != 0:
-            # 003 012 021
-            list_re[8] = 1
-        list_re[9] = 1
+        list_re[6] = 1
     return list_re
 
 def carbonic_conformer(
@@ -387,17 +361,17 @@ def carbonic_conformer(
     if bool_alpha:
         if bool_beta:
             # CC
-            return 5
+            return 3
         else:
             # TC
-            return 6
+            return 4
     else:
         if bool_beta:
             # CT
-            return 6
+            return 4
         else:
             # TT
-            return 7
+            return 5
 
 class Carbonic(AnalysisBase):
 

@@ -15,16 +15,11 @@ def run(fig,ax):
         '../TT/carbonic/carbonic.product.csv',
     ]).dropna()
 
-    #dh0 = df_data['dihedral0(rad)']
-    #dh1 = df_data['dihedral1(rad)']
-    #pio2 = np.pi/2
-    #df_data = df_data[ (dh0 > -pio2) & (dh0 < pio2) & (dh1 > -pio2) & (dh1 < pio2) ]
-    #df_data = df_data[ ((dh0 > -pio2) & (dh0 < pio2) & ((dh1 < -pio2) | (dh1 > pio2))) | (((dh0 < -pio2) | (dh0 > pio2)) & ((dh1 > -pio2) & (dh1 < pio2))) ]
     print(df_data)
-    df_sym = df_data.rename(columns={'roh0(ang)': 'roh1(ang)', 'roh1(ang)': 'roh0(ang)'})
-    df_data = pd.concat([df_data, df_sym], ignore_index=True)
+    #df_sym = df_data.rename(columns={'roh0(ang)': 'roh1(ang)', 'roh1(ang)': 'roh0(ang)'})
+    #df_data = pd.concat([df_data, df_sym], ignore_index=True)
 
-    h, xedges, yedges = np.histogram2d(df_data['roh0(ang)'], df_data['roh1(ang)'], bins=[300, 300], density=True, range=[[0.8, 1.4],[0.8, 1.4]])
+    h, xedges, yedges = np.histogram2d(df_data['roh0(ang)'], df_data['roh1(ang)'], bins=[300, 300], density=True, range=[[0.8, 10],[0.8, 1.3]])
 
     energy = plm.prob_to_deltag(h, temperature=330)
     energy -= np.amin(energy)
@@ -39,10 +34,10 @@ def run(fig,ax):
         #norm =colors.BoundaryNorm(boundaries=np.linspace(0, 30, 11), ncolors=256, extend='max') ,
     )
     colorbar = fig.colorbar( mappable=image, ax=ax, extend='max')
-    colorbar.ax.set_ylabel('Free energy (kJ/mol)')
+    colorbar.ax.set_ylabel('Free energy (kcal/mol)')
 
-    ax.set_xlabel(r'R(OH) (Å)')
-    ax.set_ylabel(r'R(OH) (Å)')
+    ax.set_xlabel(r'R($^=$OH$_{proton}$) (Å)')
+    ax.set_ylabel(r'R(O$_{OH}$H$_{OH}$) (Å)')
 
 def main():
 

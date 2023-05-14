@@ -19,7 +19,7 @@ def run(
         '2010 JPCA': str_exp+'/2010_JPCA_WangXiaoguang/Sfig_3_kelvin.csv',
         '2009 Science': str_exp+'/2009_Science_KatrinAdamczyk/pka_kelvin.csv',
     }
-    list_marker = Line2D.filled_markers
+    list_marker = Line2D.filled_markers[1:]
     marker_id = 0
     for label, file in dict_data.items():
         print(label)
@@ -29,7 +29,7 @@ def run(
 
     df = pd.read_csv('carbonic_roh_1d.pka.csv')
     df = df.groupby('state').get_group('H2CO3')
-    ax.errorbar(df['temperature(K)'], df['pka'], ls=':', marker=list_marker[marker_id], capsize=2, lw=1, markersize=2)
+    ax.errorbar(df['temperature(K)'], df['pka'], ls=':', marker=list_marker[marker_id], capsize=2, lw=1, markersize=2, label='this work')
     
     ax.set_xlabel(r'Temperature (K)')
     ax.set_ylabel('pKa')

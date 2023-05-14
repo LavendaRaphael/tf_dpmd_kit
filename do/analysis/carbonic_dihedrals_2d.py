@@ -14,13 +14,13 @@ def run(
 
     df = analysis.read_multidata([
         '../CC/carbonic/carbonic.product.csv',
-        '../CT/carbonic/carbonic_dihedrals.csv',
-        '../TT/carbonic/carbonic_dihedrals.csv',
+        '../CT/carbonic/carbonic.product.csv',
+        '../TT/carbonic/carbonic.product.csv',
     ]).dropna()
-    #df = df[df['ncarbonyl'] == 1.0]
+    df = df[df['ncarbonyl'] == 1.0]
 
-    #df_sym = df.rename(columns={'dihedral1(rad)': 'dihedral0(rad)', 'dihedral0(rad)': 'dihedral1(rad)'})
-    #df = pd.concat([df, df_sym], ignore_index=True)
+    df_sym = df.rename(columns={'dihedral1(rad)': 'dihedral0(rad)', 'dihedral0(rad)': 'dihedral1(rad)'})
+    df = pd.concat([df, df_sym], ignore_index=True)
 
     bool_c0 = df['dihedral0(rad)'] < np.pi/2
     bool_t0 = df['dihedral0(rad)'] > np.pi/2
@@ -43,10 +43,10 @@ def run(
         #cmap = 'Blues_r',
         cmap = 'coolwarm',
         aspect = 'auto',
-        norm =colors.BoundaryNorm(boundaries=np.linspace(0, 30, 11), ncolors=256, extend='max') ,
+        #norm =colors.BoundaryNorm(boundaries=np.linspace(0, 30, 11), ncolors=256, extend='max') ,
     )
-    colorbar =  fig.colorbar( mappable=image, ax=ax, extend='max')
-    colorbar.ax.set_ylabel('Free energy (kJ/mol)')
+    colorbar = fig.colorbar( mappable=image, ax=ax, extend='max')
+    colorbar.ax.set_ylabel('Free energy (kcal/mol)')
 
     ax.set_xlabel(r'$\alpha$ (rad)')
     ax.set_ylabel(r'$\beta$ (rad)')

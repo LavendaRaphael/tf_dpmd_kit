@@ -13,11 +13,11 @@ def run(
     df = pd.read_csv('carbonic_roh_1d.csv', index_col='roh0(ang)')
     for label in ['CC', 'CT', 'TT', 'H2CO3']:
         ser = df[label]
-        ser -= min(ser[(ser.index>3.5) & (ser.index<4.5)])
+        ser -= min(ser[(ser.index>3.0) & (ser.index<4.2)])
         ax.plot(df.index, df[label], label=label, lw=1)
     
-    ax.set_xlabel(r'R(OH) (Å)')
-    ax.set_ylabel('Free energy (kJ/mol)')
+    ax.set_xlabel(r'R($^=$OH$_{proton}$) (Å)')
+    ax.set_ylabel('Free energy (kcal/mol)')
     ax.legend()
 
 def main():

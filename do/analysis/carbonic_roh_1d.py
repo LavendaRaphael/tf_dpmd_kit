@@ -40,7 +40,6 @@ def run(
         df = pd.concat([df, y], axis=1)
     df = pd.concat([df, x], axis=1)
 
-    #df = pd.DataFrame(data={'roh(ang)': bin_center, 'energy(kJ/mol)': np_energy})
     df.to_csv('carbonic_roh_1d.csv', index=False)
 
 def main():
