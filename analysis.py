@@ -396,7 +396,7 @@ class Carbonic(AnalysisBase):
 
     def _prepare(self):
 
-        self.results = np.zeros((self.n_frames, 6))
+        self.results = np.zeros((self.n_frames, 10))
         self.carbonic_c2 = self.carbonic_c[[0,0]]
 
     def _single_frame(self):
@@ -406,10 +406,16 @@ class Carbonic(AnalysisBase):
 
     def _conclude(self):
 
-        columns = ['frame',
-                   'ncarbonyl', 'dihedral0(rad)', 'dihedral1(rad)','roh0(ang)','roh1(ang)']
+        columns = ['frame', 'dh0(rad)', 'dh1(rad)','roh0(ang)','roh1(ang)', 'dho0','dh0o','dh1o','dh0h','dh1h']
         self.df = pd.DataFrame(self.results, columns=columns)
-    
+        self.df = self.df.astype(dtype={
+            'frame': 'int64', 
+            'dho0': 'int64', 
+            'dh0o': 'int64', 
+            'dh1o': 'int64', 
+            'dh0h': 'int64', 
+            'dh1h': 'int64'})
+        
     def _carbonic(self):
     
         box = self._ts.dimensions
@@ -418,7 +424,7 @@ class Carbonic(AnalysisBase):
         dh_o = self.u.atoms[[]]
         dh_h = self.u.atoms[[]]
         dh_o0 = self.u.atoms[[]]
-        list_dist = []
+        roh = []
         for atom_o in self.carbonic_o:
             np_id, np_distances = capped_distance(
                 reference = mda.AtomGroup([atom_o]*2),
@@ -432,7 +438,7 @@ class Carbonic(AnalysisBase):
             h_id = np_id[np.argmin(np_distances), 1]
             dh_h += self.atomg_h[h_id]
             dh_o += atom_o
-            list_dist.append(min(np_distances))
+            roh.append(min(np_distances))
 
         ncarbonyl = len(carbonyl)
         if ncarbonyl == 1:
@@ -475,7 +481,7 @@ class Carbonic(AnalysisBase):
                 max_cutoff = box[0],
                 box = box,
             )
-            list_dist.append(min(np_distances))
+            roh.append(min(np_distances))
             h_id = np_id[np.argmin(np_distances), 1]
             dh_h += h_proton[h_id]
             o_id = np_id[np.argmin(np_distances), 0]
@@ -483,18 +489,20 @@ class Carbonic(AnalysisBase):
             dh_o0 = carbonyl - carbonyl[o_id]
         
         if len(dh_o0) == 1:
-            dihedrals = calc_dihedrals(
+            dh = calc_dihedrals(
                 dh_o0 + dh_o0,
                 self.carbonic_c2,
                 dh_o,
                 dh_h,
                 box=box
             )
+            idx = [dh_o0[0].index, dh_o[0].index, dh_o[1].index, dh_h[0].index, dh_h[1].index]
         else:
-            dihedrals = [None, None]
-            list_dist = [None, None]
+            dh = [None, None]
+            roh = [None, None]
+            idx = [None, None, None, None, None]
 
-        return ncarbonyl, dihedrals[0], dihedrals[1], list_dist[0], list_dist[1]
+        return dh[0], dh[1], roh[0], roh[1], idx[0], idx[1], idx[2], idx[3], idx[4]
 
 class Carbonic_(AnalysisBase):
 
