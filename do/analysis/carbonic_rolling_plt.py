@@ -10,7 +10,7 @@ fig, ax = plt.subplots(figsize=(8.6*cm, 3.5*cm))
 #'''
 analysis.carbonic_rolling_plt(
     ax,
-    float_xscale = 0.0004837769*5,
+    float_xscale = 0.0004837769,
     str_xlabel = 'Time (ps)',
     file_data = 'carbonic_state.csv',
     int_window = 100,

@@ -491,6 +491,10 @@ class Carbonic(AnalysisBase):
             dh_o0 = carbonyl - carbonyl[o_id]
         
         if len(dh_o0) == 1:
+            if roh[0] < roh[1]:
+                dh_o = dh_o[1] + dh_o[0]
+                dh_h = dh_h[1] + dh_h[0]
+                roh = [roh[1], roh[0]]
             dh = calc_dihedrals(
                 dh_o0 + dh_o0,
                 self.carbonic_c2,
