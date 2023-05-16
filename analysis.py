@@ -410,11 +410,12 @@ class Carbonic(AnalysisBase):
         self.df = pd.DataFrame(self.results, columns=columns)
         self.df = self.df.astype(dtype={
             'frame': 'int64', 
-            'dho0': 'int64', 
-            'dh0o': 'int64', 
-            'dh1o': 'int64', 
-            'dh0h': 'int64', 
-            'dh1h': 'int64'})
+            'dho0': 'Int64', 
+            'dh0o': 'Int64', 
+            'dh1o': 'Int64', 
+            'dh0h': 'Int64', 
+            'dh1h': 'Int64'})
+        # Int64 for Nan
         
     def _carbonic(self):
     
