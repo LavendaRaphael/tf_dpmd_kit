@@ -320,7 +320,7 @@ def carbonic_state(
     df_data = pd.read_csv(file_data)
     print(df_data)
 
-    df_new = df_data.apply(lambda x: carbonic_evalstate(x['ncarbonyl'], x['dihedral0(rad)'], x['dihedral1(rad)']), axis=1, result_type='expand')
+    df_new = df_data.apply(lambda x: carbonic_evalstate(x['ncarbonyl'], x['dh0(rad)'], x['dh1(rad)']), axis=1, result_type='expand')
     df_new.columns = ['CO3','HCO3','H2CO3','CC','CT','TT','H3CO3']
     df_new.insert(0, 'frame', df_data['frame'])
     
@@ -333,8 +333,8 @@ def carbonic_state(
 
 def carbonic_evalstate(
     ncarbonyl,
-    alpha,
-    beta,
+    dh0,
+    dh1,
 ):
     list_re = [None]*7
 
@@ -345,28 +345,28 @@ def carbonic_evalstate(
         list_re[1] = 1
     elif ncarbonyl == 1:
         list_re[2] = 1
-        list_re[carbonic_conformer(alpha, beta)] = 1
+        list_re[carbonic_conformer(dh0, dh1)] = 1
     elif ncarbonyl == 0:
         list_re[6] = 1
     return list_re
 
 def carbonic_conformer(
-    alpha,
-    beta
+    dh0,
+    dh1
 ):
     pio2 = np.pi/2
-    bool_alpha = ((alpha > -pio2) & (alpha < pio2))
-    bool_beta = ((beta > -pio2) & (beta < pio2))
+    bool_dh0 = ((dh0 > -pio2) & (dh0 < pio2))
+    bool_dh1 = ((dh1 > -pio2) & (dh1 < pio2))
 
-    if bool_alpha:
-        if bool_beta:
+    if bool_dh0:
+        if bool_dh1:
             # CC
             return 3
         else:
             # TC
             return 4
     else:
-        if bool_beta:
+        if bool_dh1:
             # CT
             return 4
         else:
@@ -396,7 +396,7 @@ class Carbonic(AnalysisBase):
 
     def _prepare(self):
 
-        self.results = np.zeros((self.n_frames, 10))
+        self.results = np.zeros((self.n_frames, 11))
         self.carbonic_c2 = self.carbonic_c[[0,0]]
 
     def _single_frame(self):
@@ -406,10 +406,11 @@ class Carbonic(AnalysisBase):
 
     def _conclude(self):
 
-        columns = ['frame', 'dh0(rad)', 'dh1(rad)','roh0(ang)','roh1(ang)', 'dho0','dh0o','dh1o','dh0h','dh1h']
+        columns = ['frame', 'ncarbonyl', 'dh0(rad)', 'dh1(rad)','roh0(ang)','roh1(ang)', 'dho0','dh0o','dh1o','dh0h','dh1h']
         self.df = pd.DataFrame(self.results, columns=columns)
         self.df = self.df.astype(dtype={
-            'frame': 'int64', 
+            'frame': 'int64',
+            'ncarbonyl': 'int64',
             'dho0': 'Int64', 
             'dh0o': 'Int64', 
             'dh1o': 'Int64', 
@@ -503,7 +504,7 @@ class Carbonic(AnalysisBase):
             roh = [None, None]
             idx = [None, None, None, None, None]
 
-        return dh[0], dh[1], roh[0], roh[1], idx[0], idx[1], idx[2], idx[3], idx[4]
+        return ncarbonyl, dh[0], dh[1], roh[0], roh[1], idx[0], idx[1], idx[2], idx[3], idx[4]
 
 class Carbonic_(AnalysisBase):
 

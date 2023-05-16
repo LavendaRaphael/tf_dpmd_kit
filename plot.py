@@ -16,6 +16,8 @@ def set_rcparam():
     mpl.rcParams['figure.dpi'] = 600
     #mpl.rcParams["figure.autolayout"] = True
     mpl.rcParams['figure.constrained_layout.use'] = True
+    #mpl.rc('text', usetex=True)
+    #mpl.rcParams['text.latex.preamble'] = r"\usepackage{amsmath}"
 
 def set_lw(
     ax,
