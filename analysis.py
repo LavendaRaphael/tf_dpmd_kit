@@ -13,6 +13,164 @@ import time
 import json
 from lifelines import KaplanMeierFitter
 
+class CarbonicRDF(AnalysisBase):
+    """
+    Modify from Mdanalysis 2.4.0 InterRDF
+    """
+    def __init__(self,
+                 water_o,
+                 all_h,
+                 carbonic,
+                 nbins=200,
+                 range=(0.0, 15.0),
+                 **kwargs):
+
+        super(CarbonicRDF, self).__init__(water_o.universe.trajectory, **kwargs)
+        self.water_o = water_o
+        self.all_h = all_h
+        self.all_atoms = water_o.universe.atoms
+        self.carbonic = carbonic
+
+        self.rdf_settings = {'bins': nbins,
+                             'range': range}
+
+    def _prepare(self):
+        # Empty histogram to store the RDF
+        count, edges = np.histogram([-1], **self.rdf_settings)
+        count = count.astype(np.float64)
+        count *= 0.0
+        self.results.edges = edges
+        bins = 0.5 * (edges[:-1] + edges[1:])
+
+        self.results.count = pd.DataFrame(
+            data={
+                'cc.o_nyl.h_w' : count,
+                'cc.o_oh.h_w'  : count,
+                'cc.h_oh.o_w'  : count,
+                'ct.o_nyl.h_w' : count,
+                'ct.o_oh_c.h_w': count,
+                'ct.o_oh_t.h_w': count,
+                'ct.h_oh_c.o_w': count,
+                'ct.h_oh_t.o_w': count,
+                'tt.o_nyl.h_w' : count,
+                'tt.o_oh.h_w'  : count,
+                'tt.h_oh.o_w'  : count,
+            },
+            index = bins
+        )
+        self.results.count.index.name = 'r(ang)'
+        self.results.nframes = pd.Series(data={'cc': 0, 'ct': 0, 'tt': 0}, name='nframe')
+
+        # Cumulative volume for rdf normalization
+        self.volume_cum = 0
+        # Set the max range to filter the search radius
+        self._maxrange = self.rdf_settings['range'][1]
+
+    def _single_frame(self):
+        self.volume_cum += self._ts.volume
+
+        ser_carbonic= self.carbonic.loc[self._ts.frame]
+        ncarbonyl = int(ser_carbonic['ncarbonyl'])
+        if ncarbonyl != 1:
+            # HCO3, CO3, H3CO3
+            return
+
+        dh0  = ser_carbonic['dh0(rad)']
+        dh1  = ser_carbonic['dh1(rad)']
+        pio2 = np.pi/2
+        bool_dh0 = ((dh0 > -pio2) & (dh0 < pio2))
+        bool_dh1 = ((dh1 > -pio2) & (dh1 < pio2))
+
+        dho0 = int(ser_carbonic['dho0'])
+        dh0o = int(ser_carbonic['dh0o'])
+        dh1o = int(ser_carbonic['dh1o'])
+        dh0h = int(ser_carbonic['dh0h'])
+        dh1h = int(ser_carbonic['dh1h'])
+        o_nyl = self.all_atoms[[dho0]]
+        h_w = self.all_h - self.all_atoms[[dh0h, dh1h]]
+        if bool_dh0:
+            if bool_dh1:
+                # CC
+                o_oh = self.all_atoms[[dh0o, dh1o]]
+                h_oh = self.all_atoms[[dh0h, dh1h]]
+                self.results.count['cc.o_nyl.h_w'] += self._cal_count(o_nyl, h_w)
+                self.results.count['cc.o_oh.h_w' ] += self._cal_count(o_oh , h_w)
+                self.results.count['cc.h_oh.o_w' ] += self._cal_count(h_oh , self.water_o)
+                self.results.nframes['cc'] += 1
+            else:
+                # CT
+                o_oh_c = self.all_atoms[[dh0o]]
+                o_oh_t = self.all_atoms[[dh1o]]
+                h_oh_c = self.all_atoms[[dh0h]]
+                h_oh_t = self.all_atoms[[dh1h]]
+                self.results.count['ct.o_nyl.h_w' ] += self._cal_count(o_nyl , h_w)
+                self.results.count['ct.o_oh_c.h_w'] += self._cal_count(o_oh_c, h_w)
+                self.results.count['ct.o_oh_t.h_w'] += self._cal_count(o_oh_t, h_w)
+                self.results.count['ct.h_oh_c.o_w'] += self._cal_count(h_oh_c, self.water_o)
+                self.results.count['ct.h_oh_t.o_w'] += self._cal_count(h_oh_t, self.water_o)
+                self.results.nframes['ct'] += 1
+        else:
+            if bool_dh1:
+                # TC
+                o_oh_t = self.all_atoms[[dh0o]]
+                o_oh_c = self.all_atoms[[dh1o]]
+                h_oh_t = self.all_atoms[[dh0h]]
+                h_oh_c = self.all_atoms[[dh1h]]
+                self.results.count['ct.o_nyl.h_w' ] += self._cal_count(o_nyl , h_w)
+                self.results.count['ct.o_oh_c.h_w'] += self._cal_count(o_oh_c, h_w)
+                self.results.count['ct.o_oh_t.h_w'] += self._cal_count(o_oh_t, h_w)
+                self.results.count['ct.h_oh_c.o_w'] += self._cal_count(h_oh_c, self.water_o)
+                self.results.count['ct.h_oh_t.o_w'] += self._cal_count(h_oh_t, self.water_o)
+                self.results.nframes['ct'] += 1
+            else:
+                # TT
+                o_oh = self.all_atoms[[dh0o, dh1o]]
+                h_oh = self.all_atoms[[dh0h, dh1h]]
+                self.results.count['tt.o_nyl.h_w'] += self._cal_count(o_nyl, h_w)
+                self.results.count['tt.o_oh.h_w' ] += self._cal_count(o_oh , h_w)
+                self.results.count['tt.h_oh.o_w' ] += self._cal_count(h_oh , self.water_o)
+                self.results.nframes['tt'] += 1
+
+    def _cal_count(self, g1, g2):
+
+        pairs, dist = capped_distance(
+                    g1,
+                    g2,
+                    self._maxrange,
+                    box=self._ts.dimensions)
+        count, _ = np.histogram(dist, **self.rdf_settings)
+        return count
+
+    def _conclude(self):
+        # Volume in each radial shell
+        vols = np.power(self.results.edges, 3)
+        norm = 4/3 * np.pi * np.diff(vols)
+
+        # Average number density
+        self.results.box_vol = self.volume_cum / self.n_frames
+        norm /= self.results.box_vol
+
+        # Number of each selection
+        n_h_w = len(self.all_h)-2
+        n_o_w = len(self.water_o)
+
+        nframe_cc = self.results.nframes['cc']
+        nframe_ct = self.results.nframes['ct']
+        nframe_tt = self.results.nframes['tt']
+
+        self.results.rdf = self.results.count
+        self.results.rdf['cc.o_nyl.h_w' ] = self.results.count['cc.o_nyl.h_w' ] / (norm *nframe_cc *n_h_w)
+        self.results.rdf['cc.o_oh.h_w'  ] = self.results.count['cc.o_oh.h_w'  ] / (norm *nframe_cc *n_h_w *2)
+        self.results.rdf['cc.h_oh.o_w'  ] = self.results.count['cc.h_oh.o_w'  ] / (norm *nframe_cc *n_o_w *2)
+        self.results.rdf['ct.o_nyl.h_w' ] = self.results.count['ct.o_nyl.h_w' ] / (norm *nframe_ct *n_h_w)
+        self.results.rdf['ct.o_oh_c.h_w'] = self.results.count['ct.o_oh_c.h_w'] / (norm *nframe_ct *n_h_w)
+        self.results.rdf['ct.o_oh_t.h_w'] = self.results.count['ct.o_oh_t.h_w'] / (norm *nframe_ct *n_h_w)
+        self.results.rdf['ct.h_oh_c.o_w'] = self.results.count['ct.h_oh_c.o_w'] / (norm *nframe_ct *n_o_w)
+        self.results.rdf['ct.h_oh_t.o_w'] = self.results.count['ct.h_oh_t.o_w'] / (norm *nframe_ct *n_o_w)
+        self.results.rdf['tt.o_nyl.h_w' ] = self.results.count['tt.o_nyl.h_w' ] / (norm *nframe_tt *n_h_w)
+        self.results.rdf['tt.o_oh.h_w'  ] = self.results.count['tt.o_oh.h_w'  ] / (norm *nframe_tt *n_h_w *2)
+        self.results.rdf['tt.h_oh.o_w'  ] = self.results.count['tt.h_oh.o_w'  ] / (norm *nframe_tt *n_o_w *2)
+
 def read_multidata(
     list_file: list,
 ):
@@ -960,3 +1118,4 @@ def rdf(
         X = array_final,
         header = ' '.join(array_final.dtype.names)
     )
+
