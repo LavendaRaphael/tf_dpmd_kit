@@ -185,9 +185,7 @@ def get_rmse(
                 float_rmse_v = float(str_line.split()[-2])
     return float_rmse_e, float_rmse_f, float_rmse_v
 
-def plt_lcurve():
-
-    fig, ax = plt.subplots()
+def plt_lcurve(ax):
 
     data = np.genfromtxt("lcurve.out", names=True)
     ax.scatter(data['step'], data['rmse_e_trn'], label='Energy (eV)', s=0.5)
@@ -198,5 +196,3 @@ def plt_lcurve():
     ax.set_yscale('log')
     ax.set_xlim((None,None))
     ax.grid()
-
-    return fig, ax

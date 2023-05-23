@@ -120,6 +120,7 @@ def inset_img(
     dict_img: dict,
     dict_spinecolor: dict = None,
     dict_spinels: dict = None,
+    spinealpha: float = None,
     float_lw: float = None,
     bool_rot90: bool = False,
     bool_axis: bool = True,
@@ -261,33 +262,26 @@ def plt_compare(
         dict_color = {}
 
     for str_label in dict_data:
-        str_file = dict_data[str_label]
-        if not os.path.isfile(str_file):
-            print(str_file, 'Not found')
-            continue
-        print(str_file)
+        x, y, e = dict_data[str_label]
 
         if str_label in dict_color:
             color = dict_color[str_label]
         else:
             color = None
 
-        np_data = pd.read_csv(str_file)
-
-        np_data_y = np_data.iloc[:,1]
         if bool_minus:
-            np_data_y *= -1
+            y *= -1
 
         if bool_minzero:
-            np_data_y -= min(np_data_y)
+            y -= min(y)
 
         if bool_maxzero:
-            np_data_y -= max(np_data_y)
+            y -= max(y)
 
-        ax.plot( np_data.iloc[:,0], np_data_y, label=str_label, color=color, linewidth=float_lw)
+        ax.plot( x, y, label=str_label, color=color, linewidth=float_lw)
 
         if bool_error:
-            ax.fill_between( np_data.iloc[:,0], np_data_y-np_data.iloc[:,2], np_data_y+np_data.iloc[:,2], color=color, alpha=0.5)
+            ax.fill_between( x, y-e, y+e, color=color, alpha=0.5)
     
     set_lw(ax, float_lw)
 

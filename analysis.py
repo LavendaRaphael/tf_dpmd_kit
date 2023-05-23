@@ -412,13 +412,10 @@ def carbonic_lifedata(
 def carbonic_rolling_plt(
     ax,
     float_xscale: float = 1,
-    str_xlabel: str = None,
-    tup_ylim: tuple = None,
     file_data: str = 'carbonic_state.csv',
     int_window: int = 1,
     list_header: list = None,
     list_ypos: list = None,
-    list_yticklabels: list = None,
     dict_color: dict = None,
 ):
 
@@ -444,10 +441,7 @@ def carbonic_rolling_plt(
             color = dict_color[header]
         ax.scatter( df_new_tmp['frame']*float_xscale, df_new_tmp[header]*list_ypos[idx], s=2, edgecolors='none', alpha=df_data_tmp[header], rasterized=True, color=color)
 
-    ax.set_xlabel(str_xlabel)
     ax.set_yticks(list_ypos)
-    ax.set_yticklabels(list_yticklabels)
-    ax.set_ylim(tup_ylim)
 
 def data_rolling(
     int_window: int,
