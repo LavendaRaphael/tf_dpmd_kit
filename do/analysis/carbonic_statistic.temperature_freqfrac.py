@@ -12,9 +12,6 @@ def run(
     ax,
 ):
 
-    dict_label = {
-        'HCO3': r'HCO$_3^-$',
-    }
     dict_color = {
         'CC': 'tab:blue',
         'CT': 'tab:orange',
@@ -28,7 +25,7 @@ def run(
         'HCO3': '>',
     }
 
-    list_header = ['CC', 'CT', 'TT','HCO3']
+    list_header = ['CC', 'CT', 'TT', 'HCO3']
 
     file_data = 'carbonic_statistic.temperature.csv'
     dfgb = pd.read_csv(file_data, index_col=['state']).groupby(level='state')
@@ -37,14 +34,21 @@ def run(
         color = dict_color[header]
         marker = dict_marker[header]
         df = dfgb.get_group(header)
-        label = header
-        if header in dict_label:
-            label = dict_label[header]
-        ax.errorbar(ser_temperature, df['frequency(ns-1)'], yerr = df['frequency(ns-1)_sem'], ls=':', marker=marker, markersize=2, lw=1, color=color, capsize=2, label=label)
+        ax.errorbar(ser_temperature, df['freqfrac'], yerr = df['freqfrac_sem'], ls=':', marker=marker, markersize=2, lw=1, color=color, capsize=2)
 
     ax.set_xlabel('Temperature (K)')
-    ax.set_ylabel(r'Frequency (ns$^{-1}$)')
-    ax.legend(frameon=False)
+    ax.set_ylabel('Formation Rate Fraction')
+
+    plot.add_text(
+        ax,
+        dict_text = {
+            (355, 0.2): 'CC',
+            (355, 0.3): 'CT',
+            (355, 0.4): r'HCO$_3^-$',
+            (355, 0.08): 'TT',
+        }
+    )
+    ax.set_xlim(None, 375)
 
 def main():
 
@@ -58,7 +62,7 @@ def main():
 
     plot.save(
         fig,
-        file_save = 'carbonic_statistic.temperature_frequency',
+        file_save = 'carbonic_statistic.temperature_freqfrac',
         list_type = ['pdf', 'svg']
     )
 

@@ -16,8 +16,9 @@ def run(
         ser -= min(ser[(ser.index>3.0) & (ser.index<4.2)])
         ax.plot(df.index, df[label], label=label, lw=1)
     
-    ax.set_xlabel(r'R($^=$OH$_{proton}$) (Å)')
+    ax.set_xlabel(r'R$_0$ (Å)')
     ax.set_ylabel('Free energy (kcal/mol)')
+    ax.set_xlim(None, 6)
     ax.legend()
 
 def main():

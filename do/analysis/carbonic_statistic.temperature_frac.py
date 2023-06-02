@@ -34,8 +34,8 @@ def run(
         color = dict_color[header]
         marker = dict_marker[header]
         df = dfgb.get_group(header)
-        ax1.errorbar(ser_temperature, df['prop'], yerr=df['prop_sem'], ls=':', marker=marker, markersize=2, lw=1, color=color, capsize=2)
-        ax2.errorbar(ser_temperature, df['prop'], yerr=df['prop_sem'], ls=':', marker=marker, markersize=2, lw=1, color=color, capsize=2)
+        ax1.errorbar(ser_temperature, df['frac'], yerr=df['frac_sem'], ls=':', marker=marker, markersize=2, lw=1, color=color, capsize=2)
+        ax2.errorbar(ser_temperature, df['frac'], yerr=df['frac_sem'], ls=':', marker=marker, markersize=2, lw=1, color=color, capsize=2)
 
     ax1.set_ylim(0.75,None)
     ax2.set_ylim(None,0.25)
@@ -52,7 +52,7 @@ def run(
 
     ax2.set_xlim(None, 375)
     ax2.set_xlabel('Temperature (K)')
-    ax2.set_ylabel('Proportion', y= 1.)
+    ax2.set_ylabel('Mole Fraction', y= 1.)
 
     plot.add_text(
         ax1,
@@ -83,7 +83,7 @@ def main():
 
     plot.save(
         fig,
-        file_save = 'carbonic_statistic.temperature_prop',
+        file_save = 'carbonic_statistic.temperature_frac',
         list_type = ['pdf', 'svg']
     )
 

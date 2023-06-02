@@ -30,7 +30,7 @@ def run(
     ser_temperature = dfgb.get_group(list_header[0])['temperature(K)']
     ser_0 = pd.Series([0]*len(ser_temperature))
     for header in list_header:
-        ser_1 = dfgb.get_group(header)['prop'].reset_index(drop=True)
+        ser_1 = dfgb.get_group(header)['frac'].reset_index(drop=True)
         if header in dict_color:
             color = dict_color[header]
         ser_1 = ser_0 + ser_1
@@ -63,7 +63,7 @@ def run(
     ax.set_xlim(290, 350)
     ax.set_ylim(0.5, 1)
     ax.set_xlabel('Temperature (K)')
-    ax.set_ylabel('Proportion'),
+    ax.set_ylabel('Mole Fraction'),
 
 def main():
 
@@ -73,7 +73,7 @@ def main():
 
     plot.save(
         fig,
-        file_save = 'carbonic_statistic.temperature_prop_river',
+        file_save = 'carbonic_statistic.temperature_frac_river',
         list_type = ['pdf', 'svg']
     )
 

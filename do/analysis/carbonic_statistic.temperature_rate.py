@@ -7,14 +7,14 @@ import pandas as pd
 import numpy as np
 from matplotlib.lines import Line2D
 
-plot.set_rcparam()
-cm = 1/2.54
-mpl.rcParams['figure.dpi'] = 300
 
 def run(
     ax,
 ):
 
+    dict_label = {
+        'HCO3': r'HCO$_3^-$',
+    }
     dict_color = {
         'CC': 'tab:blue',
         'CT': 'tab:orange',
@@ -28,7 +28,7 @@ def run(
         'HCO3': '>',
     }
 
-    list_header = ['CC', 'CT', 'TT', 'HCO3']
+    list_header = ['CC', 'CT', 'TT','HCO3']
 
     file_data = 'carbonic_statistic.temperature.csv'
     dfgb = pd.read_csv(file_data, index_col=['state']).groupby(level='state')
@@ -37,24 +37,20 @@ def run(
         color = dict_color[header]
         marker = dict_marker[header]
         df = dfgb.get_group(header)
-        ax.errorbar(ser_temperature, df['lifeave(ps)'], yerr = df['lifeave(ps)_sem'], ls=':', marker=marker, markersize=2, lw=1, color=color, capsize=2)
+        label = header
+        if header in dict_label:
+            label = dict_label[header]
+        ax.errorbar(ser_temperature, df['rate(M/s)']/1e8, yerr = df['rate(M/s)_sem']/1e8, ls=':', marker=marker, markersize=2, lw=1, color=color, capsize=2, label=label)
 
     ax.set_xlabel('Temperature (K)')
-    ax.set_ylabel('LifeAve (ps)')
-
-    plot.add_text(
-        ax,
-        dict_text = {
-            (355, 1000): 'CC',
-            (355,  100): 'CT',
-            (355,   50): r'HCO$_3^-$',
-            (355,   15): 'TT',
-        }
-    )
-    ax.set_yscale('log')
-    ax.set_xlim(None, 375)
+    ax.set_ylabel(r'Formation Rate ($\times 10^{8}$ M/s)')
+    ax.legend(frameon=False)
 
 def main():
+
+    plot.set_rcparam()
+    cm = 1/2.54
+    mpl.rcParams['figure.dpi'] = 300
 
     fig, ax = plt.subplots( figsize = (4.3*cm, 4*cm))
 
@@ -62,7 +58,7 @@ def main():
 
     plot.save(
         fig,
-        file_save = 'carbonic_statistic.temperature_lifeave',
+        file_save = 'carbonic_statistic.temperature_rate',
         list_type = ['pdf', 'svg']
     )
 

@@ -1,8 +1,11 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import json
 
 def main():
     file_list = [
+        '../8/log',
+        '../9/log',
         '../10/log',
         '../11/log',
         '../12/log',
@@ -28,6 +31,8 @@ def main():
     data = pd.DataFrame(data, columns=columns, dtype='float64')
     print(data)
     v_mean = data['Volume'].mean()
+    with open('volume.json', 'w') as fp:
+        json.dump({'volume(ang3)': v_mean}, fp, indent=4)
     print(v_mean)
     fig, ax = plt.subplots()
     for x in [10000]:

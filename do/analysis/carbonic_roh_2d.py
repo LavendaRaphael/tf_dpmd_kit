@@ -16,8 +16,6 @@ def run(fig,ax):
     ]).dropna()
 
     print(df_data)
-    #df_sym = df_data.rename(columns={'roh0(ang)': 'roh1(ang)', 'roh1(ang)': 'roh0(ang)'})
-    #df_data = pd.concat([df_data, df_sym], ignore_index=True)
 
     h, xedges, yedges = np.histogram2d(df_data['roh0(ang)'], df_data['roh1(ang)'], bins=[300, 300], density=True, range=[[0.8, 10],[0.8, 1.3]])
 
@@ -36,8 +34,8 @@ def run(fig,ax):
     colorbar = fig.colorbar( mappable=image, ax=ax, extend='max')
     colorbar.ax.set_ylabel('Free energy (kcal/mol)')
 
-    ax.set_xlabel(r'R($^=$OH$_{proton}$) (Å)')
-    ax.set_ylabel(r'R(O$_{OH}$H$_{OH}$) (Å)')
+    ax.set_xlabel(r'R$_0$ (Å) [R$_0$ > R$_1$]')
+    ax.set_ylabel(r'R$_1$ (Å)')
 
 def main():
 
