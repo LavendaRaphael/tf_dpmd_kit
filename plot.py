@@ -118,38 +118,41 @@ def add_text(
 def inset_img(
     ax,
     dict_img: dict,
-    dict_spinecolor: dict = None,
-    dict_spinels: dict = None,
+    spinecolor: dict = None,
+    spinels: dict = None,
     spinealpha: float = None,
-    float_lw: float = None,
-    bool_rot90: bool = False,
-    bool_axis: bool = True,
+    spinelw: float = None,
+    img_rot90: bool = False,
+    axin_axis: bool = True,
     **kw
 ) -> None:
 
-    if dict_spinecolor is None:
-        dict_spinecolor = {}
-    if dict_spinels is None:
-        dict_spinels = {}
-
     axs = []
-    for str_img, tup_pos in dict_img.items():
+    for img, tup_pos in dict_img.items():
         axin = ax.inset_axes(tup_pos, **kw)
         axs.append(axin)
-        image = plt.imread(str_img)
-        if bool_rot90:
+        image = plt.imread(img)
+        if img_rot90:
             image = np.rot90(np.array(image), k=3)
         axin.imshow(image)
-        if not bool_axis:
+        if not axin_axis:
             axin.axis('off')
         axin.set_xticks([])
         axin.set_yticks([])
         for spine in axin.spines.values():
-            spine.set_linewidth(float_lw)
-            if str_img in dict_spinecolor:
-                spine.set_edgecolor(dict_spinecolor[str_img])
-            if str_img in dict_spinels:
-                spine.set_linestyle(dict_spinels[str_img])
+            spine.set_linewidth(spinelw)
+            if not(spinecolor is None):
+                if isinstance(spinecolor, dict):
+                    if img in spinecolor:
+                        spine.set_edgecolor(spinecolor[img])
+                else:
+                    spine.set_edgecolor(spinecolor)
+            if not(spinels is None):
+                if isinstance(spinels, dict):
+                    if img in spinels:
+                        spine.set_linestyle(spinels[img])
+                else:
+                    spine.set_linestyle(spinels)
     return axs
 
 def add_line(
