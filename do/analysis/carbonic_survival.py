@@ -13,6 +13,7 @@ def sub(
             '../TT/carbonic/carbonic_lifedata.csv',
         ]
     )
+    print(df.loc['CC'])
 
     analysis.carbonic_lifetime(df)
 
