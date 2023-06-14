@@ -55,6 +55,7 @@ class CarbonicRDF(AnalysisBase):
                 'tt.o_nyl.h_w' : count,
                 'tt.o_oh.h_w'  : count,
                 'tt.h_oh.o_w'  : count,
+                'o_w.o_w'  : count,
             },
             index = bins
         )
@@ -65,6 +66,7 @@ class CarbonicRDF(AnalysisBase):
         self.volume_cum = 0
         # Set the max range to filter the search radius
         self._maxrange = self.rdf_settings['range'][1]
+        self._minrange = self.rdf_settings['range'][0]
 
     def _single_frame(self):
         self.volume_cum += self._ts.volume
@@ -130,6 +132,7 @@ class CarbonicRDF(AnalysisBase):
                 self.results.count['tt.o_oh.h_w' ] += self._cal_count(o_oh , h_w)
                 self.results.count['tt.h_oh.o_w' ] += self._cal_count(h_oh , self.water_o)
                 self.results.nframes['tt'] += 1
+        self.results.count['o_w.o_w'] += self._cal_count(self.water_o, self.water_o)
 
     def _cal_count(self, g1, g2):
 
@@ -137,6 +140,7 @@ class CarbonicRDF(AnalysisBase):
                     g1,
                     g2,
                     self._maxrange,
+                    self._minrange,
                     box=self._ts.dimensions)
         count, _ = np.histogram(dist, **self.rdf_settings)
         return count
@@ -167,10 +171,13 @@ class CarbonicRDF(AnalysisBase):
         self.results.rdf['ct.o_oh_t.h_w'] = self.results.count['ct.o_oh_t.h_w'] / (norm *nframe_ct *n_h_w)
         self.results.rdf['ct.h_oh_c.o_w'] = self.results.count['ct.h_oh_c.o_w'] / (norm *nframe_ct *n_o_w)
         self.results.rdf['ct.h_oh_t.o_w'] = self.results.count['ct.h_oh_t.o_w'] / (norm *nframe_ct *n_o_w)
+        self.results.rdf['ct.o_oh.h_w'  ] = (self.results.count['ct.o_oh_c.h_w'] + self.results.count['ct.o_oh_t.h_w'])/2
+        self.results.rdf['ct.h_oh.o_w'  ] = (self.results.count['ct.h_oh_c.o_w'] + self.results.count['ct.h_oh_t.o_w'])/2
         self.results.rdf['tt.o_nyl.h_w' ] = self.results.count['tt.o_nyl.h_w' ] / (norm *nframe_tt *n_h_w)
         self.results.rdf['tt.o_oh.h_w'  ] = self.results.count['tt.o_oh.h_w'  ] / (norm *nframe_tt *n_h_w *2)
         self.results.rdf['tt.h_oh.o_w'  ] = self.results.count['tt.h_oh.o_w'  ] / (norm *nframe_tt *n_o_w *2)
-
+        self.results.rdf['o_w.o_w'      ] = self.results.count['o_w.o_w'      ] / (norm *(nframe_cc+nframe_ct+nframe_tt) *n_o_w *n_o_w)
+    
 def read_multidata(
     list_file: list,
 ):
@@ -236,7 +243,7 @@ def carbonic_survival_plt(
         ax.fill_between(timeline, lower, upper, alpha=0.5, color=color, lw=0)
 
     ax.legend(frameon=False, labelspacing=0.3, handlelength=1)
-    ax.set_xscale('log')
+    #ax.set_xscale('log')
     ax.set_xlabel('Time (ps)')
     ax.set_ylabel('Survial Probability')
 
@@ -271,6 +278,7 @@ def carbonic_survival(
         df_tmp.index.name = 'timeline(ps)'
         list_df.append( df_tmp )
         list_state.append(state)
+        print(f'state: {state}, median survial time: {kmf.median_survival_time_}')
     df = pd.concat(list_df, keys=list_state, names=['state'])
     print(df)
 

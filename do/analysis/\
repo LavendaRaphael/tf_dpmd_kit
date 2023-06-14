@@ -106,7 +106,7 @@ def run(ax):
         dict_img = {
             dir_cc + '0.360003.png': (p_xx[0]-0.5*dx1, p_xx[1]-dy1/2, dx1, dy1),
         },
-        spinecolor = {
+        dict_spinecolor = {
             dir_cc + '0.360003.png': c_xx,
         },
         img_rot90 = True,
@@ -118,7 +118,7 @@ def run(ax):
             dir_cc +'3.067520.png': (p_ct[0]-0.5*dx, p_ct[1]-0.5*dy, dx, dy),
             dir_cc +'3.170878.png': (p_tt[0]-0.5*dx, p_tt[1]-0.5*dy, dx, dy),
         },
-        spinecolor = {
+        dict_spinecolor = {
             dir_cc +'3.000000.png': c_cc,
             dir_cc +'3.067520.png': c_ct,
             dir_cc +'3.170878.png': c_tt,
@@ -162,8 +162,8 @@ def run(ax):
         dict_text = {
             tuple(p_ct_cc-sx+0.3*sy): rate['cc_ct'],
             tuple(p_xx_cc+sy): rate['cc_xx'],
-            tuple(p_ct_cc-1.7*r): rate['cc_tt'],
-            #tuple(p_cc-1.6*r+sy): rate['cc_cen']
+            #tuple(p_ct_cc-1.7*r): f['cc_tt'],
+            #tuple(p_cc-1.6*r+sy): f['cc_cen']
         },
         va = 'center',
         ha = 'center',

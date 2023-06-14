@@ -13,7 +13,6 @@ def sub(
             '../TT/carbonic/carbonic_lifedata.csv',
         ]
     )
-    print(df.loc['CC'])
 
     analysis.carbonic_lifetime(df)
 
@@ -51,5 +50,6 @@ def run():
         file_save = 'carbonic_survival',
         list_type = ['pdf', 'svg']
     )
+    plt.show()
 
 run()
