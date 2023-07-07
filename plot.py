@@ -182,71 +182,15 @@ def add_arrow(
         )
         ax.add_patch(arrow)
     
-def plt_subplots(
-    axs,
-    dict_title: dict,
-    dict2d_data: dict[dict],
-    str_xlabel: str,
-    str_ylabel: str,
-    tup_xlim: tuple = (None, None),
-    dict_ylim: dict = None,
-    dict_legend: dict = None,
-    bool_scatter: bool = False,
-    bool_error: bool = False,
-    str_yaxisformat: str = None,
-    float_lw: float = None,
-) -> None:
-    
-    int_nplot = len(dict_title)
-
-    if int_nplot==1:
-        axs = [axs]
-
-    for ax, str_key in zip(axs, dict_title):
-        if not(dict_ylim is None) and (str_key in dict_ylim):
-            ax.set_ylim(dict_ylim[str_key])
-        ax.set_ylabel(str_ylabel)
-        ax.text(
-            x=0.9,
-            y=0.9,
-            s = dict_title[str_key],
-            horizontalalignment = 'right',
-            verticalalignment = 'top',
-            transform=ax.transAxes
-        )
-        for str_label, dict_data in dict2d_data.items():
-            if not (str_key in dict_data):
-                continue
-            str_file = dict_data[str_key]
-            np_data = np.loadtxt(str_file)
-            if bool_scatter:
-                ax.scatter( np_data[:,0], np_data[:,1], label=str_label, s=0.5)
-            else:
-                line, = ax.plot( np_data[:,0], np_data[:,1], label=str_label, lw=float_lw)
-                if bool_error:
-                    ax.fill_between( np_data[:,0], np_data[:,1]-np_data[:,2], np_data[:,1]+np_data[:,2], alpha=0.5)
-
-        if not(str_yaxisformat is None):
-            ax.yaxis.set_major_formatter(plt.FormatStrFormatter(str_yaxisformat))
-
-        if (dict_legend is None) or (str_key in dict_legend):
-            ax.legend(
-                frameon = False,
-                handlelength = 1
-            )
-
-    axs[-1].set_xlabel(str_xlabel)
-    axs[0].set_xlim(tup_xlim)
-    
 def dict_color_temperature(
-    tup_colormap: tuple,
+    colormap: tuple,
     dict_temperature: dict,
 ) -> dict:
 
-    sm = plt.cm.ScalarMappable(cmap='coolwarm', norm=plt.Normalize(vmin=tup_colormap[0], vmax=tup_colormap[1]))
+    sm = plt.cm.ScalarMappable(cmap='coolwarm', norm=plt.Normalize(vmin=colormap[0], vmax=colormap[1]))
     dict_color = {}
-    for str_key in dict_temperature:
-        dict_color[str_key] = sm.to_rgba(dict_temperature[str_key])
+    for key in dict_temperature:
+        dict_color[key] = sm.to_rgba(dict_temperature[key])
         
     return dict_color
 
@@ -265,7 +209,10 @@ def plt_compare(
         dict_color = {}
 
     for str_label in dict_data:
-        x, y, e = dict_data[str_label]
+        if bool_error:
+            x, y, e = dict_data[str_label]
+        else:
+            x, y = dict_data[str_label]
 
         if str_label in dict_color:
             color = dict_color[str_label]
@@ -289,46 +236,27 @@ def plt_compare(
     set_lw(ax, float_lw)
 
 def plt_error(
+    ax,
     dict_data: dict,
-    str_xlabel: str,
-    str_ylabel: str,
-    tup_ylim: tuple = None,
-    tup_xlim: tuple = None,
-    str_title: str = None,
     float_lw: float = None,
     bool_error: bool = True,
     float_scale: float = 1.0,
     dict_ls: dict = None,
 ) -> None:
 
-    fig, ax = plt.subplots()
-
     if dict_ls is None:
         dict_ls = {}
 
-    for str_label, str_marker in zip(dict_data, Line2D.filled_markers):
-        str_file = dict_data[str_label]
-        np_data = np.loadtxt(str_file, ndmin=2)
+    for label, marker in zip(dict_data, Line2D.filled_markers):
         if bool_error:
-            yerr = np_data[:,2]*float_scale
+            x, y, e = dict_data[label]
+            e *= float_scale
         else:
-            yerr = None
-        if str_label not in dict_ls:
-            dict_ls[str_label] = ''
-        ax.errorbar(np_data[:,0], np_data[:,1]*float_scale, yerr=yerr, linestyle=dict_ls[str_label], marker=str_marker, label=str_label, capsize=2, lw=float_lw, markersize=2)
+            x, y = dict_data[label]
+            e = None
+        if label not in dict_ls:
+            dict_ls[label] = ''
+        ax.errorbar(x, y*float_scale, e, linestyle=dict_ls[label], marker=marker, label=label, capsize=2, lw=float_lw, markersize=4)
 
     set_lw(ax, float_lw)
 
-    ax.set_xlabel(str_xlabel)
-    ax.set_ylabel(str_ylabel)
-    ax.set_xlim(tup_xlim)
-    ax.set_ylim(tup_ylim)
-
-    ax.legend(
-        frameon = False,
-        handlelength = 1.0,
-        labelspacing = 0.2,
-        title = str_title
-    )
-
-    return fig, ax

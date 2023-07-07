@@ -58,39 +58,52 @@ def datastatus_from_dptest():
 
 def dptest_parity_plt(
     ax,
-    str_file: str,
+    file_out: str,
     int_natoms: int = None,
     float_lw: float = None,
     list_ticks: list = None,
+    file_log: str = 'log',
+    bool_rmse: bool = False,
+    energy_sep: bool = False,
 ) -> None:
 
-    with open(str_file, 'r') as file_open:
+    with open(file_out, 'r') as file_open:
         list_line = file_open.readline().split()
         if list_line[-1] == 'pred_e':
-            str_mode = 'e'
+            mode = 'e'
         elif list_line[-1] == 'pred_fz':
-            str_mode = 'f'
+            mode = 'f'
         else:
             print(list_line)
             raise
 
-    np_data = np.loadtxt(str_file)
+    np_data = np.loadtxt(file_out)
 
-    if (str_mode=='e'):
+    if (mode=='e'):
         # per atom
         np_data_new = np_data / int_natoms
         # eV to meV
         np_data_new *= 1000
         np_data_new -= np.average( np_data_new[:,0] )
-        str_xlabel = 'DFT energy (meV/atom)'
-        str_ylabel =  'DP energy (meV/atom)'
-        str_title = 'Energy'
+        if energy_sep:
+            # two data set, the energy is sperate
+            list_tof = (np_data_new[:,0] > 0)
+            np_data_0 = np_data_new[list_tof]
+            np_data_0 -= np.average(np_data_0)
+            np_data_1 = np_data_new[~list_tof]
+            np_data_1 -= np.average(np_data_1)
+            np_data_new = np.concatenate((np_data_0, np_data_1), axis=0)
+        
+        xlabel = 'DFT energy (meV/atom)'
+        ylabel = 'DP energy (meV/atom)'
+        title = 'Energy'
 
-    elif (str_mode=='f'):
+    elif (mode=='f'):
         np_data_new = np_data.reshape((np_data.shape[0]*3, 2), order='F')
-        str_xlabel = 'DFT force (eV/Å)'
-        str_ylabel = 'DP force (eV/Å)'
-        str_title = 'Force'
+        unit = 'eV/Å'
+        xlabel = 'DFT force (eV/Å)'
+        ylabel = 'DP force (eV/Å)'
+        title = 'Force'
 
     ax.axline([0, 0], [1, 1], linestyle='--', lw=float_lw, color='tab:orange')
     ax.scatter(
@@ -101,9 +114,10 @@ def dptest_parity_plt(
         rasterized=True,
         color = 'tab:blue',
     )
-    ax.set_xlabel(str_xlabel)
-    ax.set_ylabel(str_ylabel)
-    tup_lim = (np.min(np_data_new)*1.1, np.max(np_data_new)*1.1)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    xmax = np.max(np.absolute(np_data_new))*1.1
+    tup_lim = (-xmax, xmax)
     ax.set_ylim(tup_lim)
     ax.set_xlim(tup_lim)
     #ax.set_aspect(1)
@@ -114,44 +128,60 @@ def dptest_parity_plt(
     plot.set_lw(ax, float_lw)
 
     ax.legend(
-        title = str_title,
+        title = title,
         frameon = False,
         loc = 'upper left'
     )
+    if bool_rmse:
+        rmse_e, rmse_f, rmse_v = get_rmse(file_log)
+        if mode == 'e':
+            rmse_e *= 1000
+            s = f'RMSE = {rmse_e:.2f} meV/atom'
+        elif mode == 'f':
+            s = f'RMSE = {rmse_f:.3f} eV/Å'
+        ax.text(
+            x = 0.95,
+            y = 0.05,
+            s = s,
+            ha = 'right',
+            va = 'bottom',
+            transform = ax.transAxes,
+        )
 
 def dptest_hist_plt(
     ax,
-    str_file: str,
+    file_out: str,
     int_natoms: int = None,
-    tup_xlim: tuple = None,
+    xlim: tuple = None,
+    bins: int = 'auto',
     float_lw: float = None,
 ) -> None:
 
-    with open(str_file, 'r') as file_open:
+    with open(file_out, 'r') as file_open:
         list_line = file_open.readline().split()
         if list_line[-1] == 'pred_e':
-            str_mode = 'e'
+            mode = 'e'
         elif list_line[-1] == 'pred_fz':
-            str_mode = 'f'
+            mode = 'f'
         else:
             print(list_line)
             raise
 
-    np_data = np.loadtxt(str_file)
+    np_data = np.loadtxt(file_out)
 
-    if (str_mode=='e'):
+    if (mode=='e'):
         # per atom
         np_data_new = np_data / int_natoms
         # eV to meV
         np_data_new *= 1000
         np_data_new -= np.average( np_data_new[:,0] )
-        str_xlabel = r'E$_{DP}$-E$_{DFT}$ (meV/atom)'
-        str_title = 'Energy'
+        xlabel = r'E$_{DP}$-E$_{DFT}$ (meV/atom)'
+        title = 'Energy'
 
-    elif (str_mode=='f'):
+    elif (mode=='f'):
         np_data_new = np_data.reshape((np_data.shape[0]*3, 2), order='F')
-        str_xlabel = r'F$_{DP}$-F$_{DFT}$ (eV/Å)'
-        str_title = 'Force'
+        xlabel = r'F$_{DP}$-F$_{DFT}$ (eV/Å)'
+        title = 'Force'
 
     del_data = np_data_new[:,1] - np_data_new[:,0]
     ax.hist(
@@ -159,15 +189,15 @@ def dptest_hist_plt(
         bins = 'auto',
         density = True
     )
-    ax.set_xlabel(str_xlabel)
+    ax.set_xlabel(xlabel)
     ax.set_ylabel('Probability Density')
 
-    ax.set_xlim(tup_xlim)
+    ax.set_xlim(xlim)
 
     plot.set_lw(ax, float_lw)
 
     ax.legend(
-        title = str_title,
+        title = title,
         frameon = False,
         loc = 'upper left'
     )

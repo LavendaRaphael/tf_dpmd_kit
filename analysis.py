@@ -243,9 +243,10 @@ def carbonic_survival_plt(
         ax.fill_between(timeline, lower, upper, alpha=0.5, color=color, lw=0)
 
     ax.legend(frameon=False, labelspacing=0.3, handlelength=1)
-    #ax.set_xscale('log')
+    ax.set_xscale('log')
     ax.set_xlabel('Time (ps)')
     ax.set_ylabel('Survial Probability')
+    ax.set_ylim(0,1)
 
 def carbonic_survival(
     list_file: list,
