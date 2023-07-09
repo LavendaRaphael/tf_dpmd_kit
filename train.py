@@ -191,9 +191,6 @@ def dptest_hist_plt(
     )
     ax.set_xlabel(xlabel)
     ax.set_ylabel('Probability Density')
-
-    ax.set_xlim(xlim)
-
     plot.set_lw(ax, float_lw)
 
     ax.legend(
