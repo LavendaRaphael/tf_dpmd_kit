@@ -107,13 +107,16 @@ def add_text(
     **kwargs,
 ) -> None:
 
+    texts = []
     for tup_xy, str_text in dict_text.items():
-        ax.text(
+        text = ax.text(
             x = tup_xy[0],
             y = tup_xy[1],
             s = str_text,
             **kwargs,
         )
+        texts.append(text)
+    return texts
 
 def inset_img(
     ax,

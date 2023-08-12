@@ -321,6 +321,54 @@ def carbonic_statistic(
     time_tot: float, # ps
     volume: float, # ang3
     file_data: str = 'carbonic_lifedata.csv',
+    file_state: str = 'carbonic_state.product.csv',
+    file_save: str = 'carbonic_statistic.csv',
+):
+
+    '''
+    From cabonic_state to calcualte state fraction & from lifedata to calulate frequency.
+    '''
+
+    print(file_state)
+    df_data = pd.read_csv(file_state, index_col=0)
+    ser_count = df_data.count()/len(df_data)
+    df_save = ser_count.to_frame().rename(columns={0: 'frac'})
+
+    print(file_data)
+    df_data = pd.read_csv(file_data).loc[:, ['state', 'time(ps)']]
+    print(df_data)
+    gpby = df_data.groupby('state')
+
+    #df_tmp = gpby.sum()/time_tot
+    #df_tmp.rename(columns={'time(ps)': 'frac'}, inplace=True)
+    #df_save = df_tmp
+
+    df_tmp = gpby.count()/time_tot*1000
+    df_tmp.rename(columns = {'time(ps)': 'freq(ns-1)'}, inplace=True)
+    df_save = pd.concat([df_save, df_tmp], axis=1)
+
+    Avogadro = 6.02214076e23
+    molar = 1e27/Avogadro/volume
+    ns2s = 1e9
+    df_tmp = df_save['freq(ns-1)']*molar*ns2s
+    df_tmp.rename('rate(M/s)', inplace=True)
+    df_save = pd.concat([df_save, df_tmp], axis=1)
+
+    count_tot = df_data[df_data['state']!='H2CO3']['time(ps)'].count()
+    print(count_tot)
+    df_tmp = gpby.count()/count_tot
+    df_tmp.rename(columns = {'time(ps)': 'freqfrac'}, inplace=True)
+    df_save = pd.concat([df_save, df_tmp], axis=1)
+
+    print(file_save)
+    print(df_save)
+    if file_save:
+        df_save.to_csv(file_save)
+
+def carbonic_statistic_(
+    time_tot: float, # ps
+    volume: float, # ang3
+    file_data: str = 'carbonic_lifedata.csv',
     file_save: str = 'carbonic_statistic.csv',
 ):
 
